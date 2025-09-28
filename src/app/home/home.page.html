@@ -6,6 +6,7 @@
     <ion-searchbar
       placeholder="Keresés..."
       [(ngModel)]="searchText"
+      name="searchText"
       (ionInput)="onSearch()">
     </ion-searchbar>
   </ion-toolbar>
@@ -15,6 +16,7 @@
   @if (searchText){
       <p>Keresés: {{ searchText }}</p>
   }
+  <app-upload></app-upload>
 </ion-content>
 
-<app-upload></app-upload>
+

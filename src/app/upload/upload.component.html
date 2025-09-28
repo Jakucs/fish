@@ -1,4 +1,14 @@
-<p>
-  upload works!
-</p>
-<h1>HELLOOOOOOOOOOOOOOOOOOOOOOOOOOO</h1>
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Kép feltöltése</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    <ion-button (click)="uploadImage()" [disabled]="!selectedFile">Feltöltés</ion-button>
+
+    <p *ngIf="uploadUrl">
+      Feltöltve: <a [href]="uploadUrl" target="_blank">Megtekintés</a>
+    </p>
+  </ion-card-content>
+</ion-card>
