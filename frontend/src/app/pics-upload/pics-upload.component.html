@@ -1,0 +1,29 @@
+<div class="card" style="max-width: 400px;">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Kép feltöltése</h5>
+  </div>
+
+  <div class="card-body">
+    <input 
+      type="file" 
+      class="form-control mb-3" 
+      (change)="onFileSelected($event)" 
+      accept="image/*" 
+    />
+
+    <button 
+      class="btn btn-primary" 
+      (click)="uploadImage()" 
+      [disabled]="!selectedFile">
+      Feltöltés
+    </button>
+
+    @if(uploadUrl){
+    <p class="mt-3">
+      Feltöltve: 
+      <a [href]="uploadUrl" target="_blank">Megtekintés</a>
+    </p>
+    }
+
+  </div>
+</div>

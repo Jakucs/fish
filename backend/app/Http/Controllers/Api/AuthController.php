@@ -17,31 +17,37 @@ class AuthController extends ResponseController
     public function register(RegisterRequest $request){
         $request->validated();
         $user = User::create([
-            "name" => $request["name"],
+            "username" => $request["username"],
             "email" => $request["email"],
+            "firstname" => $request["firstname"],
+            "lastname" => $request["lastname"],
             "password" => bcrypt($request["password"])
         ]);
         return $this->sendResponse($user, "Sikeres regisztráció");
     }
 
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request)
+    {
         $request->validated();
 
-        // Hitelesítés
-        if( Auth::attempt([ "name" => $request["name"], "password" => $request["password"]])) {
+        $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (Auth::attempt([$loginField => $request->login, 'password' => $request->password])) {
 
             $user = Auth::user();
 
-            $token = $user->createToken( $user->name . "Token" )->plainTextToken;
+            $token = $user->createToken(($user->username ?? $user->email) . "Token")->plainTextToken;
+
             $data = [
-                "name" => $user->name,
+                "username" => $user->username,
+                "email" => $user->email,
                 "token" => $token
             ];
 
-            return $this->sendResponse( $data, "Sikeres bejelentkezés" );
+            return $this->sendResponse($data, "Sikeres bejelentkezés");
 
-        }else{
-            return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó, 405");
+        } else {
+            return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 405);
         }
     }
 
