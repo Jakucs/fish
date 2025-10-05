@@ -8,11 +8,24 @@
     </div>
 
     <!-- Login Form -->
-    <form>
-      <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
-      <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
-      <input type="submit" class="fadeIn fourth" value="Log In">
-    </form>
+<form [formGroup]="loginForm" (ngSubmit)="login()">
+  <input type="text"
+         id="login"
+         formControlName="login"
+         class="fadeIn second"
+         placeholder="Felhasználónév vagy email">
+
+  <input type="password"
+         id="password"
+         formControlName="password"
+         class="fadeIn third"
+         placeholder="Jelszó">
+
+  <input type="submit"
+         class="fadeIn fourth"
+         value="Log In">
+</form>
+
 
     <div class="text-center mt-3 fadeIn fifth">
       Nincs még fiókod? <a href="/register">Regisztrálj</a>

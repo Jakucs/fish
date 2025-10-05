@@ -36,57 +36,41 @@ export class LoginComponent {
     this.loggedIn = this.authapi.isLoggedIn();
   }
 
-    login(){
+  login() {
     console.log("Azonosítás..");
     this.authapi.login(this.loginForm.value).subscribe({
-      next: (data: any) => {
-        console.log(data);
+      next: (res: any) => {
+        console.log(res);
 
-        if(!data.token){
-          this.errorMessageFromBackend = `
-          <p>Az azonosítás sikertelen. Nincs érvényes token!</p>`;
+        if (!res.data || !res.data.token) {
+          this.errorMessageFromBackend = `<p>Az azonosítás sikertelen. Nincs érvényes token!</p>`;
           return;
         }
 
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userName', data.user.name);
-        localStorage.setItem('role', data.user.role);
-        localStorage.setItem('userId', data.user.id);
-        localStorage.setItem('showAdminPage', (data.user.role === 'superadmin').toString());
+        const token = res.data.token;
+        console.log('Token beállítása:', token);
+        localStorage.setItem('token', token);
+        localStorage.setItem('userName', res.data.username);
+        localStorage.setItem('email', res.data.email);
+
         this.loggedIn = true;
+        console.log('LocalStorage tartalom:', localStorage.getItem('token'));
 
-        if(data.user.role === 'superadmin') {
-          this.router.navigate([{ outlets: { admin: ['adminsite']} }]);
-        } else {
-          this.router.navigate(['/']);
-        }
-
-        this.loginForm.reset()
+        this.loginForm.reset();
         location.reload();
       },
       error: (error: HttpErrorResponse) => {
-        console.log("Belépési hiba:",error),
-        this.errorMessageFromBackend = ` <hr>
-        <p>Hibás felhasználónév vagy jelszó</p> 
-        <hr>
-        `;
+        console.log("Belépési hiba:", error);
+        this.errorMessageFromBackend = `<hr><p>Hibás felhasználónév vagy jelszó</p><hr>`;
         this.showErrorCard = true;
       }
-
-      /* BANCKEND VÁLASZÁT KIÍRATNI
-            error: (error: HttpErrorResponse) => {
-        console.log("Belépési hiba:",error),
-        this.errorMessageFromBackend = ` <hr>
-        <p>Hibás felhasználónév vagy jelszó</p> <hr>
-        ${error.error?.message} </br>  
-        `
-      }
-      */
-    })
+    });
+      this.router.navigate(['pics_upload' ]);
   }
 
+
     navigateToRegister(){
-    this.router.navigate([{outlets: {top: 'register' }}]); //navigálás a regisztrációs oldalra
+    this.router.navigate(['register' ]); //navigálás a regisztrációs oldalra
   }
 
 }

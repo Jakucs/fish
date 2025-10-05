@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthapiService {
+  private email: string = '';
 
   private apiUrl = 'http://192.168.100.147:8000/api';
 
@@ -39,5 +40,13 @@ export class AuthapiService {
   login(data: any) {
     const url = `${this.apiUrl}/login`;
     return this.http.post(url, data);
+  }
+
+    setEmail(email: string) {
+    this.email = email;
+  }
+
+    getEmail() {
+    return this.email;
   }
 }

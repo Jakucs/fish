@@ -8,14 +8,54 @@
     </div>
 
     <!-- Register Form -->
-     <form [formGroup]="registerForm" (ngSubmit)="register()">
-      <input type="text" id="register" class="fadeIn second" name="register" placeholder="Felhasználónév">
-      <input type="text" id="password" class="fadeIn third" name="register" placeholder="Email cím">
-      <input type="text" id="firstname" class="fadeIn third" name="firstname" placeholder="Vezetéknév">
-      <input type="text" id="lastname" class="fadeIn third" name="lastname" placeholder="Keresztnév">
-      
-      <input type="submit" class="fadeIn fourth" value="Regisztráció">
-    </form>
+<form [formGroup]="registerForm" (ngSubmit)="register()">
+
+  <input type="text"
+         formControlName="username"
+         class="fadeIn second form-control"
+         [ngClass]="{'is-invalid': registerForm.get('username')?.invalid && registerForm.get('username')?.touched}"
+         placeholder="Felhasználónév">
+  <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="invalid-feedback">Felhasználónév megadása kötelező</div>
+
+  <input type="email"
+         formControlName="email"
+         class="fadeIn third form-control"
+         [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+         placeholder="Email cím">
+  <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="invalid-feedback">Adj meg érvényes email címet</div>
+
+  <input type="text"
+         formControlName="firstname"
+         class="fadeIn third form-control"
+         [ngClass]="{'is-invalid': registerForm.get('firstname')?.invalid && registerForm.get('firstname')?.touched}"
+         placeholder="Vezetéknév">
+  <div *ngIf="registerForm.get('firstname')?.invalid && registerForm.get('firstname')?.touched" class="invalid-feedback">Vezetéknév kötelező</div>
+
+  <input type="text"
+         formControlName="lastname"
+         class="fadeIn third form-control"
+         [ngClass]="{'is-invalid': registerForm.get('lastname')?.invalid && registerForm.get('lastname')?.touched}"
+         placeholder="Keresztnév">
+  <div *ngIf="registerForm.get('lastname')?.invalid && registerForm.get('lastname')?.touched" class="invalid-feedback">Keresztnév kötelező</div>
+
+  <input type="password"
+         formControlName="password"
+         class="fadeIn third form-control"
+         [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+         placeholder="Jelszó">
+  <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="invalid-feedback">Jelszó megadása kötelező</div>
+
+  <input type="password"
+         formControlName="confirm_password"
+         class="fadeIn third form-control"
+         [ngClass]="{'is-invalid': registerForm.get('confirm_password')?.invalid && registerForm.get('confirm_password')?.touched}"
+         placeholder="Jelszó megerősítése">
+  <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="invalid-feedback">A jelszó megerősítése kötelező</div>
+
+  <input type="submit" class="fadeIn fourth btn btn-primary mt-3" value="Regisztráció">
+
+</form>
+
 
     <!-- Remind Passowrd -->
     <div id="formFooter">
