@@ -1,0 +1,90 @@
+<h2 class="container">Add el nem használt horgászcuccaid</h2>
+
+<form [formGroup]="productForm" (ngSubmit)="saveProduct()" novalidate>
+
+  <!-- Termék neve -->
+  <div class="mb-3 container">
+    <label for="productName" class="form-label">Termék neve</label>
+    <input type="text"
+           formControlName="name"
+           class="form-control"
+           id="productName"
+           placeholder="Add meg a termék nevét"
+           [ngClass]="{'is-invalid': productForm.controls['name'].invalid && productForm.controls['name'].touched}">
+    <div *ngIf="productForm.controls['name'].invalid && productForm.controls['name'].touched" class="invalid-feedback">
+      Termék neve megadása kötelező.
+    </div>
+  </div>
+
+  <!-- Leírás -->
+<div class="mb-3 container">
+  <label for="productDescription" class="form-label">Leírás</label>
+  <textarea
+         formControlName="description"
+         class="form-control"
+         id="productDescription"
+         rows="3"
+         placeholder="Add meg a termék leírását"
+         [ngClass]="{'is-invalid': productForm.controls['description'].invalid && productForm.controls['description'].touched}">
+  </textarea>
+  <div *ngIf="productForm.controls['description'].invalid && productForm.controls['description'].touched" class="invalid-feedback">
+    Leírás megadása kötelező.
+  </div>
+</div>
+
+
+  <!-- Ár -->
+  <div class="mb-3 container">
+    <label for="productPrice" class="form-label">Ár</label>
+    <input type="number"
+           formControlName="price"
+           class="form-control"
+           id="productPrice"
+           placeholder="Add meg az árat (Forint)"
+           [ngClass]="{'is-invalid': productForm.controls['price'].invalid && productForm.controls['price'].touched}">
+    <div *ngIf="productForm.controls['price'].invalid && productForm.controls['price'].touched" class="invalid-feedback">
+      Ár megadása kötelező.
+    </div>
+  </div>
+
+  <div class="mb-3 container">
+  <label for="productCategory" class="form-label">Kategória</label>
+  <select
+         formControlName="category"
+         id="productCategory"
+         class="form-select"
+         [ngClass]="{'is-invalid': productForm.controls['category'].invalid && productForm.controls['category'].touched}">
+            <option value="" disabled selected hidden>Válassz kategóriát</option>
+            <option value="botok">botok</option>
+            <option value="orsók">orsók</option>
+            <option value="zsinórok">zsinórok</option>
+            <option value="csali">csali</option>
+            <option value="horgok">horgok</option>
+            <option value="súlyok/ólom">súlyok/ólom</option>
+            <option value="úszók">úszók</option>
+            <option value="hálók/merítők">hálók/merítők</option>
+            <option value="csapdák">csapdák</option>
+            <option value="kiegészítők/tartozékok">kiegészítők/tartozékok</option>
+            <option value="elektronika">elektronika</option>
+            <option value="csónakok">csónakok</option>
+  </select>
+  <div *ngIf="productForm.controls['category'].invalid && productForm.controls['category'].touched" class="invalid-feedback">
+    Kategória kiválasztása kötelező.
+  </div>
+</div>
+
+
+  <div class="container mb-3">
+    <app-pics-upload class="container"></app-pics-upload>
+    <button class="btn btn-primary mt-3" (click)="saveProduct()">Hirdetés mentése</button>
+  </div>
+
+</form>
+
+
+
+
+
+
+
+

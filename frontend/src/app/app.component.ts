@@ -39,4 +39,12 @@ export class AppComponent {
     this.router.navigate(['/logout']);
   }
 
+  goToAdUpload(){
+    if (this.isLoggedIn) {
+      this.router.navigate(['/ad_upload' ]);
+    } else {
+      this.router.navigate(['/login' ]);
+    }
+  }
+
 }
