@@ -33,10 +33,10 @@ class ProductController extends ResponseController
         $product = new Product();
         $product->name = $request["name"]; 
         $product->description = $request["description"];
-        $product->category = $request["category"];
+        $product->type_id = $request["type_id"];
+        $product->user_id = $request["user_id"];
         $product->price = $request["price"];
         $product->image	= $request["image"];
-        $product->stock = $request["stock"];
         $product->save();
         return $this->sendResponse(new ProductResource($product), "Sikeres felvitel!");
     }
@@ -51,10 +51,10 @@ class ProductController extends ResponseController
         else{
             $product->name = $request["name"]; 
             $product->description = $request["description"];
-            $product->category = $request["category"];
+            $product->type_id = $request["type_id"];
+            $product->user_id = $request["user_id"];
             $product->price = $request["price"];
             $product->image	= $request["image"];
-            $product->stock = $request["stock"];
             $product->save();
             return $this->sendResponse(new ProductResource($product), "Sikeres módosítás");
         }

@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('description');
             $table->unsignedBigInteger('type_id'); // kell az UNSIGNED
             $table->foreign('type_id')->references('id')->on('types')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('price');
             $table->string('image');
-            $table->integer('stock');
             $table->timestamps();
             $table->engine = 'InnoDB'; // biztos, ami biztos
         });

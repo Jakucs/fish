@@ -48,27 +48,34 @@
   </div>
 
   <div class="mb-3 container">
-  <label for="productCategory" class="form-label">Kategória</label>
+  <label for="productType" class="form-label">Kategória</label>
   <select
-         formControlName="category"
-         id="productCategory"
+         formControlName="type_id"
+         id="productType"
          class="form-select"
-         [ngClass]="{'is-invalid': productForm.controls['category'].invalid && productForm.controls['category'].touched}">
+         [ngClass]="{'is-invalid': productForm.controls['type_id'].invalid && productForm.controls['type_id'].touched}">
             <option value="" disabled selected hidden>Válassz kategóriát</option>
-            <option value="botok">botok</option>
-            <option value="orsók">orsók</option>
-            <option value="zsinórok">zsinórok</option>
-            <option value="csali">csali</option>
-            <option value="horgok">horgok</option>
-            <option value="súlyok/ólom">súlyok/ólom</option>
-            <option value="úszók">úszók</option>
-            <option value="hálók/merítők">hálók/merítők</option>
-            <option value="csapdák">csapdák</option>
-            <option value="kiegészítők/tartozékok">kiegészítők/tartozékok</option>
-            <option value="elektronika">elektronika</option>
-            <option value="csónakok">csónakok</option>
+            <option value="1">Botok</option>
+            <option value="2">Orsók</option>
+            <option value="3">Zsinórok</option>
+            <option value="4">Csalik/Bojlik/Etetőanyagok</option>
+            <option value="5">Műcsalik</option>
+            <option value="6">Horgok</option>
+            <option value="7">Súlyok/Ólmok/Kosarak</option>
+            <option value="8">Úszók</option>
+            <option value="9">Hálók/Merítők</option>
+            <option value="10">Kiegészítő tartozékok</option>
+            <option value="11">Elektronika</option>
+            <option value="12">Sátrak/Ernyők</option>
+            <option value="13">Botzsákok/Táskák</option>
+            <option value="14">Székek</option>
+            <option value="15">Féder kiegészítők</option>
+            <option value="16">Verseny ládák</option>
+            <option value="17">Kapásjelzők/Halradarok</option>
+            <option value="18">Aprócikkek</option>
+
   </select>
-  <div *ngIf="productForm.controls['category'].invalid && productForm.controls['category'].touched" class="invalid-feedback">
+  <div *ngIf="productForm.controls['type_id'].invalid && productForm.controls['type_id'].touched" class="invalid-feedback">
     Kategória kiválasztása kötelező.
   </div>
 </div>

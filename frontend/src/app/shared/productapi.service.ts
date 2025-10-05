@@ -18,5 +18,9 @@ export class ProductapiService {
     console.log(this.productsURL)
     return this.http.get(this.productsURL);
   }
+
+  addProduct(){
+    //return this.http.post(this.productsURL,);
+  }
   
 }

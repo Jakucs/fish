@@ -17,7 +17,7 @@ Route::get( "/users", [ AuthController::class, "getUsers" ]);
 
 Route::get ("/products", [ProductController::class, "getProducts"]);
 Route::get ("/product", [ProductController::class, "getProduct"]);
-Route::post ("/newproducts", [ProductController::class, "newProduct"]);
+Route::post ("/newproduct", [ProductController::class, "newProduct"]);
 Route::put ("/updateproducts/{id}", [ProductController::class, "updateProduct"]);
 Route::delete ("/destroyproducts/{id}", [ProductController::class, "destroyProduct"]);
 

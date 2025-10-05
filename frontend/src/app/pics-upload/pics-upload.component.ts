@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { CloudinaryapiService } from '../shared/cloudinaryapi.service';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-pics-upload',
@@ -24,17 +28,15 @@ export class PicsUploadComponent {
       }
     }
 
-  uploadImage() {
-    console.log(this.selectedFile);
-    if (!this.selectedFile) return;
+uploadImage(): Observable<any> {
+  if (!this.selectedFile) return of(null); // ha nincs fájl, adjon vissza null-t
 
-    this.uploadService.uploadFile(this.selectedFile).subscribe({
-      next: (res: any) => {
-        console.log('Feltöltve:', res);
-        this.uploadUrl = res.secure_url;
-      },
-      error: (err) => console.error('Feltöltési hiba:', err)
-    });
+  return this.uploadService.uploadFile(this.selectedFile).pipe(
+    tap((res: any) => {
+      this.uploadUrl = res.secure_url;
+      console.log('Kép feltöltve, URL:', this.uploadUrl);
+    })
+  );
+}
 
-  }
 }

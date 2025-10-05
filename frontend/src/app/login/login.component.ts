@@ -51,13 +51,15 @@ export class LoginComponent {
         console.log('Token beállítása:', token);
         localStorage.setItem('token', token);
         localStorage.setItem('userName', res.data.username);
+        localStorage.setItem('userId', res.data.user_id.toString());
         localStorage.setItem('email', res.data.email);
 
         this.loggedIn = true;
-        console.log('LocalStorage tartalom:', localStorage.getItem('token'));
+        console.log('LocalStorage tartalom:', localStorage.getItem('token'), localStorage.getItem('userId'));
 
         this.loginForm.reset();
         location.reload();
+        this.router.navigate(['pics_upload' ]);
       },
       error: (error: HttpErrorResponse) => {
         console.log("Belépési hiba:", error);
@@ -65,7 +67,6 @@ export class LoginComponent {
         this.showErrorCard = true;
       }
     });
-      this.router.navigate(['pics_upload' ]);
   }
 
 
