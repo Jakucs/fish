@@ -43,18 +43,19 @@ export class AdUploadComponent {
     }
     if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
 
-      this.picsUpload.uploadImages().subscribe({
-        next: (res: any) => {
-          if (res && res.secure_url) {
-            this.productForm.patchValue({ image: res.secure_url });
-          }
-          // Save to backend
-          this.saveProductToBackend();
-        },
-        error: (err: any) => {
-          console.error('Feltöltési hiba:', err);
+    this.picsUpload.uploadImages().subscribe({
+      next: (res: any[]) => {
+        if (res && res.length > 0) {
+          const urls = res.map(r => r.secure_url);
+          this.productForm.patchValue({ image: JSON.stringify(urls) });
         }
-      });
+        this.saveProductToBackend();
+      },
+      error: (err: any) => {
+        console.error('Feltöltési hiba:', err);
+      }
+    });
+
     } else {
       // If no pics, just simple save
       this.saveProductToBackend();
