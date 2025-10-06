@@ -263,3 +263,7 @@ input[type=text]:placeholder {
 #icon {
   width:60%;
 }
+
+.fadeIn.fourth {
+  margin-bottom: 30px;
+}

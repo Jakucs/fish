@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { from, Observable, switchMap } from 'rxjs';
+import { forkJoin, from, Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -49,19 +49,26 @@ export class CloudinaryapiService {
       });
   }
 
-    uploadFile(file: File, folder: string = 'user_uploads'): Observable<any> {
-      // pl. max 1024x1024 px, 80% minőség
-      return from(this.resizeImage(file, 1024, 1024, 0.8)).pipe(
-        switchMap((resizedBlob) => {
-          const formData = new FormData();
-          formData.append('file', resizedBlob, file.name);
-          formData.append('upload_preset', this.uploadPreset);
-          formData.append('folder', folder);
+    uploadFiles(files: File[], folder: string = 'user_uploads'): Observable<any[]> {
+      // Minden fájl resize-olása és feltöltése
+      const uploadRequests = files.map(file =>
+        from(this.resizeImage(file, 1280, 1280, 0.7)).pipe( // Promise → Observable
+          switchMap((resizedBlob: Blob) => {
+            const resizedFile = new File([resizedBlob], file.name, { type: 'image/jpeg' });
+            const formData = new FormData();
+            formData.append('file', resizedFile);
+            formData.append('upload_preset', this.uploadPreset);
+            formData.append('folder', folder);
 
-          return this.http.post(`https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`, formData);
-        })
+            return this.http.post('https://api.cloudinary.com/v1_1/ddt30o1t2/image/upload', formData);
+          })
+        )
       );
+
+      return forkJoin(uploadRequests);
     }
+
+
 
 
 }

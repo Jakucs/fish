@@ -26,7 +26,7 @@ export class AdUploadComponent {
 
   ngOnInit(): void {
     this.productForm = this.builder.group({
-  name: ['', [Validators.required, Validators.minLength(3)]],
+      name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]],
       type_id: ['', Validators.required],
       user_id: [localStorage.getItem('userId')],
@@ -41,9 +41,9 @@ export class AdUploadComponent {
       Object.values(this.productForm.controls).forEach(control => control.markAsTouched());
       return;
     }
-    if (this.picsUpload.selectedFile) {
+    if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
 
-      this.picsUpload.uploadImage().subscribe({
+      this.picsUpload.uploadImages().subscribe({
         next: (res: any) => {
           if (res && res.secure_url) {
             this.productForm.patchValue({ image: res.secure_url });
@@ -51,7 +51,7 @@ export class AdUploadComponent {
           // Save to backend
           this.saveProductToBackend();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Feltöltési hiba:', err);
         }
       });

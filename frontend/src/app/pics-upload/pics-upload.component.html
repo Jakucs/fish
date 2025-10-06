@@ -1,29 +1,41 @@
-<div class="card" style="max-width: 400px;">
-  <div class="card-header">
-    <h5 class="card-title mb-0">Kép feltöltése</h5>
+<div class="card shadow-sm p-3" style="max-width: 500px;">
+  <h5 class="mb-3">Képek feltöltése (max. {{ MAX_FILES }})</h5>
+
+  <input 
+    type="file" 
+    class="form-control mb-3"
+    (change)="onFileSelected($event)"
+    accept="image/*"
+    multiple
+  >
+
+  <div class="d-flex flex-wrap gap-2">
+    <div *ngFor="let file of selectedFiles; let i = index" class="position-relative">
+      <div class="upload-icon bg-light border rounded d-flex align-items-center justify-content-center" 
+           style="width: 70px; height: 70px; cursor: pointer;">
+        <i class="bi bi-image"></i>
+      </div>
+      <small class="text-muted d-block text-center mt-1">{{ file.name | slice:0:10 }}...</small>
+
+      <!-- Törlés ikon -->
+      <button class="btn-close position-absolute top-0 end-0" 
+              style="font-size: 0.7rem;" 
+              (click)="removeImage(i)">
+      </button>
+    </div>
   </div>
 
-  <div class="card-body">
-    <input 
-      type="file" 
-      class="form-control mb-3" 
-      (change)="onFileSelected($event)" 
-      accept="image/*" 
-    />
+  <button 
+    class="btn btn-primary w-100 mt-3"
+    (click)="uploadImages()"
+    [disabled]="selectedFiles.length === 0">
+    Feltöltés ({{ selectedFiles.length }}/{{ MAX_FILES }})
+  </button>
 
-    <!--<button 
-      class="btn btn-primary" 
-      (click)="uploadImage()" 
-      [disabled]="!selectedFile">
-      Feltöltés
-    </button>-->
-
-    @if(uploadUrl){
-    <p class="mt-3">
-      Feltöltve: 
-      <a [href]="uploadUrl" target="_blank">Megtekintés</a>
-    </p>
-    }
-
+  <div *ngIf="uploadUrls.length > 0" class="mt-3">
+    <h6>✅ Feltöltött képek:</h6>
+    <div class="d-flex flex-wrap gap-2">
+      <img *ngFor="let url of uploadUrls" [src]="url" class="img-thumbnail" style="width: 70px; height: 70px;">
+    </div>
   </div>
 </div>
