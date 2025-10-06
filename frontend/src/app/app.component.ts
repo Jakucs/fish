@@ -23,8 +23,8 @@ export class AppComponent {
     this.router.navigate(['/login']);
   }
 
-  goToAds() {
-    this.router.navigate(['/ads']);
+  goToMyAds() {
+    this.router.navigate(['/myads']);
   }
 
   goToProfile() {

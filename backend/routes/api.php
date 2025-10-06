@@ -6,20 +6,33 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\AuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Bejelentkezett user adatai
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Hirdetések végpontja
+    //Route::get('ads', [AdController::class, 'getAds']);
+    //Route::put('updateAd/{id}', [AdController::class, 'modifyAd']);
+    //Route::delete('destroyAd/{id}', [AdController::class, 'destroyAd']);
+
+    Route::get ("/getmyads", [ProductController::class, "getmyads"]);
+    Route::post ("/newproduct", [ProductController::class, "newProduct"]);
+    Route::put ("/updateproduct/{id}", [ProductController::class, "updateProduct"]);
+    Route::delete ("/destroyproduct/{id}", [ProductController::class, "destroyProduct"]);
+
+});
 
 Route::post( "/register", [ AuthController::class, "register" ]);
 Route::post( "/login", [ AuthController::class, "login" ]);
 Route::post( "/logout", [ AuthController::class, "logout" ]);
 Route::get( "/users", [ AuthController::class, "getUsers" ]);
-
 Route::get ("/products", [ProductController::class, "getProducts"]);
-Route::get ("/product", [ProductController::class, "getProduct"]);
-Route::post ("/newproduct", [ProductController::class, "newProduct"]);
-Route::put ("/updateproducts/{id}", [ProductController::class, "updateProduct"]);
-Route::delete ("/destroyproducts/{id}", [ProductController::class, "destroyProduct"]);
+//Route::get ("/product", [ProductController::class, "getProduct"]);
+
+
 
 Route::get ("/types", [TypeController::class, "getTypes"]);
 Route::get ("/type", [TypeController::class, "getType"]);

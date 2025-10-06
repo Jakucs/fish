@@ -7,6 +7,7 @@ import { RegisterComponent } from './register/register.component';
 import { SuccessfulregisterComponent } from './successfulregister/successfulregister.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AdUploadComponent } from './ad-upload/ad-upload.component';
+import { MyadsComponent } from './myads/myads.component';
 
 export const routes: Routes = [
     { path: "products", component: ProductListComponent},
@@ -15,6 +16,7 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent},
     { path: 'logout', component: LogoutComponent},
     { path: 'ad_upload', component: AdUploadComponent},
+    { path: 'myads', component: MyadsComponent},
     { path: 'successfulregister', component: SuccessfulregisterComponent},
     { path: '', component: ProductListComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }

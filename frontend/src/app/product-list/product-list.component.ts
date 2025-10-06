@@ -10,7 +10,7 @@ import { ProductapiService } from '../shared/productapi.service';
 export class ProductListComponent {
 
 
-    productList: any[] = []
+  productList: any[] = []
 
   constructor(private productsapi: ProductapiService) { }
 

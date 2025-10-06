@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\Product as ProductResource;
 use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProductController extends ResponseController
 {
@@ -15,6 +17,18 @@ class ProductController extends ResponseController
         $products = Product::with("type")->get();
         return $this->sendResponse(ProductResource::collection($products), "Adat betöltve");
     }
+
+        public function getmyads(){
+        $userId = Auth::id();
+        if (!$userId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nincs jogosultságod a művelet végrehajtásához. Kérlek jelentkezz be.'
+            ], 401);
+    }
+        $products = Product::where("user_id", Auth::id())->with("type")->get();
+        return $this->sendResponse(ProductResource::collection($products), "Adat betöltve");
+        }
 
         public function getProduct(Request $request){
         $product = Product::where("name", $request["name"])->first();
@@ -30,11 +44,13 @@ class ProductController extends ResponseController
 
         public function newProduct(ProductRequest $request){
         $request->validated();
+        
         $product = new Product();
         $product->name = $request["name"]; 
         $product->description = $request["description"];
         $product->type_id = $request["type_id"];
-        $product->user_id = $request["user_id"];
+        $product->user_id = Auth::id();
+        //$product->user_id = $request["user_id"];
         $product->price = $request["price"];
         $product->image	= $request["image"];
         $product->save();
@@ -43,36 +59,47 @@ class ProductController extends ResponseController
 
 
         public function updateProduct(ProductRequest $request, $id){
-        $request->validated();
-        $product = Product::find($id);
-        if(is_null($product)){
-            return $this->sendError("Adathiba", ["Nincs ilyen termék"]);
-        }
-        else{
-            $product->name = $request["name"]; 
-            $product->description = $request["description"];
-            $product->type_id = $request["type_id"];
-            $product->user_id = $request["user_id"];
-            $product->price = $request["price"];
-            $product->image	= $request["image"];
-            $product->save();
+            $request->validated();
+
+            $product = Product::find($id);
+            if(is_null($product)){
+                return $this->sendError("Adathiba", ["Nincs ilyen termék"]);
+            }
+
+            // Ellenőrzés: csak a termék tulajdonosa frissíthet
+            if($product->user_id !== Auth::id()){
+                return $this->sendError("Jogosultsági hiba", ["Ehhez a termékhez nincs jogosultságod"]);
+            }
+
+            $product->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'type_id' => $request->type_id,
+                'price' => $request->price,
+                'image' => $request->image
+            ]);
+
             return $this->sendResponse(new ProductResource($product), "Sikeres módosítás");
         }
 
-    }
 
+        public function destroyProduct($id)
+        {
+            $product = Product::find($id);
 
-    	public function destroyProduct ($id){
-        $product = Product::find ($id);
-        if(is_null($product)){
-            return $this->sendError("Adathiba", ["Nincs ilyen termék"]);
-        }
-        else{
+            if (is_null($product)) {
+                return $this->sendError("Adathiba", ["Nincs ilyen termék"], 404);
+            }
+
+            // Ellenőrzés: csak a tulajdonos törölheti
+            if ($product->user_id !== Auth::id()) {
+                return $this->sendError("Jogosultsági hiba", ["Ehhez a termékhez nincs jogosultságod"], 403);
+            }
+
             $product->delete();
-        }
 
-        return $this->sendResponse(new ProductResource($product), "Termék törölve");
-    }
+            return $this->sendResponse(new ProductResource($product), "Termék törölve");
+        }
 
 
 }

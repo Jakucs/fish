@@ -3,6 +3,8 @@ import { PicsUploadComponent } from "../pics-upload/pics-upload.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductapiService } from '../shared/productapi.service';
+import { AdapiService } from '../shared/adapi.service';
+import { UserapiService } from '../shared/userapi.service';
 
 @Component({
   selector: 'app-ad-upload',
@@ -18,6 +20,8 @@ export class AdUploadComponent {
   constructor(
     private builder: FormBuilder,
     private productapi: ProductapiService,
+    private adapi: AdapiService,
+    private userapi: UserapiService,
   ) { }
 
   ngOnInit(): void {
@@ -32,53 +36,54 @@ export class AdUploadComponent {
   }
 
 
-saveProduct() {
-  if (this.productForm.invalid) {
-    Object.values(this.productForm.controls).forEach(control => control.markAsTouched());
-    return;
-  }
-  if (this.picsUpload.selectedFile) {
+  saveProduct() {
+    if (this.productForm.invalid) {
+      Object.values(this.productForm.controls).forEach(control => control.markAsTouched());
+      return;
+    }
+    if (this.picsUpload.selectedFile) {
 
-    this.picsUpload.uploadImage().subscribe({
-      next: (res: any) => {
-        if (res && res.secure_url) {
-          this.productForm.patchValue({ image: res.secure_url });
+      this.picsUpload.uploadImage().subscribe({
+        next: (res: any) => {
+          if (res && res.secure_url) {
+            this.productForm.patchValue({ image: res.secure_url });
+          }
+          // Save to backend
+          this.saveProductToBackend();
+        },
+        error: (err) => {
+          console.error('Feltöltési hiba:', err);
         }
-        // Mentés a backendre
-        this.saveProductToBackend();
-      },
-      error: (err) => {
-        console.error('Feltöltési hiba:', err);
-      }
-    });
-  } else {
-    // Ha nincs kép, csak simán mentés
-    this.saveProductToBackend();
+      });
+    } else {
+      // If no pics, just simple save
+      this.saveProductToBackend();
+    }
   }
-}
 
-saveProductToBackend() {
-  if (this.productForm.valid) {
-    console.log('Hirdetés mentve:', this.productForm.value);
-    this.productapi.addProduct(this.productForm.value).subscribe({
-      next: (res) => {
-        console.log('Sikeres mentés:', res);
-        alert('Sikeres mentés!');
-        this.productForm.reset();
+  saveProductToBackend() {
+    if (this.productForm.valid) {
+      console.log('Hirdetés mentve:', this.productForm.value);
+      const headers = this.userapi.makeHeader();
+      this.productapi.addProduct(this.productForm.value).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+          console.log('✅ Sikeres mentés:', res);
+          alert('Sikeres mentés!');
+          this.productForm.reset();
+        } else{
+          console.error('❌ Sikertelen mentés:', res);
+          alert(`Hiba a mentés során: ${res.message}`);
+        }
       },
-      error: (err) => {
-        console.error('Mentési hiba:', err);
-        alert('Hiba történt a hirdetés feladása során. Kérlek, próbáld újra.');
-      }
-    });
-  } else {
-    console.warn('Az űrlap érvénytelen, töltsd ki az összes mezőt!');
-    this.productForm.markAllAsTouched();
+        error: (err) => {
+          console.error('Mentési hiba:', err);
+          alert('Hiba történt a hirdetés feladása során. Kérlek, próbáld újra.');
+        }
+      });
+    } else {
+      console.warn('Az űrlap érvénytelen, töltsd ki az összes mezőt!');
+      this.productForm.markAllAsTouched();
+    }
   }
-}
-
-
-
-
-
 }
