@@ -3,14 +3,17 @@
     @for (productItem of productList; track productItem) {
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="card h-100 shadow-sm">
-          <img
-            [src]="productItem.image || 'https://via.placeholder.com/300x200?text=Nincs+kép'"
-            class="card-img-top"
-            alt="{{ productItem.name }}"
-            width="300"
-            height="200"
-            style="object-fit: cover;"
-          >
+<img
+  *ngIf="productItem.imagesArray && productItem.imagesArray.length > 0"
+  [src]="productItem.imagesArray[0]"
+  alt="{{ productItem.name }}"
+  class="card-img-top"
+  width="300"
+  height="200"
+  style="object-fit: cover;"
+>
+
+
           <div class="card-body">
             <h5 class="card-title">{{ productItem.name }}</h5>
             <p class="card-text text-muted small">{{ productItem.description }}</p>

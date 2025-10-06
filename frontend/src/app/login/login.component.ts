@@ -56,10 +56,8 @@ export class LoginComponent {
 
         this.loggedIn = true;
         console.log('LocalStorage tartalom:', localStorage.getItem('token'), localStorage.getItem('userId'));
-
         this.loginForm.reset();
-        location.reload();
-        this.router.navigate(['pics_upload' ]);
+        this.router.navigate(['myads']);
       },
       error: (error: HttpErrorResponse) => {
         console.log("Belépési hiba:", error);
