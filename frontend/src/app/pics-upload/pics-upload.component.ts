@@ -28,15 +28,15 @@ export class PicsUploadComponent {
       }
     }
 
-uploadImage(): Observable<any> {
-  if (!this.selectedFile) return of(null); // ha nincs fájl, adjon vissza null-t
+    uploadImage(): Observable<any> {
+      if (!this.selectedFile) return of(null); // ha nincs fájl, adjon vissza null-t
 
-  return this.uploadService.uploadFile(this.selectedFile).pipe(
-    tap((res: any) => {
-      this.uploadUrl = res.secure_url;
-      console.log('Kép feltöltve, URL:', this.uploadUrl);
-    })
-  );
-}
+      return this.uploadService.uploadFile(this.selectedFile).pipe(
+        tap((res: any) => {
+          this.uploadUrl = res.secure_url;
+          console.log('Kép feltöltve, URL:', this.uploadUrl);
+        })
+      );
+    }
 
 }
