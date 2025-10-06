@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class ProductapiService {
 
   private productItems: any[] = [];
-  private productsURL = "http://192.168.100.147:8000/api/products"
+  private productsURL = "http://192.168.100.147:8000/api"
 
   constructor(
     private http: HttpClient,
@@ -16,11 +16,11 @@ export class ProductapiService {
 
   getProducts(){
     console.log(this.productsURL)
-    return this.http.get(this.productsURL);
+    return this.http.get(this.productsURL + '/products');
   }
 
-  addProduct(){
-    //return this.http.post(this.productsURL,);
+  addProduct(productData: any){
+    return this.http.post(this.productsURL + '/newproduct', productData);
   }
   
 }

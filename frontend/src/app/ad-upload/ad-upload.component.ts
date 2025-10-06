@@ -37,15 +37,13 @@ saveProduct() {
     Object.values(this.productForm.controls).forEach(control => control.markAsTouched());
     return;
   }
-
   if (this.picsUpload.selectedFile) {
-    // Kép feltöltése és megvárása
+
     this.picsUpload.uploadImage().subscribe({
       next: (res: any) => {
         if (res && res.secure_url) {
           this.productForm.patchValue({ image: res.secure_url });
         }
-
         // Mentés a backendre
         this.saveProductToBackend();
       },
@@ -60,9 +58,25 @@ saveProduct() {
 }
 
 saveProductToBackend() {
-  console.log('Hirdetés mentve:', this.productForm.value);
-  // this.productapi.addProduct(this.productForm.value).subscribe(...)
+  if (this.productForm.valid) {
+    console.log('Hirdetés mentve:', this.productForm.value);
+    this.productapi.addProduct(this.productForm.value).subscribe({
+      next: (res) => {
+        console.log('Sikeres mentés:', res);
+        alert('Sikeres mentés!');
+        this.productForm.reset();
+      },
+      error: (err) => {
+        console.error('Mentési hiba:', err);
+        alert('Hiba történt a hirdetés feladása során. Kérlek, próbáld újra.');
+      }
+    });
+  } else {
+    console.warn('Az űrlap érvénytelen, töltsd ki az összes mezőt!');
+    this.productForm.markAllAsTouched();
+  }
 }
+
 
 
 
