@@ -7,7 +7,7 @@ import { UserapiService } from './userapi.service';
 })
 export class ProductapiService {
 
-  private productsURL = "http://192.168.100.147:8000/api"
+  productsURL = "http://192.168.100.147:8000/api"
 
   constructor(
     private http: HttpClient,
@@ -24,5 +24,10 @@ export class ProductapiService {
     const headers = this.userapi.makeHeader();
     return this.http.post(this.productsURL + '/newproduct', productData, { headers } );
   }
+
+  updateProductImage(productId: number, imageUrl: string) {
+  const headers = this.userapi.makeHeader();
+  return this.http.patch(`${this.productsURL}/update/${productId}`, { image: imageUrl }, { headers });
+}
   
 }

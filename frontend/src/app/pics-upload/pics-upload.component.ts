@@ -14,6 +14,7 @@ import { tap } from 'rxjs/operators';
 export class PicsUploadComponent {
   selectedFile: File | null = null;
   uploadUrl: string = '';
+  lastUploadedPublicId: string | null = null;
 
   constructor(private uploadService: CloudinaryapiService){}
 
@@ -34,7 +35,8 @@ export class PicsUploadComponent {
       return this.uploadService.uploadFile(this.selectedFile).pipe(
         tap((res: any) => {
           this.uploadUrl = res.secure_url;
-          console.log('Kép feltöltve, URL:', this.uploadUrl);
+          this.lastUploadedPublicId = res.public_id;
+          console.log('Kép feltöltve, URL és Public_id:', this.uploadUrl, this.lastUploadedPublicId);
         })
       );
     }

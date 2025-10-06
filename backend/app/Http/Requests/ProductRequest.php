@@ -28,7 +28,7 @@ class ProductRequest extends FormRequest
             "description" => "max:200",
             "type_id" => "required",
             "price" => "required | numeric",
-            "image" => "required"
+            "image" => "nullable|string"
         ];
     }
 

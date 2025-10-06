@@ -261,3 +261,12 @@ input[type=text]:placeholder {
 #icon {
   width:60%;
 }
+
+
+input[type="submit"] {
+  margin-bottom: 20px;
+}
+
+.fadeIn.fifth {
+  margin-bottom: 15px;
+}

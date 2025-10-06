@@ -26,7 +26,7 @@ export class AdUploadComponent {
 
   ngOnInit(): void {
     this.productForm = this.builder.group({
-      name: ['', Validators.required],
+  name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]],
       type_id: ['', Validators.required],
       user_id: [localStorage.getItem('userId')],

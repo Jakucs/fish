@@ -1,4 +1,4 @@
-<h2 class="container">Add el nem használt horgászcuccaid</h2>
+<h2 class="container mt-3">Add el nem használt horgászcuccaid</h2>
 
 <form [formGroup]="productForm" (ngSubmit)="saveProduct()" novalidate>
 
@@ -11,9 +11,13 @@
            id="productName"
            placeholder="Add meg a termék nevét"
            [ngClass]="{'is-invalid': productForm.controls['name'].invalid && productForm.controls['name'].touched}">
-    <div *ngIf="productForm.controls['name'].invalid && productForm.controls['name'].touched" class="invalid-feedback">
-      Termék neve megadása kötelező.
-    </div>
+  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['required']" class="invalid-feedback">
+    Termék neve megadása kötelező.
+  </div>
+  
+  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['minlength']" class="invalid-feedback">
+    A termék neve legalább 3 karakter hosszú kell legyen.
+  </div>
   </div>
 
   <!-- Leírás -->
