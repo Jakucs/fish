@@ -1,1 +1,28 @@
-<p>product-detail works!</p>
+<div class="card" *ngIf="productDetails" style="width: 24rem;">
+  <div *ngIf="productDetails.imagesArray && productDetails.imagesArray.length > 0" id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+    
+    <!-- Képek -->
+    <div class="carousel-inner">
+      <div class="carousel-item" *ngFor="let img of productDetails.imagesArray; let i = index" [class.active]="i === 0">
+        <img [src]="img" class="d-block w-100" [alt]="productDetails.name">
+      </div>
+    </div>
+
+    <!-- Navigációs gombok -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Előző</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Következő</span>
+    </button>
+  </div>
+
+  <!-- Termék adatai -->
+  <div class="card-body">
+    <h5 class="card-title">{{ productDetails.name }}</h5>
+    <p class="card-text">{{ productDetails.description }}</p>
+    <p class="card-text fw-bold">{{ productDetails.price }} Ft</p>
+  </div>
+</div>

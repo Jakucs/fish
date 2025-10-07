@@ -40,16 +40,33 @@
   <!-- Ár -->
   <div class="mb-3 container">
     <label for="productPrice" class="form-label">Ár</label>
-    <input type="number"
-           formControlName="price"
-           class="form-control"
-           id="productPrice"
-           placeholder="Add meg az árat (Forint)"
-           [ngClass]="{'is-invalid': productForm.controls['price'].invalid && productForm.controls['price'].touched}">
+    
+    <div class="input-group">
+      <input type="number"
+            formControlName="price"
+            class="form-control"
+            id="productPrice"
+            placeholder="Add meg az árat"
+            [ngClass]="{'is-invalid': productForm.controls['price'].invalid && productForm.controls['price'].touched}">
+      <span class="input-group-text">Ft</span>
+    </div>
+
     <div *ngIf="productForm.controls['price'].invalid && productForm.controls['price'].touched" class="invalid-feedback">
       Ár megadása kötelező.
     </div>
+
+    <!-- Checkbox az ár nullázásához az input alatt -->
+    <div class="form-check mt-2">
+      <input class="form-check-input"
+            type="checkbox"
+            id="freePrice"
+            (change)="onFreePriceChange($event)">
+      <label class="form-check-label" for="freePrice">
+        Ingyenes termék
+      </label>
+    </div>
   </div>
+
 
   <div class="mb-3 container">
   <label for="productType" class="form-label">Kategória</label>

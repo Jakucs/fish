@@ -35,6 +35,16 @@ export class AdUploadComponent {
     });
   }
 
+  onFreePriceChange(event: any) {
+  if (event.target.checked) {
+    // Checkbox be van pipálva → ár 0
+    this.productForm.get('price')?.setValue(0);
+  } else {
+    // Checkbox üres → ár mező törlése vagy marad az előző érték
+    this.productForm.get('price')?.setValue(null);
+  }
+}
+
 
   saveProduct() {
     if (this.productForm.invalid) {

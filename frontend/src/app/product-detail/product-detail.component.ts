@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { ProductapiService } from '../shared/productapi.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [],
+  imports: [RouterModule, CommonModule],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
@@ -17,21 +18,38 @@ export class ProductDetailComponent {
     private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    const productId = this.route.snapshot.paramMap.get('id'); // az URL-ből
-    if (productId) {
-      this.productapi.getProduct(productId).subscribe({
-        next: (res: any) => {
-          console.log("Product details fetched successfully");
-          this.productDetails = res.data;
-          console.log("productDetails tartalma: ", this.productDetails);
-        },
-        error: (err: any) => {
-          console.log("Error fetching product details: ", err);
+ngOnInit(): void {
+  const productId = this.route.snapshot.paramMap.get('id');
+  if (productId) {
+    this.productapi.getProduct(productId).subscribe({
+      next: (res: any) => {
+        this.productDetails = res.data;
+        console.log(this.productDetails);
+        // Image mező normalizálása: mindig tömb
+        if (this.productDetails.image) {
+          try {
+            const parsed = JSON.parse(this.productDetails.image);
+            if (Array.isArray(parsed)) {
+              this.productDetails.imagesArray = parsed;
+            } else {
+              this.productDetails.imagesArray = [this.productDetails.image];
+            }
+          } catch {
+            // Nem JSON, sima string
+            this.productDetails.imagesArray = [this.productDetails.image];
+          }
+        } else {
+          this.productDetails.imagesArray = [];
         }
-      });
-    }
+
+      },
+      error: (err: any) => {
+        console.log("Error fetching product details: ", err);
+      }
+    });
   }
+}
+
 
 
 }
