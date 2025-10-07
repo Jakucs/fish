@@ -30,16 +30,17 @@ class ProductController extends ResponseController
         return $this->sendResponse(ProductResource::collection($products), "Adat betöltve");
         }
 
-        public function getProduct(Request $request){
-        $product = Product::where("name", $request["name"])->first();
-        if(is_null($product)){
-            return $this->sendError("Adathiba", ["Nincs ilyen termék"]);
+        // ProductController.php
+        public function getProduct($id){ // <--- ide jön a param
+            $product = Product::find($id);
+
+            if (is_null($product)) {
+                return $this->sendError("Adathiba", ["Nincs ilyen termék"]);
+            } else {
+                return $this->sendResponse(new ProductResource($product), "Adat betöltve");
+            }
         }
-        else
-        {
-            return $this->sendResponse(new ProductResource($product), "Adat betöltve");
-        }
-    }
+
 
 
         public function newProduct(ProductRequest $request){

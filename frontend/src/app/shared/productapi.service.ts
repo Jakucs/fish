@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserapiService } from './userapi.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,11 @@ export class ProductapiService {
     return this.http.get(this.productsURL + '/products');
   }
 
+  getProduct(id: string): Observable<any> {
+    return this.http.get(`${this.productsURL}/product/${id}`);
+  }
+
+
   addProduct(productData: any){
     const headers = this.userapi.makeHeader();
     return this.http.post(this.productsURL + '/newproduct', productData, { headers } );
@@ -29,5 +35,6 @@ export class ProductapiService {
   const headers = this.userapi.makeHeader();
   return this.http.patch(`${this.productsURL}/update/${productId}`, { image: imageUrl }, { headers });
 }
+
   
 }

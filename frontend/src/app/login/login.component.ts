@@ -57,7 +57,9 @@ export class LoginComponent {
         this.loggedIn = true;
         console.log('LocalStorage tartalom:', localStorage.getItem('token'), localStorage.getItem('userId'));
         this.loginForm.reset();
-        this.router.navigate(['myads']);
+        this.router.navigate(['myads']).then(() => {
+          window.location.reload();
+        });
       },
       error: (error: HttpErrorResponse) => {
         console.log("Belépési hiba:", error);

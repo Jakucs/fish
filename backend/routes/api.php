@@ -30,7 +30,7 @@ Route::post( "/login", [ AuthController::class, "login" ]);
 Route::post( "/logout", [ AuthController::class, "logout" ]);
 Route::get( "/users", [ AuthController::class, "getUsers" ]);
 Route::get ("/products", [ProductController::class, "getProducts"]);
-//Route::get ("/product", [ProductController::class, "getProduct"]);
+Route::get ("/product/{id}", [ProductController::class, "getProduct"]);
 
 
 

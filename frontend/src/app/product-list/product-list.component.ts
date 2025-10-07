@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { ProductapiService } from '../shared/productapi.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -44,5 +45,7 @@ export class ProductListComponent {
       });
     }
 
-
+    goToDetails(productId: number) {
+      
+    }
 }

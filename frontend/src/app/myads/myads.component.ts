@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AdapiService } from '../shared/adapi.service';
 import { UserapiService } from '../shared/userapi.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-myads',
@@ -16,6 +17,7 @@ export class MyadsComponent {
   constructor(
     private userapi: UserapiService,
     private adapi: AdapiService,
+    private router: Router
   ) { }
 
 
@@ -35,6 +37,10 @@ export class MyadsComponent {
           console.log("Hiba a hirdetések betöltésekor: ", error)
         }
       });
+    }
+
+    goToAdupload() {
+      this.router.navigate(['/ad_upload']);
     }
 
 

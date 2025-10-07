@@ -1,28 +1,48 @@
 <div class="container mt-4">
-  <div class="row g-3">
-    @for (adItem of adList; track adItem.id) {
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100 shadow-sm">
-        <img
-          *ngIf="adItem.imagesArray && adItem.imagesArray.length > 0"
-          [src]="adItem.imagesArray[0]"
-          class="card-img-top"
-          alt="{{ adItem.name }}"
-        >
 
-          <div class="card-body">
-            <h5 class="card-title">{{ adItem.name }}</h5>
-            <p class="card-text text-muted small">{{ adItem.description }}</p>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item fw-semibold">{{ adItem.price }} Ft</li>
-            <li class="list-group-item">{{ adItem.type }}</li>
-          </ul>
-          <div class="card-body text-center">
-            <a href="#" class="btn btn-outline-primary btn-sm">Részletek</a>
+  <!-- 1️⃣ Ha van hirdetés -->
+  @if(adList && adList.length > 0) {
+    <div class="row g-3">
+      @for(adItem of adList; track adItem.id) {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="card h-100 shadow-sm">
+
+            <!-- Kép vagy helyettesítő -->
+            @if(adItem.imagesArray?.length > 0) {
+              <img [src]="adItem.imagesArray[0]" class="card-img-top" alt="{{ adItem.name }}">
+            } @else {
+              <div class="d-flex align-items-center justify-content-center bg-light text-muted"
+                   style="height: 200px; font-size: 14px;">
+                Nincs kép feltöltve
+              </div>
+            }
+
+            <div class="card-body">
+              <h5 class="card-title">{{ adItem.name }}</h5>
+              <p class="card-text text-muted small">{{ adItem.description }}</p>
+            </div>
+
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item fw-semibold">{{ adItem.price }} Ft</li>
+              <li class="list-group-item">{{ adItem.type }}</li>
+            </ul>
+
+            <div class="card-body text-center">
+              <a href="#" class="btn btn-outline-primary btn-sm">Részletek</a>
+            </div>
+
           </div>
         </div>
+      }
+    </div>
+  } @else {
+    <!-- 2️⃣ Ha nincs hirdetés -->
+    <div class="d-flex flex-column align-items-center mt-5">
+      <div class="text-center text-muted mb-3" style="font-size:18px;">
+        Nem adtál még fel hirdetést.
       </div>
-    }
-  </div>
+      <button class="btn btn-dark" (click)="goToAdupload()">Hirdetés feladás</button>
+    </div>
+  }
+
 </div>
