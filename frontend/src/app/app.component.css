@@ -2,3 +2,12 @@
   cursor: pointer;
 }
 
+@media (max-width: 480px) {
+  .navbar-brand img {
+    height: 30px;
+  }
+  .btn {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+}

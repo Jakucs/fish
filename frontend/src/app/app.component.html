@@ -1,17 +1,21 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="images/fishdrobe5.png" alt="FishDrobe Logo" style="height: 40px; width: 90px;">
+<nav class="navbar bg-body-tertiary px-2">
+  <div class="container-fluid d-flex align-items-center justify-content-between flex-nowrap">
+    
+    <!-- Bal oldal: logó -->
+    <a class="navbar-brand flex-shrink-0" href="#">
+      <img src="images/fishdrobe5.png" alt="FishDrobe Logo" style="height: 35px; width: auto;">
     </a>
-      <div class="d-flex align-items-center gap-2 ms-auto">
 
-    <button class="btn btn-dark ms-auto" (click)="goToAdUpload()">Hirdetés feladás</button>
-    <button *ngIf="!isLoggedIn" class="btn btn-dark ms-auto" (click)="goToLogin()">Belépés</button>
+    <!-- Jobb oldal: gombok -->
+    <div class="d-flex align-items-center gap-2 flex-shrink-1 flex-nowrap">
+      <button class="btn btn-dark btn-sm text-nowrap" (click)="goToAdUpload()">Hirdetés feladás</button>
+      <button *ngIf="!isLoggedIn" class="btn btn-dark btn-sm text-nowrap" (click)="goToLogin()">Belépés</button>
+
 
     <!-- Ha be van jelentkezve -->
     <div *ngIf="isLoggedIn" class="dropdown ms-auto">
       <button
-        class="btn btn-dark dropdown-toggle"
+        class="btn btn-dark btn-sm text-nowrap dropdown-toggle"
         type="button"
         id="profileDropdown"
         data-bs-toggle="dropdown"
