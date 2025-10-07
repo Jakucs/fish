@@ -1,42 +1,43 @@
 <div class="container mt-4">
-
-  <!-- 1️⃣ Ha van hirdetés -->
   @if(adList && adList.length > 0) {
-    <div class="row g-3">
+    <div class="list-group">
       @for(adItem of adList; track adItem.id) {
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <div class="card h-100 shadow-sm">
-
-            <!-- Kép vagy helyettesítő -->
+        <div class="list-group-item d-flex align-items-center justify-content-between mb-2 p-2 shadow-sm">
+          
+          <!-- Bal kép -->
+          <div class="me-3 flex-shrink-0">
             @if(adItem.imagesArray?.length > 0) {
-              <img [src]="adItem.imagesArray[0]" class="card-img-top" alt="{{ adItem.name }}">
+              <img [src]="adItem.imagesArray[0]" alt="{{ adItem.name }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
             } @else {
-              <div class="d-flex align-items-center justify-content-center bg-light text-muted"
-                   style="height: 200px; font-size: 14px;">
-                Nincs kép feltöltve
+              <div class="bg-light text-muted d-flex align-items-center justify-content-center" style="width:80px; height:80px; font-size:12px;">
+                Nincs kép
               </div>
             }
-
-            <div class="card-body">
-              <h5 class="card-title">{{ adItem.name }}</h5>
-              <p class="card-text text-muted small">{{ adItem.description }}</p>
-            </div>
-
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item fw-semibold">{{ adItem.price }} Ft</li>
-              <li class="list-group-item">{{ adItem.type }}</li>
-            </ul>
-
-            <div class="card-body text-center">
-              <a href="#" class="btn btn-outline-primary btn-sm">Részletek</a>
-            </div>
-
           </div>
+
+          <!-- Középső rész: cím, leírás, ár -->
+          <div class="flex-grow-1">
+            <h6 class="mb-1">{{ adItem.name }}</h6>
+            <p class="mb-1 text-muted small">{{ adItem.description }}</p>
+            <span class="fw-semibold">{{ adItem.price }} Ft</span>
+          </div>
+
+          <!-- Jobb oldali 3 pötty -->
+          <div class="ms-3 dropdown">
+            <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              &#x22EE; <!-- függőleges három pont -->
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Szerkesztés</a></li>
+              <li><a class="dropdown-item" href="#">Törlés</a></li>
+              <li><a class="dropdown-item" href="#">Megtekintés</a></li>
+            </ul>
+          </div>
+
         </div>
       }
     </div>
   } @else {
-    <!-- 2️⃣ Ha nincs hirdetés -->
     <div class="d-flex flex-column align-items-center mt-5">
       <div class="text-center text-muted mb-3" style="font-size:18px;">
         Nem adtál még fel hirdetést.
@@ -44,5 +45,5 @@
       <button class="btn btn-dark" (click)="goToAdupload()">Hirdetés feladás</button>
     </div>
   }
-
 </div>
+
