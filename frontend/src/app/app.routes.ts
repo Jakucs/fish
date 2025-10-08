@@ -9,6 +9,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { AdUploadComponent } from './ad-upload/ad-upload.component';
 import { MyadsComponent } from './myads/myads.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { SuccessfulupdateComponent } from './successfulupdate/successfulupdate.component';
 
 export const routes: Routes = [
     { path: "products", component: ProductListComponent},
@@ -19,6 +20,7 @@ export const routes: Routes = [
     { path: 'ad_upload', component: AdUploadComponent},
     { path: 'myads', component: MyadsComponent},
     { path: 'successfulregister', component: SuccessfulregisterComponent},
+    { path: 'successfulupdate', component: SuccessfulupdateComponent},
     { path: 'product/:id', component: ProductDetailComponent},
     { path: '', component: ProductListComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }

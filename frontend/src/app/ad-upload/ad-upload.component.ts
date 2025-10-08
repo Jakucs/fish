@@ -3,8 +3,9 @@ import { PicsUploadComponent } from "../pics-upload/pics-upload.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductapiService } from '../shared/productapi.service';
-import { AdapiService } from '../shared/adapi.service';
 import { UserapiService } from '../shared/userapi.service';
+import { PicsShareService } from '../shared/pics-share.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ad-upload',
@@ -20,8 +21,9 @@ export class AdUploadComponent {
   constructor(
     private builder: FormBuilder,
     private productapi: ProductapiService,
-    private adapi: AdapiService,
     private userapi: UserapiService,
+    private picsshare: PicsShareService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -51,23 +53,26 @@ export class AdUploadComponent {
       Object.values(this.productForm.controls).forEach(control => control.markAsTouched());
       return;
     }
+
     if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
+      this.picsUpload.uploadImages().subscribe({
+        next: (res: any[]) => {
+          if (res && res.length > 0) {
+            const urls = res.map(r => r.secure_url);
+            this.productForm.patchValue({ image: JSON.stringify(urls) });
 
-    this.picsUpload.uploadImages().subscribe({
-      next: (res: any[]) => {
-        if (res && res.length > 0) {
-          const urls = res.map(r => r.secure_url);
-          this.productForm.patchValue({ image: JSON.stringify(urls) });
+            // ⬇️ Itt adod tovább más komponenseknek
+            this.picsshare.updateUrls(urls);
+          }
+
+          this.saveProductToBackend();
+          this.router.navigate(['/successfulupdate']);
+        },
+        error: (err: any) => {
+          console.error('Feltöltési hiba:', err);
         }
-        this.saveProductToBackend();
-      },
-      error: (err: any) => {
-        console.error('Feltöltési hiba:', err);
-      }
-    });
-
+      });
     } else {
-      // If no pics, just simple save
       this.saveProductToBackend();
     }
   }

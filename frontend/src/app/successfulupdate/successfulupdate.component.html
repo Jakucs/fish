@@ -1,0 +1,6 @@
+<div *ngIf="urls.length > 0">
+  <h6>📷 Feltöltött képek (másik komponens):</h6>
+  <div class="d-flex flex-wrap gap-2">
+    <img *ngFor="let url of urls" [src]="url" class="img-thumbnail" style="width: 70px; height: 70px;">
+  </div>
+</div>
