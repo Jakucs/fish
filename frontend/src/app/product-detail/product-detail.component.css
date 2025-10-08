@@ -1,0 +1,24 @@
+/* Alapértelmezett card és kép */
+.product-card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.product-image {
+  height: 300px;
+  object-fit: cover;
+}
+
+/* Kép nagyobb asztali nézetben */
+@media (min-width: 992px) {
+  .product-image {
+    height: 450px;
+  }
+}
+
+/* Nagy monitoron még magasabb */
+@media (min-width: 1400px) {
+  .product-image {
+    height: 500px;
+  }
+}

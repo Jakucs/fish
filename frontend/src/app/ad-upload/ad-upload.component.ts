@@ -66,7 +66,6 @@ export class AdUploadComponent {
           }
 
           this.saveProductToBackend();
-          this.router.navigate(['/successfulupdate']);
         },
         error: (err: any) => {
           console.error('Feltöltési hiba:', err);
@@ -79,13 +78,14 @@ export class AdUploadComponent {
 
   saveProductToBackend() {
     if (this.productForm.valid) {
-      console.log('Hirdetés mentve:', this.productForm.value);
       const headers = this.userapi.makeHeader();
       this.productapi.addProduct(this.productForm.value).subscribe({
         next: (res: any) => {
           if (res.success) {
           console.log('✅ Sikeres mentés:', res);
           this.productForm.reset();
+          this.router.navigate(['/successfulupdate']);
+          console.log('Hirdetés mentve:', this.productForm.value);
         } else{
           console.error('❌ Sikertelen mentés:', res);
           alert(`Hiba a mentés során: ${res.message}`);

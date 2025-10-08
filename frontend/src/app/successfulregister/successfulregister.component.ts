@@ -19,6 +19,6 @@ export class SuccessfulregisterComponent {
   }
 
     navigateToLogin(){
-    this.router.navigate([{outlets: {top: ['login']}}]);
+    this.router.navigate(['login']);
   }
 }

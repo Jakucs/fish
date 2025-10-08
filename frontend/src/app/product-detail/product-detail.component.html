@@ -1,28 +1,35 @@
-<div class="card" *ngIf="productDetails" style="width: 24rem;">
-  <div *ngIf="productDetails.imagesArray && productDetails.imagesArray.length > 0" id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-    
-    <!-- Képek -->
-    <div class="carousel-inner">
-      <div class="carousel-item" *ngFor="let img of productDetails.imagesArray; let i = index" [class.active]="i === 0">
-        <img [src]="img" class="d-block w-100" [alt]="productDetails.name">
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+      <div class="card shadow-lg border-0 product-card" *ngIf="productDetails">
+        
+        <!-- Képek -->
+        <div *ngIf="productDetails.imagesArray && productDetails.imagesArray.length > 0" id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item" *ngFor="let img of productDetails.imagesArray; let i = index" [class.active]="i === 0">
+              <img [src]="img" class="d-block w-100 product-image" [alt]="productDetails.name">
+            </div>
+          </div>
+
+          <!-- Navigációs gombok -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Előző</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Következő</span>
+          </button>
+        </div>
+
+        <!-- Termék adatai -->
+        <div class="card-body text-center">
+          <h5 class="card-title mb-2">{{ productDetails.name }}</h5>
+          <p class="card-text text-muted">{{ productDetails.description }}</p>
+          <p class="card-text fw-bold fs-5 mt-3">{{ productDetails.price }} Ft</p>
+        </div>
+
       </div>
     </div>
-
-    <!-- Navigációs gombok -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Előző</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Következő</span>
-    </button>
-  </div>
-
-  <!-- Termék adatai -->
-  <div class="card-body">
-    <h5 class="card-title">{{ productDetails.name }}</h5>
-    <p class="card-text">{{ productDetails.description }}</p>
-    <p class="card-text fw-bold">{{ productDetails.price }} Ft</p>
   </div>
 </div>

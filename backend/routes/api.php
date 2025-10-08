@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\LocationController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -39,3 +40,5 @@ Route::get ("/type", [TypeController::class, "getType"]);
 Route::post ("/newtype", [TypeController::class, "newType"]);
 Route::put ("/updatetype/{id}", [TypeController::class, "updateType"]);
 Route::delete ("/destroytype/{id}", [TypeController::class, "destroyType"]);
+
+Route::post ("/newlocation", [LocationController::class, "newLocation"]);

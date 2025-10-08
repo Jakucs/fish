@@ -19,4 +19,8 @@ class Product extends Model
     public function type(){
         return $this->belongsTo(Type::class);
     }
+
+    public function location(){
+        return $this->hasOne(Location::class);
+    }
 }

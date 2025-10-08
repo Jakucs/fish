@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { PicsShareService } from '../shared/pics-share.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-successfulupdate',
@@ -12,7 +13,7 @@ export class SuccessfulupdateComponent {
 
     urls: string[] = [];
 
-    constructor(private picsState: PicsShareService) {}
+    constructor(private picsState: PicsShareService, private router: Router) {}
 
     ngOnInit(): void {
       this.picsState.urls$.subscribe(urls => {
@@ -20,5 +21,8 @@ export class SuccessfulupdateComponent {
       });
     }
 
+    goToMyAds() {
+      this.router.navigate(['/myads']);
+    }
 
 }
