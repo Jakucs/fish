@@ -85,7 +85,6 @@ export class AdUploadComponent {
         next: (res: any) => {
           if (res.success) {
           console.log('✅ Sikeres mentés:', res);
-          alert('Sikeres mentés!');
           this.productForm.reset();
         } else{
           console.error('❌ Sikertelen mentés:', res);

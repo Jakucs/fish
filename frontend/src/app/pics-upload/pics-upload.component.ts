@@ -51,29 +51,29 @@ export class PicsUploadComponent {
 
 
 
-  uploadImages(): Observable<any> {
-    if (!this.selectedFiles || this.selectedFiles.length === 0) {
-      console.warn('Nincs kiválasztott fájl!');
-      return of([]); // üres observable, hogy ne dobjon hibát
+    uploadImages(): Observable<any> {
+      if (!this.selectedFiles || this.selectedFiles.length === 0) {
+        console.warn('Nincs kiválasztott fájl!');
+        return of([]); // üres observable, hogy ne dobjon hibát
+      }
+
+      return this.uploadService.uploadFiles(this.selectedFiles).pipe(
+        tap(results => {
+          this.uploadUrls = results.map((r: any) => r.secure_url);
+          console.log('✅ Feltöltve:', this.uploadUrls);
+
+          // Itt adjuk át a képeket a többi komponensnek
+          this.picsshare.updateUrls(this.uploadUrls);
+        })
+      );
     }
 
-    return this.uploadService.uploadFiles(this.selectedFiles).pipe(
-      tap(results => {
-        this.uploadUrls = results.map((r: any) => r.secure_url);
-        console.log('✅ Feltöltve:', this.uploadUrls);
-
-        // 👇 Itt adod át a képeket a többi komponensnek
-        this.picsshare.updateUrls(this.uploadUrls);
-      })
-    );
-  }
 
 
-
-      removeImage(index: number) {
-        this.selectedFiles.splice(index, 1);
-        this.uploadUrls.splice(index, 1);
-      }
+    removeImage(index: number) {
+      this.selectedFiles.splice(index, 1);
+      this.uploadUrls.splice(index, 1);
+    }
 
 
 }
