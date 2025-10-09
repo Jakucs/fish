@@ -1,15 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
 import { PicsUploadComponent } from "../pics-upload/pics-upload.component";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductapiService } from '../shared/productapi.service';
 import { UserapiService } from '../shared/userapi.service';
 import { PicsShareService } from '../shared/pics-share.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-ad-upload',
-  imports: [PicsUploadComponent, ReactiveFormsModule, CommonModule],
+  imports: [PicsUploadComponent, ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './ad-upload.component.html',
   styleUrl: './ad-upload.component.css'
 })
@@ -17,13 +18,17 @@ export class AdUploadComponent {
   @ViewChild(PicsUploadComponent) picsUpload!: PicsUploadComponent;
 
   productForm!: FormGroup;
+  postalCode: string = '';
+  city: string = '';
+  isCityReadonly = true;
 
   constructor(
     private builder: FormBuilder,
     private productapi: ProductapiService,
     private userapi: UserapiService,
     private picsshare: PicsShareService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -34,6 +39,8 @@ export class AdUploadComponent {
       user_id: [localStorage.getItem('userId')],
       price: ['', Validators.required],
       image: [''],
+      postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
+      city: ['']
     });
   }
 
@@ -101,4 +108,33 @@ export class AdUploadComponent {
       this.productForm.markAllAsTouched();
     }
   }
+
+
+
+  getCityByZip() {
+    const postalCode = this.productForm.get('postalCode')?.value;
+
+    if (postalCode && postalCode.length === 4) {
+      this.http.get<any>(`https://api.zippopotam.us/hu/${postalCode}`).subscribe({
+        next: (data) => {
+          const city = data.places?.[0]?.['place name'];
+          if (city) {
+            this.productForm.patchValue({ city: city });
+            this.isCityReadonly = true; // ✅ automatikus találat → readonly
+          } else {
+            console.warn('Nem található város az adott irányítószámhoz');
+            this.isCityReadonly = false; // ❌ nem található → engedjük kézzel
+          }
+        },
+        error: (err) => {
+          console.error('API hiba:', err);
+          this.isCityReadonly = false; // ❌ API hiba → engedjük kézzel
+        }
+      });
+    } else {
+      this.isCityReadonly = false; // ha még nincs rendes irányítószám
+    }
+  }
+
+
 }

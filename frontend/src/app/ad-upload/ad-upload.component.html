@@ -101,6 +101,30 @@
   </div>
 </div>
 
+<div class="mb-3 container">
+  <label for="postalCode" class="form-label">Irányítószám</label>
+  <input type="text"
+         formControlName="postalCode"
+         class="form-control"
+         id="postalCode"
+         placeholder="Pl. 1061"
+         (input)="getCityByZip()">
+</div>
+
+<div class="mb-3 container">
+  <label for="city" class="form-label">Város</label>
+  <input type="text"
+         formControlName="city"
+         class="form-control"
+         id="city"
+         [readonly]="isCityReadonly"
+         placeholder="Automatikusan kitöltve vagy kézzel megadható">
+</div>
+
+
+
+
+
 
   <div class="container mb-3">
     <app-pics-upload class="container"></app-pics-upload>
@@ -108,11 +132,3 @@
   </div>
 
 </form>
-
-
-
-
-
-
-
-
