@@ -55,6 +55,12 @@ class ProductController extends ResponseController
         $product->price = $request["price"];
         $product->image	= $request["image"];
         $product->save();
+
+        // Helyszín mentése a locations táblába
+        $product->location()->create([
+        'postal_code' => $request['postal_code'],
+        'city' => $request['city'],
+    ]);
         return $this->sendResponse(new ProductResource($product), "Sikeres felvitel!");
     }
 

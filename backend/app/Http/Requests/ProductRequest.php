@@ -28,7 +28,9 @@ class ProductRequest extends FormRequest
             "description" => "max:200",
             "type_id" => "required",
             "price" => "required | numeric",
-            "image" => "nullable|string"
+            "image" => "nullable|string",
+            'postal_code' => 'required|string|min:4|max:4',
+            'city' => 'required|string|min:2',
         ];
     }
 
@@ -53,7 +55,18 @@ class ProductRequest extends FormRequest
             "type_id.required" => "A típus megadása kötelező",
             "price.required" => "Az ár megadása kötelező",
             "price.numeric" => "Az ár csak szám lehet",
-            "image.required" => "A kép megadása kötelező"
+            "image.required" => "A kép megadása kötelező",
+
+            // ⬇️ PostalCode üzenetek
+            "postal_code.required" => "Az irányítószám megadása kötelező",
+            "postal_code.string" => "Az irányítószám szöveges formátumú kell legyen",
+            "postal_code.min" => "Az irányítószám legalább 4 karakter kell legyen",
+            "postal_code.max" => "Az irányítószám legfeljebb 4 karakter lehet",
+
+            // ⬇️ City üzenetek
+            "city.required" => "A város megadása kötelező",
+            "city.string" => "A város neve szöveges formátumú kell legyen",
+            "city.min" => "A város neve legalább 2 karakter kell legyen",
         ];
     }
 }
