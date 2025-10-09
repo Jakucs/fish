@@ -18,7 +18,7 @@ export class AdUploadComponent {
   @ViewChild(PicsUploadComponent) picsUpload!: PicsUploadComponent;
 
   productForm!: FormGroup;
-  postalCode: string = '';
+  postal_code: string = '';
   city: string = '';
   isCityReadonly = true;
 
@@ -39,7 +39,7 @@ export class AdUploadComponent {
       user_id: [localStorage.getItem('userId')],
       price: ['', Validators.required],
       image: [''],
-      postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
+      postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
       city: ['']
     });
   }
@@ -112,10 +112,10 @@ export class AdUploadComponent {
 
 
   getCityByZip() {
-    const postalCode = this.productForm.get('postalCode')?.value;
+    const postal_code = this.productForm.get('postal_code')?.value;
 
-    if (postalCode && postalCode.length === 4) {
-      this.http.get<any>(`https://api.zippopotam.us/hu/${postalCode}`).subscribe({
+    if (postal_code && postal_code.length === 4) {
+      this.http.get<any>(`https://api.zippopotam.us/hu/${postal_code}`).subscribe({
         next: (data) => {
           const city = data.places?.[0]?.['place name'];
           if (city) {

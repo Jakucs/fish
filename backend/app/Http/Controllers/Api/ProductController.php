@@ -30,9 +30,8 @@ class ProductController extends ResponseController
         return $this->sendResponse(ProductResource::collection($products), "Adat betöltve");
         }
 
-        // ProductController.php
-        public function getProduct($id){ // <--- ide jön a param
-            $product = Product::find($id);
+        public function getProduct($id){
+            $product = Product::with('location', 'user')->find($id);
 
             if (is_null($product)) {
                 return $this->sendError("Adathiba", ["Nincs ilyen termék"]);
@@ -40,6 +39,7 @@ class ProductController extends ResponseController
                 return $this->sendResponse(new ProductResource($product), "Adat betöltve");
             }
         }
+
 
 
 

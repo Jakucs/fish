@@ -1,34 +1,54 @@
-<div class="container mt-5">
+<div class="container mt-5" *ngIf="productDetails">
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
-      <div class="card shadow-lg border-0 product-card" *ngIf="productDetails">
-        
-        <!-- Képek -->
-        <div *ngIf="productDetails.imagesArray && productDetails.imagesArray.length > 0" id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item" *ngFor="let img of productDetails.imagesArray; let i = index" [class.active]="i === 0">
-              <img [src]="img" class="d-block w-100 product-image" [alt]="productDetails.name">
-            </div>
+      <div class="card shadow-lg border-0 product-card">
+
+        <!-- Termék galéria -->
+        <div *ngIf="productDetails.imagesArray && productDetails.imagesArray.length > 0" class="mb-4">
+          <img [src]="productDetails.imagesArray[0]" class="d-block w-100 product-image rounded" [alt]="productDetails.name">
+        </div>
+
+        <!-- Termék alap adatai -->
+        <div class="card-body">
+          <h2 class="card-title fw-bold">{{ productDetails.name }}</h2>
+          <p class="text-muted mb-1">{{ productDetails.type_name }}</p>
+          <p class="fw-bold fs-4 text-success">{{ productDetails.price }} Ft</p>
+
+          <!-- Hirdetés adatok -->
+          <div class="d-flex justify-content-between mb-3">
+            <span><i class="bi bi-geo-alt-fill"></i> {{ productDetails.location?.city }}, {{ productDetails.location?.postal_code }}</span>
+            <span><i class="bi bi-person-circle"></i> {{ productDetails.user_name }}</span>
           </div>
 
-          <!-- Navigációs gombok -->
-          <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Előző</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Következő</span>
-          </button>
-        </div>
+          <!-- Rövid leírás -->
+          <p class="card-text mb-3">{{ productDetails.description }}</p>
 
-        <!-- Termék adatai -->
-        <div class="card-body text-center">
-          <h5 class="card-title mb-2">{{ productDetails.name }}</h5>
-          <p class="card-text text-muted">{{ productDetails.description }}</p>
-          <p class="card-text fw-bold fs-5 mt-3">{{ productDetails.price }} Ft</p>
-        </div>
+          <!-- Tulajdonságok táblázat -->
+          <table class="table table-sm table-bordered mb-4">
+            <tbody>
+              <tr>
+                <th scope="row">Állapot</th>
+                <td>{{ productDetails.condition || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Garancia</th>
+                <td>{{ productDetails.warranty || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Egyéb jellemzők</th>
+                <td>{{ productDetails.features || 'N/A' }}</td>
+              </tr>
+            </tbody>
+          </table>
 
+          <!-- CTA / Akció gomb -->
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg" type="button">
+              Kapcsolatfelvétel a hirdetővel
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
