@@ -27,6 +27,7 @@ class Product extends JsonResource
                     'firstname' => $this->user?->firstname,
                     'lastname' => $this->user?->lastname,
                     'email' => $this->user?->email,
+                    'phone_number' => $this->user?->phone_number
                 ],
             ];
         }

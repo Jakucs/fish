@@ -122,6 +122,22 @@
 </div>
 
 
+<div *ngIf="showPhoneInput" class="mb-3 container">
+  <label for="phone_number" class="form-label">Telefonszám</label>
+  <input type="text"
+         formControlName="phone_number"
+         class="form-control"
+         id="phone_number"
+         placeholder="Add meg a telefonszámodat"
+         [ngClass]="{'is-invalid': productForm.controls['phone_number'].invalid && productForm.controls['phone_number'].touched}">
+  <div *ngIf="productForm.controls['phone_number'].invalid && productForm.controls['phone_number'].touched" class="invalid-feedback">
+    Telefonszám megadása kötelező.
+  </div>
+</div>
+
+
+
+
 
 
 

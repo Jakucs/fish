@@ -62,4 +62,11 @@ class AuthController extends ResponseController
         $users = User::all();
         return $users;
     }
+
+    public function getUserDetails(Request $request) {
+        return response()->json([
+            'success' => true,
+            'data' => $request->user()
+        ]);
+    }
 }

@@ -21,6 +21,7 @@ export class AdUploadComponent {
   postal_code: string = '';
   city: string = '';
   isCityReadonly = true;
+  showPhoneInput = true;
 
   constructor(
     private builder: FormBuilder,
@@ -31,18 +32,47 @@ export class AdUploadComponent {
     private http: HttpClient
   ) { }
 
-  ngOnInit(): void {
-    this.productForm = this.builder.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required]],
-      type_id: ['', Validators.required],
-      user_id: [localStorage.getItem('userId')],
-      price: ['', Validators.required],
-      image: [''],
-      postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
-      city: ['']
-    });
-  }
+ngOnInit(): void {
+  this.productForm = this.builder.group({
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    description: ['', [Validators.required]],
+    type_id: ['', Validators.required],
+    user_id: [localStorage.getItem('userId')],
+    price: ['', Validators.required],
+    image: [''],
+    postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
+    city: [''],
+    phone_number: ['']
+  });
+
+  // Alapból mutatjuk az inputot
+  this.showPhoneInput = true;
+
+  this.userapi.getUserDetails().subscribe({
+    next: (res: any) => {
+      console.log('Felhasználói adatok:', res);
+      if (res.success) {
+        const phone = res.data.phone_number;
+        if (phone) {
+          // Ha van telefonszám → ne mutassuk az inputot
+          this.showPhoneInput = false;
+
+          // Formot is előtöltjük az API értékkel (bár az input nem látszik)
+          this.productForm.patchValue({ phone_number: phone });
+        } else {
+          // Ha nincs telefonszám → inputot mutatjuk
+          this.showPhoneInput = true;
+        }
+      }
+    },
+    error: (err: any) => {
+      console.error('Hiba a felhasználói adatok lekérésekor:', err);
+      // API hiba esetén mutassuk az inputot
+      this.showPhoneInput = true;
+    }
+  });
+}
+
 
   onFreePriceChange(event: any) {
   if (event.target.checked) {

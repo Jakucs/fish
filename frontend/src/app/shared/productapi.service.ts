@@ -21,6 +21,8 @@ export class ProductapiService {
     return this.http.get(this.productsURL + '/products');
   }
 
+  //Mindent releváns adatot lekérünk egy termékről ID alapján és megis kapjuk, user táblából a phone_number-t, locations táblából a várost irányítószámmal együtt
+  //De végül nem használjuk fel, mert külön api hívásként kezeljük a user adatokat
   getProduct(id: string): Observable<any> {
     return this.http.get(`${this.productsURL}/product/${id}`);
   }

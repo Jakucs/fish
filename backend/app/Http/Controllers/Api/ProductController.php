@@ -61,6 +61,15 @@ class ProductController extends ResponseController
         'postal_code' => $request['postal_code'],
         'city' => $request['city'],
     ]);
+
+
+        // 🔹 Telefonszám mentése a users táblába
+        if ($request->has('phone_number') && $request['phone_number']) {
+            $user = Auth::user(); // vagy User::find($userId)
+            $user->phone_number = $request['phone_number'];
+            $user->save();
+        }
+
         return $this->sendResponse(new ProductResource($product), "Sikeres felvitel!");
     }
 
