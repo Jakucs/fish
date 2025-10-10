@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
     {
         return [
             "name" => "required | min:3 | max:30",
-            "description" => "max:200",
+            "description" => "max:2000",
             "type_id" => "required",
             "price" => "required | numeric",
             "image" => "nullable|string",
@@ -51,7 +51,7 @@ class ProductRequest extends FormRequest
             "name.min" => "Product minimum 3 karakter kell legyen",
             "name.max" => "Product maximum 30 karakter kell lehet",
 
-            "description.max" => "A leírás maximum 200 karakter lehet",
+            "description.max" => "A leírás maximum 2000 karakter lehet",
             "type_id.required" => "A típus megadása kötelező",
             "price.required" => "Az ár megadása kötelező",
             "price.numeric" => "Az ár csak szám lehet",

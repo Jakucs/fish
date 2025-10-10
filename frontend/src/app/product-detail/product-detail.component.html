@@ -3,9 +3,60 @@
     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
       <div class="card shadow-lg border-0 product-card">
 
-        <!-- Termék galéria -->
+        <!-- Termék galéria (carousel) -->
         <div *ngIf="productDetails.imagesArray && productDetails.imagesArray.length > 0" class="mb-4">
-          <img [src]="productDetails.imagesArray[0]" class="d-block w-100 product-image rounded" [alt]="productDetails.name">
+          <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+            
+            <!-- Képek -->
+            <div class="carousel-inner">
+              <div
+                class="carousel-item"
+                *ngFor="let img of productDetails.imagesArray; let i = index"
+                [class.active]="i === 0"
+              >
+                <img
+                  [src]="img"
+                  class="d-block w-100 rounded product-image"
+                  [alt]="productDetails.name + ' kép ' + (i + 1)"
+                  style="object-fit: cover; max-height: 450px;"
+                />
+              </div>
+            </div>
+
+            <!-- Navigációs nyilak -->
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#productCarousel"
+              data-bs-slide="prev"
+            >
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Előző</span>
+            </button>
+
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#productCarousel"
+              data-bs-slide="next"
+            >
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Következő</span>
+            </button>
+
+            <!-- Indikátor pöttyök -->
+            <div class="carousel-indicators">
+              <button
+                *ngFor="let img of productDetails.imagesArray; let i = index"
+                type="button"
+                data-bs-target="#productCarousel"
+                [attr.data-bs-slide-to]="i"
+                [class.active]="i === 0"
+                [attr.aria-current]="i === 0 ? 'true' : null"
+                [attr.aria-label]="'Kép ' + (i + 1)"
+              ></button>
+            </div>
+          </div>
         </div>
 
         <!-- Termék alap adatai -->
@@ -14,30 +65,26 @@
           <p class="text-muted mb-1">{{ productDetails.type_name }}</p>
           <p class="fw-bold fs-4 text-success">{{ productDetails.price }} Ft</p>
 
-        <!-- Hirdetés adatok -->
-        <div class="d-flex align-items-center mb-3">
-          <!-- Bal oldalon a hely -->
-          <span>
-            <i class="bi bi-geo-alt-fill"></i> 
-            {{ productDetails.city }}, {{ productDetails.postal_code }}
-          </span>
+          <!-- Hirdetés adatok -->
+          <div class="d-flex align-items-center mb-3">
+            <!-- Bal oldalon a hely -->
+            <span>
+              <i class="bi bi-geo-alt-fill"></i>
+              {{ productDetails.city }}, {{ productDetails.postal_code }}
+            </span>
 
-          <!-- Jobb oldalra tolva a felhasználói adatok -->
-          <div class="ms-auto text-end">
-            <div>
-              <i class="bi bi-person-circle"></i> 
-              {{ productDetails.user.firstname }} {{ productDetails.user.lastname }}
-            </div>
-            <div>
-              <i class="bi bi-envelope-fill"></i> 
-              {{ productDetails.user.email }}
+            <!-- Jobb oldalra tolva a felhasználói adatok -->
+            <div class="ms-auto text-end">
+              <div>
+                <i class="bi bi-person-circle"></i>
+                {{ productDetails.user.firstname }} {{ productDetails.user.lastname }}
+              </div>
+              <div>
+                <i class="bi bi-envelope-fill"></i>
+                {{ productDetails.user.email }}
+              </div>
             </div>
           </div>
-        </div>
-
-
-          <!-- Rövid leírás -->
-          <p class="card-text mb-3">{{ productDetails.description }}</p>
 
           <!-- Tulajdonságok táblázat -->
           <table class="table table-sm table-bordered mb-4">
@@ -47,12 +94,8 @@
                 <td>{{ productDetails.condition || 'N/A' }}</td>
               </tr>
               <tr>
-                <th scope="row">Garancia</th>
-                <td>{{ productDetails.warranty || 'N/A' }}</td>
-              </tr>
-              <tr>
-                <th scope="row">Egyéb jellemzők</th>
-                <td>{{ productDetails.features || 'N/A' }}</td>
+                <th scope="row">Leírás</th>
+                <td>{{ productDetails.description || 'N/A' }}</td>
               </tr>
             </tbody>
           </table>

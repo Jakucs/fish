@@ -1,0 +1,22 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-body {
+  flex-grow: 1;
+}
+
+.card-text {
+  display: -webkit-box;
+  display: box;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3; /* ✅ szabványos property */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 3.6em;
+}
+
