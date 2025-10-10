@@ -14,11 +14,27 @@
           <p class="text-muted mb-1">{{ productDetails.type_name }}</p>
           <p class="fw-bold fs-4 text-success">{{ productDetails.price }} Ft</p>
 
-          <!-- Hirdetés adatok -->
-          <div class="d-flex justify-content-between mb-3">
-            <span><i class="bi bi-geo-alt-fill"></i> {{ productDetails.location?.city }}, {{ productDetails.location?.postal_code }}</span>
-            <span><i class="bi bi-person-circle"></i> {{ productDetails.user_name }}</span>
+        <!-- Hirdetés adatok -->
+        <div class="d-flex align-items-center mb-3">
+          <!-- Bal oldalon a hely -->
+          <span>
+            <i class="bi bi-geo-alt-fill"></i> 
+            {{ productDetails.city }}, {{ productDetails.postal_code }}
+          </span>
+
+          <!-- Jobb oldalra tolva a felhasználói adatok -->
+          <div class="ms-auto text-end">
+            <div>
+              <i class="bi bi-person-circle"></i> 
+              {{ productDetails.user.firstname }} {{ productDetails.user.lastname }}
+            </div>
+            <div>
+              <i class="bi bi-envelope-fill"></i> 
+              {{ productDetails.user.email }}
+            </div>
           </div>
+        </div>
+
 
           <!-- Rövid leírás -->
           <p class="card-text mb-3">{{ productDetails.description }}</p>
