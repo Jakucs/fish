@@ -101,6 +101,26 @@
   </div>
 </div>
 
+  <div class="mb-3 container">
+    <label for="productCondition" class="form-label">Állapot</label>
+    <select
+          formControlName="condition"
+          id="productCondition"
+          class="form-select"
+          [ngClass]="{'is-invalid': productForm.controls['condition'].invalid && productForm.controls['condition'].touched}">
+      <option value="" disabled hidden>Válassz állapotot</option>
+      <option value="új">Új</option>
+      <option value="újszerű">Újszerű</option>
+      <option value="jó állapotú">Jó állapotú</option>
+      <option value="használt">Használt</option>
+    </select>
+    <div *ngIf="productForm.controls['condition'].invalid && productForm.controls['condition'].touched" class="invalid-feedback">
+      Állapot kiválasztása kötelező.
+    </div>
+  </div>
+
+
+
 <div class="mb-3 container">
   <label for="postal_code" class="form-label">Irányítószám</label>
   <input type="text"

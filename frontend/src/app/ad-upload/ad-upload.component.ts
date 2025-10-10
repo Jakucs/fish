@@ -40,6 +40,8 @@ ngOnInit(): void {
     user_id: [localStorage.getItem('userId')],
     price: ['', Validators.required],
     image: [''],
+    condition: ['', Validators.required],
+    status: ['active', Validators.required],
     postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
     city: [''],
     phone_number: ['']

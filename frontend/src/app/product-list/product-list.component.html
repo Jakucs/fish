@@ -19,7 +19,10 @@
             <p class="card-text text-muted small">{{ productItem.description }}</p>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item fw-semibold">{{ productItem.price }} Ft</li>
+          <li class="list-group-item fw-semibold"
+              [ngClass]="{'text-success': productItem.price === 0}">
+            {{ productItem.price === 0 ? 'Ingyenes' : (productItem.price + ' Ft') }}
+          </li>
             <li class="list-group-item">{{ productItem.type }}</li>
           </ul>
 

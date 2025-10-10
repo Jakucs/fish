@@ -21,6 +21,8 @@ class Product extends JsonResource
                 'type_id' => $this->type_id,
                 'price' => $this->price,
                 'image' => $this->image,
+                'condition' => $this->condition, // új mező
+                'status' => $this->status,       // új mező
                 'postal_code' => $this->location?->postal_code,
                 'city' => $this->location?->city,
                 'user' => [

@@ -24,7 +24,7 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required | min:3 | max:30",
+            "name" => "required | min:3 | max:50",
             "description" => "max:2000",
             "type_id" => "required",
             "price" => "required | numeric",
@@ -49,7 +49,7 @@ class ProductRequest extends FormRequest
         return [
             "name.required" => "Product megadása szükséges",
             "name.min" => "Product minimum 3 karakter kell legyen",
-            "name.max" => "Product maximum 30 karakter kell lehet",
+            "name.max" => "Product maximum 50 karakter kell lehet",
 
             "description.max" => "A leírás maximum 2000 karakter lehet",
             "type_id.required" => "A típus megadása kötelező",

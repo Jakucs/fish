@@ -63,7 +63,12 @@
         <div class="card-body">
           <h2 class="card-title fw-bold">{{ productDetails.name }}</h2>
           <p class="text-muted mb-1">{{ productDetails.type_name }}</p>
-          <p class="fw-bold fs-4 text-success">{{ productDetails.price }} Ft</p>
+          <p class="fw-bold fs-4" 
+            [ngClass]="{'text-success': productDetails.price === 0}">
+            {{ productDetails.price === 0 ? 'Ingyenes' : (productDetails.price + ' Ft') }}
+          </p>
+
+
 
           <!-- Hirdetés adatok -->
           <div class="d-flex align-items-center mb-3">

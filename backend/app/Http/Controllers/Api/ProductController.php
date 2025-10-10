@@ -54,6 +54,8 @@ class ProductController extends ResponseController
         //$product->user_id = $request["user_id"];
         $product->price = $request["price"];
         $product->image	= $request["image"];
+        $product->condition = $request["condition"]; // pl. 'új', 'használt', 'újszerű'
+        $product->status = $request["status"];       // pl. 'pending', 'active', 'sold', 'archived'
         $product->save();
 
         // Helyszín mentése a locations táblába
