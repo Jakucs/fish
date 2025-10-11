@@ -25,6 +25,7 @@ class Product extends JsonResource
                 'status' => $this->status,       // új mező
                 'postal_code' => $this->location?->postal_code,
                 'city' => $this->location?->city,
+                'created_at' => $this->created_at?->format('Y.m.d H:i'),
                 'user' => [
                     'firstname' => $this->user?->firstname,
                     'lastname' => $this->user?->lastname,
