@@ -23,7 +23,7 @@ export class ProductapiService {
 
   //Mindent releváns adatot lekérünk egy termékről ID alapján és megis kapjuk, user táblából a phone_number-t, locations táblából a várost irányítószámmal együtt
   //De végül nem használjuk fel, mert külön api hívásként kezeljük a user adatokat
-  getProduct(id: string): Observable<any> {
+  getProduct(id: string | number): Observable<any> {
     return this.http.get(`${this.productsURL}/product/${id}`);
   }
 
@@ -33,10 +33,10 @@ export class ProductapiService {
     return this.http.post(this.productsURL + '/newproduct', productData, { headers } );
   }
 
-  updateProductImage(productId: number, imageUrl: string) {
-  const headers = this.userapi.makeHeader();
-  return this.http.patch(`${this.productsURL}/update/${productId}`, { image: imageUrl }, { headers });
-}
+    updateProductImage(productId: number, imageUrl: string) {
+    const headers = this.userapi.makeHeader();
+    return this.http.patch(`${this.productsURL}/update/${productId}`, { image: imageUrl }, { headers });
+  }
 
   
 }

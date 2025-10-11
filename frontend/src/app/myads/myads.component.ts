@@ -43,5 +43,9 @@ export class MyadsComponent {
       this.router.navigate(['/ad_upload']);
     }
 
+    goToModifyProduct(id: number) {
+      this.router.navigate(['/modify-product', id]);
+    }
+
 
 }
