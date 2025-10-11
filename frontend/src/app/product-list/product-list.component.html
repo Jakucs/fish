@@ -2,62 +2,61 @@
   <div class="row g-3">
     @for (productItem of productList; track productItem) {
       <div class="col-6 col-sm-4 col-md-3 col-lg-2">
- <!-- ez hiányzott -->
         <div
           class="card h-100 shadow-sm clickable-card"
           (click)="goToDetails(productItem.id)"
         >
-          <img
-            *ngIf="productItem.imagesArray && productItem.imagesArray.length > 0"
-            [src]="productItem.imagesArray[0]"
-            alt="{{ productItem.name }}"
-            class="card-img-top"
-            width="300"
-            height="200"
-            style="object-fit: cover;"
-          >
 
+          <!-- 🔹 A kép és a badge közös, relatív konténerben -->
+          <div class="position-relative">
+            <img
+              *ngIf="productItem.imagesArray && productItem.imagesArray.length > 0"
+              [src]="productItem.imagesArray[0]"
+              alt="{{ productItem.name }}"
+              class="card-img-top"
+              width="300"
+              height="200"
+              style="object-fit: cover;"
+            >
+
+            <!-- 📷 Képek számának jelölése a kép sarkában -->
+            <div
+              *ngIf="productItem.imagesArray && productItem.imagesArray.length > 1"
+              class="position-absolute bottom-0 end-0 m-2 px-2 py-1 bg-dark text-white small rounded-pill opacity-75"
+              style="font-size: 0.75rem; z-index: 2;"
+              title="{{ productItem.imagesArray.length }} kép"
+            >
+              <i class="bi bi-camera-fill me-1"></i>{{ productItem.imagesArray.length }}
+            </div>
+          </div>
+
+          <!-- További kártya tartalom -->
           <div class="card-body">
             <h5 class="card-title">{{ productItem.name }}</h5>
-            <p class="card-text text-muted small">{{ productItem.description }}</p>
+            <p class="card-subtitle text-muted mb-2">{{ productItem.type }}</p>
           </div>
 
-      <ul class="list-group list-group-flush">
-        <li
-          class="list-group-item fw-semibold"
-          [ngClass]="{ 'text-success': productItem.price === 0 }"
-        >
-          {{ productItem.price === 0 ? 'Ingyenes' : (productItem.price + ' Ft') }}
-        </li>
-
-        <!-- Város és dátum -->
-        <li class="list-group-item text-muted small">
-          <div class="d-flex flex-column">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
-              <span>{{ productItem.city }}</span>
-            </div>
-            <div class="d-flex align-items-center mt-1">
-              <i class="bi bi-calendar3 me-1 text-secondary"></i>
-              <span>{{ productItem.created_at | timeAgo }}</span>
-            </div>
-          </div>
-        </li>
-
-        <!-- Típus -->
-        <li class="list-group-item">{{ productItem.type }}</li>
-      </ul>
-
-
-      <!-- <div class="card-body text-center">
-            <a
-              [routerLink]="['/product', productItem.id]"
-              class="btn btn-outline-primary btn-sm"
-              (click)="$event.stopPropagation()"
+          <ul class="list-group list-group-flush">
+            <li
+              class="list-group-item fw-semibold"
+              [ngClass]="{ 'text-success': productItem.price === 0 }"
             >
-              Részletek
-            </a>
-          </div> -->
+              {{ productItem.price === 0 ? 'Ingyenes' : (productItem.price + ' Ft') }}
+            </li>
+            <li class="list-group-item text-muted small">
+              <div class="d-flex flex-column">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
+                  <span>{{ productItem.city }}</span>
+                </div>
+                <div class="d-flex align-items-center mt-1">
+                  <i class="bi bi-calendar3 me-1 text-secondary"></i>
+                  <span>{{ productItem.created_at | timeAgo }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+
         </div>
       </div>
     }
