@@ -26,6 +26,7 @@ class Product extends JsonResource
                 'postal_code' => $this->location?->postal_code,
                 'city' => $this->location?->city,
                 'created_at' => $this->created_at?->format('Y.m.d H:i'),
+                'type' => $this->type ? $this->type->type : null,
                 'user' => [
                     'firstname' => $this->user?->firstname,
                     'lastname' => $this->user?->lastname,
