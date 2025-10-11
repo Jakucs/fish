@@ -74,4 +74,14 @@ export class LoginComponent {
     this.router.navigate(['register' ]); //navigálás a regisztrációs oldalra
   }
 
+  ngAfterViewInit() {
+  const inputs = document.querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('focus', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+}
+
+
 }
