@@ -18,8 +18,20 @@
               height="200"
               style="object-fit: cover;"
             >
+            <!-- 🎣 Hal ikon badge háttérrel, lehet túlzás-->
+            <div
+              class="position-absolute top-0 end-0 m-2 px-2 py-1 bg-dark text-white rounded-pill opacity-75 d-flex align-items-center justify-content-center"
+              style="z-index: 2; width: 28px; height: 28px;"
+              title="Halas termék"
+            >
+              <img
+                src="icons/fish.svg"
+                alt="fish icon"
+                style="width: 24px; height: 24px; filter: invert(1);"
+              >
+            </div>
 
-            <!-- 📷 Képek számának jelölése a kép sarkában -->
+            <!-- 📷 Képek számának jelölése -->
             <div
               *ngIf="productItem.imagesArray && productItem.imagesArray.length > 1"
               class="position-absolute bottom-0 end-0 m-2 px-2 py-1 bg-dark text-white small rounded-pill opacity-75"
