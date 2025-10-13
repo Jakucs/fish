@@ -20,4 +20,15 @@ export class UserapiService {
   getUserDetails(): Observable<any> {
     return this.http.get(`${this.userURL}/userdetails`, { headers: this.makeHeader() });
   }
+
+
+    
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  // Ellenőrizzük, hogy be vagyunk-e jelentkezve
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
 }

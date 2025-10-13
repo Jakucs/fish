@@ -16,10 +16,17 @@ export class ProductapiService {
   ){}
 
 
-  getProducts(){
-    console.log(this.productsURL)
-    return this.http.get(this.productsURL + '/products');
-  }
+  getProductsWithToken() {
+  const token = this.userapi.getToken();
+  return this.http.get(this.productsURL + '/products', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+getProductsPublic() {
+  return this.http.get(this.productsURL + '/products/public');
+}
+
 
   //Mindent releváns adatot lekérünk egy termékről ID alapján és megis kapjuk, user táblából a phone_number-t, locations táblából a várost irányítószámmal együtt
   //De végül nem használjuk fel, mert külön api hívásként kezeljük a user adatokat

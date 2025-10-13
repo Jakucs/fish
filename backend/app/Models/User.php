@@ -49,8 +49,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function favourites()
-    {
-        return $this->belongsToMany(Product::class, 'favourites')->withTimestamps();
+    public function favourites() {
+        return $this->belongsToMany(Product::class, 'favourites', 'user_id', 'product_id');
     }
 }

@@ -42,3 +42,7 @@
 .bi-geo-alt-fill {
   font-size: 0.9rem;
 }
+
+.inverted {
+  filter: invert(1);
+}

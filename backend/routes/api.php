@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Kedvencek végpontja
     Route::post('/favourites/toggle/{productId}', [FavouriteController::class, 'toggle']);
 
+    Route::get ("/products", [ProductController::class, "getProducts"]);
+
 });
 
 Route::post( "/register", [ AuthController::class, "register" ]);
@@ -35,10 +37,10 @@ Route::post( "/login", [ AuthController::class, "login" ]);
 Route::post( "/logout", [ AuthController::class, "logout" ]);
 Route::get( "/users", [ AuthController::class, "getUsers" ]);
 
-Route::get ("/products", [ProductController::class, "getProducts"]);
+
 Route::get ("/product/{id}", [ProductController::class, "getProduct"]);
 
-
+Route::get("/products/public", [ProductController::class, "getProductsPublic"]);
 
 Route::get ("/types", [TypeController::class, "getTypes"]);
 Route::get ("/type", [TypeController::class, "getType"]);

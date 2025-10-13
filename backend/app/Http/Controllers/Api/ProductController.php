@@ -12,11 +12,38 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends ResponseController
 {
-        public function getProducts()
-    {
-        $products = Product::with("type")->get();
-        return $this->sendResponse(ProductResource::collection($products), "Adat betöltve");
-    }
+        public function getProducts(Request $request)
+        {
+            $products = Product::with('type', 'user')->get();
+
+            $user = $request->user(); // null, ha nincs bejelentkezve
+
+            $products = $products->map(function ($product) use ($user) {
+                $product->is_favourite = $user ? $user->favourites()->where('product_id', $product->id)->exists() : false;
+                return $product;
+            });
+
+            return response()->json([
+                'data' => $products
+            ]);
+        }
+
+        public function getProductsPublic()
+        {
+            $products = Product::with('type', 'user')->get();
+
+            // Nincs user, ezért minden termék is_favourite = false
+            $products = $products->map(function ($product) {
+                $product->is_favourite = false;
+                return $product;
+            });
+
+            return response()->json([
+                'data' => $products
+            ]);
+        }
+
+
 
         public function getmyads(){
         $userId = Auth::id();

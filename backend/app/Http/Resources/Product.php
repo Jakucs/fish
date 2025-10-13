@@ -33,6 +33,11 @@ class Product extends JsonResource
                     'email' => $this->user?->email,
                     'phone_number' => $this->user?->phone_number
                 ],
+                // 🔹 Kedvenc státusz
+                'is_favourite' => $request->user()
+                    ? $this->resource->favouritedBy()->where('user_id', $request->user()->id)->exists()
+                    : false,
+
             ];
         }
 
