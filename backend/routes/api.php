@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\FavouriteController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -24,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put ("/updateproduct/{id}", [ProductController::class, "updateProduct"]);
     Route::delete ("/destroyproduct/{id}", [ProductController::class, "destroyProduct"]);
     Route::get( "/userdetails", [ AuthController::class, "getUserDetails"]);
+    // Kedvencek végpontja
+    Route::post('/favourites/toggle/{productId}', [FavouriteController::class, 'toggle']);
 
 });
 
