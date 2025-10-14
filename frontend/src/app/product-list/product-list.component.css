@@ -118,7 +118,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   border-right: 1px solid #ccc;
-  font-size: 0.75rem;          /* kisebb betűméret */
+  font-size: 0.8rem;          /* kisebb betűméret */
 }
 
 .category-item:last-child {
