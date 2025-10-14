@@ -25,7 +25,7 @@
 
 
   <div class="row g-3">
-    @for (productItem of productList; track productItem) {
+    @for (productItem of productList; track productItem.id) {
       <div class="col-6 col-sm-4 col-md-3 col-lg-2">
         <div
           class="card h-100 shadow-sm clickable-card"

@@ -47,4 +47,12 @@ export class AppComponent {
     }
   }
 
+      refreshProducts() {
+      if (this.router.url === '/products') {
+        window.location.reload();
+      } else {
+        this.router.navigate(['/products']);
+      }
+  }
+
 }

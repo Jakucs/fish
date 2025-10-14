@@ -32,7 +32,12 @@ export class ProductListComponent {
   ) { }
 
     ngOnInit() {
-      if (this.userapi.isLoggedIn()) {
+      this.loadProducts();
+      this.loadTypes();
+    }
+
+    loadProducts(){
+            if (this.userapi.isLoggedIn()) {
         this.productsapi.getProductsWithToken().subscribe({
           next: (data: any) => {
             console.log("Bejelentkezett felhasználó termékei:", data);
@@ -49,7 +54,6 @@ export class ProductListComponent {
           error: (error) => console.log("Hiba a termék betöltésekor: ", error)
         });
       }
-      this.loadTypes();
     }
 
 
