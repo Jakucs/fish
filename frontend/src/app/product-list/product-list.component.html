@@ -14,7 +14,7 @@
 <!-- Kategória carousel -->
 <div class="category-carousel py-1 mb-1"> <!-- korábban py-2, most kisebb padding -->
   <div class="category-inner d-flex overflow-auto flex-nowrap gap-2 px-2">
-    <div *ngFor="let type of types" class="category-item">
+    <div *ngFor="let type of types" class="category-item" (click)="getProductsByType(type.id)">
       {{ type.type }}
     </div>
   </div>

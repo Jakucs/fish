@@ -21,6 +21,7 @@ export class ProductListComponent {
 
   productList: any[] = []
   types: any[] = [];
+  productsByType: any[] = [];
 
   constructor(
     private productsapi: ProductapiService,
@@ -33,22 +34,29 @@ export class ProductListComponent {
     ngOnInit() {
       if (this.userapi.isLoggedIn()) {
         this.productsapi.getProductsWithToken().subscribe({
-          next: (data: any) => this.handleProducts(data),
+          next: (data: any) => {
+            console.log("Bejelentkezett felhasználó termékei:", data);
+            this.handleProducts(data);
+          },
           error: (error) => console.log("Hiba a termék betöltésekor: ", error)
         });
       } else {
         this.productsapi.getProductsPublic().subscribe({
-          next: (data: any) => this.handleProducts(data),
+          next: (data: any) => {
+            console.log("Publikus terméklista:", data);
+            this.handleProducts(data);
+          },
           error: (error) => console.log("Hiba a termék betöltésekor: ", error)
         });
       }
       this.loadTypes();
     }
 
+
       loadTypes(): void {
       this.typeapi.getTypes().subscribe({
         next: (res: any) => {
-          this.types = res.data || res; // attól függ, a backend mit ad vissza
+          this.types = res.data || res;
           console.log('Típusok:', this.types);
         },
         error: (err) => {
@@ -93,6 +101,17 @@ export class ProductListComponent {
         }
       })
     }
+
+    getProductsByType(typeId: number) {
+      this.productsapi.getProductsByType(typeId).subscribe({
+        next: (data: any) => {
+          this.productsByType = data
+          console.log("Termékek típussal: ", this.productsByType);
+        },
+        error: (error) => console.log("Hiba a termékek lekérésekor típussal: ", error)
+      });
+    }
+
 
 
 }

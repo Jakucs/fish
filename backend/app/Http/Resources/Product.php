@@ -35,7 +35,7 @@ class Product extends JsonResource
                 ],
                 // 🔹 Kedvenc státusz
                 'is_favourite' => $request->user()
-                    ? $this->resource->favouritedBy()->where('user_id', $request->user()->id)->exists()
+                    ? $this->resource->favourites()->where('user_id', $request->user()->id)->exists()
                     : false,
 
             ];

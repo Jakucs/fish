@@ -16,16 +16,16 @@ export class ProductapiService {
   ){}
 
 
-  getProductsWithToken() {
-  const token = this.userapi.getToken();
-  return this.http.get(this.productsURL + '/products', {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-}
+    getProductsWithToken() {
+    const token = this.userapi.getToken();
+    return this.http.get(this.productsURL + '/products', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
 
-getProductsPublic() {
-  return this.http.get(this.productsURL + '/products/public');
-}
+  getProductsPublic() {
+    return this.http.get(this.productsURL + '/products/public');
+  }
 
 
   //Mindent releváns adatot lekérünk egy termékről ID alapján és megis kapjuk, user táblából a phone_number-t, locations táblából a várost irányítószámmal együtt
@@ -43,6 +43,10 @@ getProductsPublic() {
     updateProductImage(productId: number, imageUrl: string) {
     const headers = this.userapi.makeHeader();
     return this.http.patch(`${this.productsURL}/update/${productId}`, { image: imageUrl }, { headers });
+  }
+
+  getProductsByType(id: number){
+    return this.http.get(`${this.productsURL}/getproductsbytype/${id}`);
   }
 
   

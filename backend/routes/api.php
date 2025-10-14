@@ -39,7 +39,6 @@ Route::get( "/users", [ AuthController::class, "getUsers" ]);
 
 
 Route::get ("/product/{id}", [ProductController::class, "getProduct"]);
-
 Route::get("/products/public", [ProductController::class, "getProductsPublic"]);
 
 Route::get ("/types", [TypeController::class, "getTypes"]);
@@ -47,5 +46,7 @@ Route::get ("/type", [TypeController::class, "getType"]);
 Route::post ("/newtype", [TypeController::class, "newType"]);
 Route::put ("/updatetype/{id}", [TypeController::class, "updateType"]);
 Route::delete ("/destroytype/{id}", [TypeController::class, "destroyType"]);
+
+Route::get("/getproductsbytype/{id}", [ProductController::class, "getProductsByType"]);
 
 Route::post ("/newlocation", [LocationController::class, "newLocation"]);

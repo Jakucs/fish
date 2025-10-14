@@ -23,9 +23,9 @@ class ProductController extends ResponseController
                 return $product;
             });
 
-            return response()->json([
-                'data' => $products
-            ]);
+                return response()->json([
+                    'data' => ProductResource::collection($products)
+                ]);
         }
 
         public function getProductsPublic()
@@ -38,9 +38,9 @@ class ProductController extends ResponseController
                 return $product;
             });
 
-            return response()->json([
-                'data' => $products
-            ]);
+                return response()->json([
+                    'data' => ProductResource::collection($products)
+                ]);
         }
 
 
@@ -145,6 +145,19 @@ class ProductController extends ResponseController
 
             return $this->sendResponse(new ProductResource($product), "Termék törölve");
         }
+
+
+                    // ProductController.php
+            public function getProductsByType($id)
+            {
+                $products = Product::where('type_id', $id)
+                    ->orderBy('created_at', 'desc')
+                    ->take(100) // opcionális limitálás
+                    ->get();
+
+                return response()->json($products);
+            }
+
 
 
 }
