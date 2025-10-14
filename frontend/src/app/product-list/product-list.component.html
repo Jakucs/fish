@@ -49,12 +49,12 @@
           <div class="card-body">
             <h5 class="card-title">{{ productItem.name }}</h5>
             <p class="card-subtitle text-muted mb-2">{{ productItem.type?.type }}</p>
-            <p class="card-text text-secondary small">{{ productItem.condition }}</p>
+            <p class="card-text text-secondary small mb-0">{{ productItem.condition }}</p>
           </div>
 
           <ul class="list-group list-group-flush">
             <li
-              class="list-group-item fw-semibold"
+              class="list-group-item fw-semibold py-1"
               [ngClass]="{ 'text-success': productItem.price === 0 }"
             >
               {{ productItem.price === 0 ? 'Ingyenes' : (productItem.price + ' Ft') }}

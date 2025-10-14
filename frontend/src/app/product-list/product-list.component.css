@@ -6,21 +6,51 @@
 
 .card-body {
   flex-grow: 1;
+  padding: 0.25rem 0.5rem;
+}
+
+/*.tight-card-text {
+  margin: 0;
+  padding: 0;
+  line-height: 1.1;
+  font-size: 0.875rem;
+}
+
+.tight-list-item {
+  margin: 0;
+  padding: 0.15rem 0.5rem;
+  line-height: 1.1;
+  font-size: 0.875rem;
+}  */
+
+
+.card-body h5,
+.card-body p {
+  margin: 0; /* szinte teljesen eltünteti a vertikális margót */
 }
 
 .card-text {
-  display: -webkit-box;
-  display: box;
+  display: -webkit-box;       /* old WebKit browsers */
+  display: box;               /* standard property for fallback */
   -webkit-box-orient: vertical;
-  box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3; /* ✅ szabványos property */
+  box-orient: vertical;       /* standard property */
+  -webkit-line-clamp: 3;      /* WebKit-specific */
+  line-clamp: 3;              /* standard property */
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 3.6em;
+  min-height: auto;
+  line-height: 1.2;           /* optional, controls spacing */
 }
 
 
+
+.list-group {
+  margin-top: 0;       /* alapból lehet 0.5rem */
+  padding-top: 0;
+}
+.list-group-item {
+  padding: 0.15rem 0.5rem;
+}
 
 .clickable-card {
   cursor: pointer;
