@@ -105,12 +105,14 @@ export class ProductListComponent {
     getProductsByType(typeId: number) {
       this.productsapi.getProductsByType(typeId).subscribe({
         next: (data: any) => {
-          this.productsByType = data
-          console.log("Termékek típussal: ", this.productsByType);
+          this.handleProducts(data); // 🔹 így lesz imagesArray
+          console.log("Termékek típussal: ", this.productList);
         },
         error: (error) => console.log("Hiba a termékek lekérésekor típussal: ", error)
       });
     }
+
+
 
 
 

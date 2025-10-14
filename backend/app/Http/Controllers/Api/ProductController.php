@@ -43,6 +43,29 @@ class ProductController extends ResponseController
                 ]);
         }
 
+                            // ProductController.php
+            public function getProductsByType(Request $request, $id)
+            {
+                $products = Product::with('type', 'user')
+                    ->where('type_id', $id)
+                    ->orderBy('created_at', 'desc')
+                    ->take(100)
+                    ->get();
+
+                $user = $request->user(); // null, ha nincs bejelentkezve
+
+                // is_favourite mező beállítása
+                $products = $products->map(function ($product) use ($user) {
+                    $product->is_favourite = $user ? $user->favourites()->where('product_id', $product->id)->exists() : false;
+                    return $product;
+                });
+
+                return response()->json([
+                    'data' => ProductResource::collection($products)
+                ]);
+            }
+
+
 
 
         public function getmyads(){
@@ -147,16 +170,7 @@ class ProductController extends ResponseController
         }
 
 
-                    // ProductController.php
-            public function getProductsByType($id)
-            {
-                $products = Product::where('type_id', $id)
-                    ->orderBy('created_at', 'desc')
-                    ->take(100) // opcionális limitálás
-                    ->get();
 
-                return response()->json($products);
-            }
 
 
 
