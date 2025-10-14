@@ -35,6 +35,16 @@
         <li>
           <a class="dropdown-item" (click)="goToSettings()">Beállítások</a>
         </li>
+        <!--ezt hogykéne?
+        <li>
+          <button type="button" class="btn position-relative dropdown-toggle m-lg-3" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-search"></i>
+          </button>
+            <div class="search-container dropdown-menu">
+            <input type="text" class="form-control search-input" placeholder="Keresés...">
+      </div>
+        </li>
+          -->
         <li><hr class="dropdown-divider"></li>
         <li>
           <a class="dropdown-item text-danger" (click)="goToLogout()">Kijelentkezés</a>
@@ -49,3 +59,47 @@
 </nav>
 
 <router-outlet></router-outlet>
+
+
+
+
+
+<!--
+<div *ngIf="isLoggedIn" class="dropdown ms-auto" data-bs-auto-close="outside">
+  <button
+    class="btn btn-dark btn-sm text-nowrap dropdown-toggle"
+    type="button"
+    id="profileDropdown"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Profilom
+  </button>
+
+  <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="profileDropdown">
+    <li><a class="dropdown-item" (click)="goToMyAds()">Hirdetéseim</a></li>
+    <li><a class="dropdown-item" (click)="goToProfile()">Saját profil</a></li>
+    <li><a class="dropdown-item" (click)="goToSettings()">Beállítások</a></li>
+
+    <li><hr class="dropdown-divider"></li>
+
+    🔍 Keresőmező
+    <li class="px-2">
+      <input
+        type="text"
+        class="form-control form-control-sm"
+        placeholder="Keresés..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch(searchTerm)"
+      />
+    </li>
+
+    <li><hr class="dropdown-divider"></li>
+
+    <li>
+      <a class="dropdown-item text-danger" (click)="goToLogout()">Kijelentkezés</a>
+    </li>
+  </ul>
+</div>
+
+-->

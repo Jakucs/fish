@@ -76,3 +76,73 @@
 .inverted {
   filter: invert(1);
 }
+
+
+
+
+.scroll-container {
+  background-color: #f0f0f0; /* világos szürke */
+  border-radius: 0.5rem;     /* lekerekített sarkok */
+  padding: 0.5rem;           /* opcionális belső tér */
+}
+
+
+
+.category-carousel {
+  background-color: #f1f3f5; /* szürke háttér */
+  border-radius: 0.5rem;
+  padding: 0.75rem 0; /* függőleges belső margó */
+  overflow-x: auto; /* EZ A LÉNYEG */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  white-space: nowrap; /* egymás mellett maradjanak */
+}
+
+.category-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.category-inner {
+  display: flex;
+  overflow-x: auto;
+  gap: 0; /* a border miatt nem kell gap */
+  padding: 0 0.5rem;
+}
+
+.category-item {
+  padding: 0.25rem 0.75rem;   /* kisebb padding a kompaktabb megjelenéshez */
+  background-color: #f0f0f0;
+  border-radius: 1rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-right: 1px solid #ccc;
+  font-size: 0.75rem;          /* kisebb betűméret */
+}
+
+.category-item:last-child {
+  border-right: none; /* utolsó elemnél nincs vonal */
+}
+
+.category-item:hover {
+  background-color: #e0e0e0;  /* kicsit sötétebb hover effekt */
+}
+
+
+.category-carousel .d-flex {
+  scroll-behavior: smooth;
+}
+
+.category-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-carousel::-webkit-scrollbar-thumb {
+  background-color: #0d6efd;
+  border-radius: 10px;
+}
+
+.category-carousel button {
+  white-space: nowrap;
+}

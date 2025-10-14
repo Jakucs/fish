@@ -1,4 +1,29 @@
 <div class="container mt-4">
+        <!-- 🔍 Keresősáv -->
+<!-- 🔍 Keresősáv -->
+<div class="row mb-1"> <!-- korábban mb-3, most szinte nincs margin -->
+  <div class="col-12 col-md-6 mx-auto">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Keresés termékre..."
+    />
+  </div>
+</div>
+
+<!-- Kategória carousel -->
+<div class="category-carousel py-1 mb-1"> <!-- korábban py-2, most kisebb padding -->
+  <div class="category-inner d-flex overflow-auto flex-nowrap gap-2 px-2">
+    <div *ngFor="let type of types" class="category-item">
+      {{ type.type }}
+    </div>
+  </div>
+</div>
+
+
+
+
+
   <div class="row g-3">
     @for (productItem of productList; track productItem) {
       <div class="col-6 col-sm-4 col-md-3 col-lg-2">
