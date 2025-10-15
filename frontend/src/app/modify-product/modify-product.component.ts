@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { ProductapiService } from '../shared/productapi.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modify-product',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './modify-product.component.html',
   styleUrl: './modify-product.component.css'
 })
@@ -15,12 +16,14 @@ export class ModifyProductComponent {
     productForm!: FormGroup;
     isCityReadonly = false;
     productId!: number;
+    images: string[] = [];
 
   constructor(
     private productapi: ProductapiService,
     private route: ActivatedRoute,
     private builder: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
     ngOnInit(): void {
@@ -42,26 +45,48 @@ export class ModifyProductComponent {
     }
   }
 
-    getProductDetails(id: number) {
-    this.productapi.getProduct(id).subscribe({
-      next: (res) => {
-        const product = res.data;
-        console.log('Betöltött termék:', product);
-        this.productForm.patchValue({
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          condition: product.condition.charAt(0).toUpperCase() + product.condition.slice(1), //nemszámít kis és nagybetű
-          postal_code: product.postal_code,
-          city: product.city
+      getProductDetails(id: number) {
+        this.productapi.getProduct(id).subscribe({
+          next: (res) => {
+            const product = res.data;
+            console.log('Betöltött termék:', product);
+
+            this.productForm.patchValue({
+              name: product.name,
+              description: product.description,
+              price: product.price,
+              condition: product.condition.charAt(0).toUpperCase() + product.condition.slice(1), // nemszámít kis és nagybetű
+              postal_code: product.postal_code,
+              city: product.city
+            });
+
+            this.isCityReadonly = !!product.city;
+
+            // 👇 Képek kezelése
+            if (product.image) {
+              if (Array.isArray(product.image)) {
+                // ha már tömb
+                this.images = product.image;
+              } else if (typeof product.image === 'string') {
+                try {
+                  // JSON parse, mert stringként érkezik a tömb
+                  this.images = JSON.parse(product.image);
+                } catch (e) {
+                  console.error("Hiba a kép JSON parse során:", e);
+                  // fallback, sima stringként
+                  this.images = [product.image];
+                }
+              }
+            } else {
+              this.images = [];
+            }
+
+              console.log("képek formátuma:", this.images);
+          },
+          error: (err) => console.error('Hiba a termék lekérésekor:', err)
         });
-        this.isCityReadonly = !!product.city;
-      },
-      error: (err) => {
-        console.error('Hiba a termék lekérésekor:', err);
-      }
-    });
   }
+
 
     getCityByZip() {
     const postal_code = this.productForm.get('postal_code')?.value;
@@ -105,5 +130,9 @@ export class ModifyProductComponent {
     }
   }
 
+
+  goToModifyImages(){
+    this.router.navigate([`/modify-images/${this.productId}`]);
+  }
 
 }

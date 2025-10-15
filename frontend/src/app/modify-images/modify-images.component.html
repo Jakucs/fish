@@ -1,0 +1,33 @@
+<div class="container mt-4">
+  <h4 class="mb-3">Képek módosítása</h4>
+
+  <div *ngIf="images.length > 0" class="d-flex flex-wrap gap-2">
+    <div *ngFor="let img of images; let i = index" class="position-relative">
+      <img
+        [src]="img"
+        alt="Termékkép"
+        class="rounded border"
+        style="width: 120px; height: 120px; object-fit: cover;"
+      />
+
+      <!-- Törlés gomb -->
+      <button
+        class="btn btn-sm btn-danger position-absolute top-0 end-0"
+        (click)="deleteImage(i, img)"
+      >
+        ❌
+      </button>
+
+      <!-- Frissítés gomb -->
+      <button
+        class="btn btn-sm btn-primary position-absolute bottom-0 start-50 translate-middle-x"
+        (click)="updateImage(i)"
+      >
+        ✏️
+      </button>
+    </div>
+  </div>
+
+  <!-- Új kép feltöltése -->
+  <app-pics-upload (uploadComplete)="onUploadComplete($event)"></app-pics-upload>
+</div>

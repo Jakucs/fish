@@ -76,6 +76,34 @@
       />
     </div>
 
+        
+            <!-- Képek előnézete -->
+            @if (images.length > 0) {
+            <div class="mb-3">
+                <label class="form-label">Képek</label>
+                <div class="d-flex flex-wrap gap-2">
+                @for (img of images; track $index) {
+                    <img
+                    [src]="img"
+                    alt="Termékkép"
+                    class="rounded border"
+                    style="width: 120px; height: 120px; object-fit: cover;"
+                    />
+                }
+                </div>
+            </div>
+            }
+
+        <!-- Képek szerkesztése gomb -->
+        <div class="mb-3">
+        <button type="button" class="btn btn-secondary" (click)="goToModifyImages()">
+            Képek módosítása
+        </button>
+        </div>
+
+
+
+
     <!-- Mentés gomb -->
     <button
       type="submit"

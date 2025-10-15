@@ -40,7 +40,7 @@ export class ProductapiService {
     return this.http.post(this.productsURL + '/newproduct', productData, { headers } );
   }
 
-    updateProductImage(productId: number, imageUrl: string) {
+  updateProductImage(productId: number, imageUrl: string) {
     const headers = this.userapi.makeHeader();
     return this.http.patch(`${this.productsURL}/update/${productId}`, { image: imageUrl }, { headers });
   }
@@ -52,6 +52,33 @@ export class ProductapiService {
   modifyProduct(productId: number, productData: any) {
     const headers = this.userapi.makeHeader();
     return this.http.put(`${this.productsURL}/updateproduct/${productId}`, productData, { headers });
+  }
+
+
+  //Képek végpontjaival a kommunikáció
+  getPictures(productId: number){
+    const headers = this.userapi.makeHeader();
+    return this.http.get(`${this.productsURL}/pictures/${productId}`, {headers});
+  }
+
+  newPicture(id: number, images: string[]) {
+  return this.http.post<{ image: string[] }>(`${this.productsURL}/newpicture`, {
+    product_id: id,
+    images
+  });
+}
+
+  destroyPicture(id: number, url: string) {
+    return this.http.request<{ image: string[] }>('delete', `${this.productsURL}/destroypicture/${id}`, {
+      body: { url }
+    });
+  }
+
+  updatePicture(id: number, index: number, newUrl: string) {
+    return this.http.put<{ image: string[] }>(`${this.productsURL}/updatepicture/${id}`, {
+      index,
+      new_url: newUrl
+    });
   }
 
   

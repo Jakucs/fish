@@ -50,3 +50,8 @@ Route::delete ("/destroytype/{id}", [TypeController::class, "destroyType"]);
 Route::get("/getproductsbytype/{id}", [ProductController::class, "getProductsByType"]);
 
 Route::post ("/newlocation", [LocationController::class, "newLocation"]);
+
+Route::get("/pictures/{id}", [ProductController::class, "getPictures"]);
+Route::post("/newpicture", [ProductController::class, "newPicture"]);
+Route::delete("/destroypicture/{id}", [ProductController::class, "destroyPicture"]);
+Route::put("/updatepicture/{id}", [ProductController::class, "updatePicture"]);

@@ -170,6 +170,104 @@ class ProductController extends ResponseController
         }
 
 
+        //We can modify pictures CRUD
+
+        public function getPictures($id)
+        {
+            $product = Product::find($id);
+
+            if (!$product) {
+                return response()->json(['message' => 'Termék nem található.'], 404);
+            }
+
+            // Ha JSON string, dekódoljuk (pl. '["url1","url2"]')
+            $image = is_string($product->image)
+                ? json_decode($product->image, true)
+                : $product->image;
+
+            return response()->json([
+                'product_id' => $product->id,
+                'image' => $image ?? [],
+            ]);
+        }
+
+
+
+
+        public function newPicture(Request $request)
+        {
+            $request->validate([
+                'product_id' => 'required|integer|exists:products,id',
+                'images' => 'required|array',
+                'images.*' => 'string',
+            ]);
+
+            $product = Product::findOrFail($request->product_id);
+
+            // meglévő képek + újak összevonása
+            $existing = is_string($product->image)
+                ? json_decode($product->image, true)
+                : ($product->image ?? []);
+
+            $merged = array_merge($existing, $request->images);
+
+            $product->image = json_encode($merged);
+            $product->save();
+
+            return response()->json([
+                'message' => 'Képek hozzáadva.',
+                'images' => $merged,
+            ]);
+        }
+
+
+        public function destroyPicture($id, Request $request)
+        {
+            $request->validate(['url' => 'required|string']);
+
+            $product = Product::findOrFail($id);
+            $images = is_string($product->image)
+                ? json_decode($product->image, true)
+                : [];
+
+            $filtered = array_filter($images, fn($img) => $img !== $request->url);
+
+            $product->image = json_encode(array_values($filtered));
+            $product->save();
+
+            return response()->json([
+                'message' => 'Kép törölve.',
+                'images' => array_values($filtered),
+            ]);
+        }
+
+        public function updatePicture($id, Request $request)
+        {
+            $request->validate([
+                'index' => 'required|integer',
+                'new_url' => 'required|string',
+            ]);
+
+            $product = Product::findOrFail($id);
+            $images = is_string($product->image)
+                ? json_decode($product->image, true)
+                : [];
+
+            if (!isset($images[$request->index])) {
+                return response()->json(['message' => 'A megadott index nem létezik.'], 404);
+            }
+
+            $images[$request->index] = $request->new_url;
+
+            $product->image = json_encode(array_values($images));
+            $product->save();
+
+            return response()->json([
+                'message' => 'Kép frissítve.',
+                'images' => array_values($images),
+            ]);
+        }
+
 
 
 
