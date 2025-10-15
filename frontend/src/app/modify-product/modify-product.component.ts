@@ -29,7 +29,7 @@ export class ModifyProductComponent {
       name: [''],
       description: [''],
       price: [''],
-      condition: ['új'],
+      condition: [''],
       postal_code: [''],
       city: ['']
     });
@@ -51,7 +51,7 @@ export class ModifyProductComponent {
           name: product.name,
           description: product.description,
           price: product.price,
-          condition: product.condition,
+          condition: product.condition.charAt(0).toUpperCase() + product.condition.slice(1), //nemszámít kis és nagybetű
           postal_code: product.postal_code,
           city: product.city
         });
