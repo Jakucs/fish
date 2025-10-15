@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductapiService } from '../shared/productapi.service';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,7 @@ import { PicsUploadComponent } from '../pics-upload/pics-upload.component';
   styleUrl: './modify-images.component.css'
 })
 export class ModifyImagesComponent {
+  @ViewChild(PicsUploadComponent) picsUpload!: PicsUploadComponent;
   productId!: number;
   images: string[] = [];
 
@@ -36,30 +37,18 @@ export class ModifyImagesComponent {
       });
     }
 
-      deleteImage(index: number, url: string) {
-    if (!confirm('Biztosan törlöd a képet?')) return;
+    deleteImage(index: number, url: string) {
+      if (!confirm('Biztosan törlöd a képet?')) return;
 
-    this.productService.destroyPicture(this.productId, url).subscribe({
-      next: (res: any) => {
-        this.images = res.image; // backend a frissített tömböt adja vissza
-      },
-      error: (err: any) => console.error('Hiba a kép törlésekor:', err)
-    });
-  }
+      this.productService.destroyPicture(this.productId, url).subscribe({
+        next: (res: any) => {
+          this.images = res.image; // backend a frissített tömböt adja vissza
+        },
+        error: (err: any) => console.error('Hiba a kép törlésekor:', err)
+      });
+    }
 
-  updateImage(index: number) {
-    // Itt lehet megnyitni egy file inputot vagy modal-t
-    // Például: új kép feltöltése Cloudinary-ra → updatePicture()
-    const newUrl = prompt('Add meg az új kép URL-jét:');
-    if (!newUrl) return;
 
-    this.productService.updatePicture(this.productId, index, newUrl).subscribe({
-      next: (res: any) => {
-        this.images = res.image;
-      },
-      error: (err: any) => console.error('Hiba a kép frissítésekor:', err)
-    });
-  }
 
   onUploadComplete(urls: string[]) {
     // Új képek hozzáadása a termékhez
@@ -72,6 +61,31 @@ export class ModifyImagesComponent {
 
      this.images = urls;
   }
+
+
+    saveImages() {
+    if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
+      this.picsUpload.uploadImages().subscribe({
+        next: (res: any[]) => {
+          if (res && res.length > 0) {
+            const urls = res.map(r => r.secure_url);
+
+            // ⬇️ Backendnek elküldjük az új képeket
+            this.productService.newPicture(this.productId, urls).subscribe({
+              next: (res: any) => {
+                this.images = res.image; // frissített képtömb a backendből
+              },
+              error: (err: any) => console.error('Hiba új kép hozzáadásakor:', err)
+            });
+          }
+        },
+        error: (err: any) => console.error('Feltöltési hiba:', err)
+      });
+    } else {
+      console.warn('Nincs kiválasztott kép feltöltésre.');
+    }
+  }
+
 
 
 

@@ -11,6 +11,7 @@ import { MyadsComponent } from './myads/myads.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { SuccessfulupdateComponent } from './successfulupdate/successfulupdate.component';
 import { ModifyProductComponent } from './modify-product/modify-product.component';
+import { ModifyImagesComponent } from './modify-images/modify-images.component';
 
 export const routes: Routes = [
     { path: "products", component: ProductListComponent},
@@ -24,6 +25,7 @@ export const routes: Routes = [
     { path: 'successfulupdate', component: SuccessfulupdateComponent},
     { path: 'product/:id', component: ProductDetailComponent},
     { path: 'modify-product/:id', component: ModifyProductComponent},
+    { path: 'modify-images/:id', component: ModifyImagesComponent },
     { path: '', component: ProductListComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

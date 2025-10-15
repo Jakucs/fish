@@ -17,17 +17,10 @@
       >
         ❌
       </button>
-
-      <!-- Frissítés gomb -->
-      <button
-        class="btn btn-sm btn-primary position-absolute bottom-0 start-50 translate-middle-x"
-        (click)="updateImage(i)"
-      >
-        ✏️
-      </button>
     </div>
   </div>
 
   <!-- Új kép feltöltése -->
   <app-pics-upload (uploadComplete)="onUploadComplete($event)"></app-pics-upload>
+  <button class="btn btn-secondary" (click)="saveImages()">Save images</button>
 </div>
