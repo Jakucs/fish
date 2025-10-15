@@ -49,5 +49,10 @@ export class ProductapiService {
     return this.http.get(`${this.productsURL}/getproductsbytype/${id}`);
   }
 
+  modifyProduct(productId: number, productData: any) {
+    const headers = this.userapi.makeHeader();
+    return this.http.put(`${this.productsURL}/updateproduct/${productId}`, productData, { headers });
+  }
+
   
 }
