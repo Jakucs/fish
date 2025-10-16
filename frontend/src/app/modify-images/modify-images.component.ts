@@ -17,7 +17,7 @@ export class ModifyImagesComponent {
 
     constructor(
     private route: ActivatedRoute,
-    private productService: ProductapiService // szolgáltatás a képekhez
+    private productService: ProductapiService
   ) {}
 
 

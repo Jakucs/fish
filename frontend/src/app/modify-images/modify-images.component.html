@@ -22,6 +22,6 @@
   </div>
 
   <!-- Új kép feltöltése -->
-  <app-pics-upload (uploadComplete)="onUploadComplete($event)"></app-pics-upload>
+  <app-pics-upload [existingImagesCount]="images.length" (uploadComplete)="onUploadComplete($event)"></app-pics-upload>
   <button class="btn btn-secondary mt-3" (click)="saveImages()">Képek mentése</button>
 </div>

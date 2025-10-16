@@ -15,7 +15,7 @@ import { PicsShareService } from '../shared/pics-share.service';
 })
 export class PicsUploadComponent {
   @Output() uploadComplete = new EventEmitter<string[]>(); //Outputot és EventMittert importáltuk, hogy együtt tudjuk használni a modify-images komponensel.
-  @Input() existingImages: string[] = []; // meglévő képek
+  @Input() existingImagesCount: number = 0; // hány kép van már feltöltve
 
   selectedFiles: any[] = [];
   uploadUrls: string[] = [];
@@ -37,19 +37,20 @@ export class PicsUploadComponent {
   }
 
     onFileSelected(event: Event) {
-      const input = event.target as HTMLInputElement;
-      if (!input.files || input.files.length === 0) return;
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) return;
 
-      const newFiles = Array.from(input.files);
+  const newFiles = Array.from(input.files);
 
-      if (this.selectedFiles.length + newFiles.length > this.MAX_FILES) {
-        alert(`Maximum ${this.MAX_FILES} képet tölthetsz fel.`);
-        return;
-      }
+  // ❌ Összesen ne legyen több mint MAX_FILES (pl. 10)
+  if (this.existingImagesCount + this.selectedFiles.length + newFiles.length > this.MAX_FILES) {
+    alert(`Maximum ${this.MAX_FILES} képet tölthetsz fel összesen.`);
+    return;
+  }
 
-      this.selectedFiles.push(...newFiles);
-      console.log('Kiválasztott fájlok:', this.selectedFiles);
-    }
+  this.selectedFiles.push(...newFiles);
+  console.log('Kiválasztott fájlok:', this.selectedFiles);
+}
 
 
 
