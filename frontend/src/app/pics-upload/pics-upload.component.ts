@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CloudinaryapiService } from '../shared/cloudinaryapi.service';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs';
@@ -15,6 +15,7 @@ import { PicsShareService } from '../shared/pics-share.service';
 })
 export class PicsUploadComponent {
   @Output() uploadComplete = new EventEmitter<string[]>(); //Outputot és EventMittert importáltuk, hogy együtt tudjuk használni a modify-images komponensel.
+  @Input() existingImages: string[] = []; // meglévő képek
 
   selectedFiles: any[] = [];
   uploadUrls: string[] = [];

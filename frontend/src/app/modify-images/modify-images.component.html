@@ -2,6 +2,7 @@
   <h4 class="mb-3">Képek módosítása</h4>
 
   <div *ngIf="images.length > 0" class="d-flex flex-wrap gap-2">
+
     <div *ngFor="let img of images; let i = index" class="position-relative">
       <img
         [src]="img"
@@ -22,5 +23,5 @@
 
   <!-- Új kép feltöltése -->
   <app-pics-upload (uploadComplete)="onUploadComplete($event)"></app-pics-upload>
-  <button class="btn btn-secondary" (click)="saveImages()">Save images</button>
+  <button class="btn btn-secondary mt-3" (click)="saveImages()">Képek mentése</button>
 </div>

@@ -29,24 +29,43 @@ export class ModifyImagesComponent {
   }
 
     loadImages() {
-      this.productService.getPictures(this.productId).subscribe({
-        next: (res: any) => {
-          this.images = Array.isArray(res.image) ? res.image : [res.image];
-        },
-        error: (err) => console.error('Hiba a képek lekérésekor:', err)
-      });
+  this.productService.getPictures(this.productId).subscribe({
+    next: (res: any) => {
+      // Mindig tömb lesz
+      this.images = Array.isArray(res.image) ? res.image : res.image ? [res.image] : [];
+    },
+    error: (err) => {
+      console.error('Hiba a képek lekérésekor:', err);
+      this.images = []; // ha hiba van, legalább üres tömb
     }
+  });
+}
 
-    deleteImage(index: number, url: string) {
-      if (!confirm('Biztosan törlöd a képet?')) return;
 
-      this.productService.destroyPicture(this.productId, url).subscribe({
-        next: (res: any) => {
-          this.images = res.image; // backend a frissített tömböt adja vissza
-        },
-        error: (err: any) => console.error('Hiba a kép törlésekor:', err)
-      });
-    }
+      deleteImage(index: number, url: string) {
+    if (!confirm('Biztosan törlöd a képet?')) return;
+
+    this.productService.destroyPicture(this.productId, url).subscribe({
+      next: (res: any) => {
+        // mindig tömb
+        if (!Array.isArray(this.images)) this.images = [];
+
+        // lokális törlés
+        if (index >= 0 && index < this.images.length) {
+          this.images.splice(index, 1);
+        }
+
+        // backend válasz frissítése
+        if (res?.image) {
+          this.images = Array.isArray(res.image) ? res.image : [];
+        }
+      },
+      error: (err) => console.error('Hiba a kép törlésekor:', err)
+    });
+  }
+
+
+
 
 
 

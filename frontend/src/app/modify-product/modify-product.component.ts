@@ -31,6 +31,7 @@ export class ModifyProductComponent {
     this.productForm = this.builder.group({
       name: [''],
       description: [''],
+      type_id: [''],
       price: [''],
       condition: [''],
       postal_code: [''],
@@ -54,6 +55,7 @@ export class ModifyProductComponent {
             this.productForm.patchValue({
               name: product.name,
               description: product.description,
+              type_id: product.type_id,
               price: product.price,
               condition: product.condition.charAt(0).toUpperCase() + product.condition.slice(1), // nemszámít kis és nagybetű
               postal_code: product.postal_code,
