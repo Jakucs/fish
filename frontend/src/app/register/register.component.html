@@ -10,75 +10,101 @@
     <!-- Register Form -->
 <form [formGroup]="registerForm" (ngSubmit)="register()">
 
-<!-- Felhasználónév -->
-<input type="text"
-       formControlName="username"
-       class="form-control fadeIn second"
-       [ngClass]="{'is-invalid': registerForm.get('username')?.invalid && registerForm.get('username')?.touched}"
-       placeholder="Felhasználónév">
-<div *ngIf="registerForm.get('username')?.touched" class="invalid-feedback">
-  <div *ngIf="registerForm.get('username')?.hasError('required')">Felhasználónév megadása kötelező.</div>
-  <div *ngIf="registerForm.get('username')?.hasError('minlength')">Legalább 3 karakter szükséges.</div>
-  <div *ngIf="registerForm.get('username')?.hasError('maxlength')">Legfeljebb 20 karakter lehet.</div>
-</div>
+       <!-- Felhasználónév -->
+       <input type="text"
+              formControlName="username"
+              class="fadeIn second form-control"
+              [ngClass]="{'is-invalid': registerForm.get('username')?.invalid && registerForm.get('username')?.touched}"
+              placeholder="Felhasználónév">
+       <div *ngIf="registerForm.get('username')?.touched" class="invalid-feedback">
+       <div *ngIf="registerForm.get('username')?.hasError('required')">
+       Felhasználónév megadása kötelező
+       </div>
+       <div *ngIf="registerForm.get('username')?.hasError('minlength')">
+       Legalább 3 karakter szükséges
+       </div>
+       <div *ngIf="registerForm.get('username')?.hasError('maxlength')">
+       Legfeljebb 20 karakter lehet
+       </div>
+       <div *ngIf="registerForm.get('username')?.hasError('backend')">
+       {{ registerForm.get('username')?.getError('backend') }}
+       </div>
+       </div>
 
-<!-- Email -->
-<input type="email"
-       formControlName="email"
-       class="form-control fadeIn third"
-       [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
-       placeholder="Email cím">
-<div *ngIf="registerForm.get('email')?.touched" class="invalid-feedback">
-  <div *ngIf="registerForm.get('email')?.hasError('required')">Az email cím megadása kötelező.</div>
-  <div *ngIf="registerForm.get('email')?.hasError('email')">Érvényes email címet adj meg.</div>
-</div>
 
-<!-- Vezetéknév -->
-<input type="text"
-       formControlName="firstname"
-       class="form-control fadeIn third"
-       [ngClass]="{'is-invalid': registerForm.get('firstname')?.invalid && registerForm.get('firstname')?.touched}"
-       placeholder="Vezetéknév">
-<div *ngIf="registerForm.get('firstname')?.touched" class="invalid-feedback">
-  <div *ngIf="registerForm.get('firstname')?.hasError('required')">Vezetéknév megadása kötelező.</div>
-  <div *ngIf="registerForm.get('firstname')?.hasError('minlength')">Legalább 3 karakter legyen.</div>
-  <div *ngIf="registerForm.get('firstname')?.hasError('maxlength')">Legfeljebb 15 karakter lehet.</div>
-</div>
+       <input type="email"
+              formControlName="email"
+              class="fadeIn third form-control"
+              [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+              placeholder="Email cím">
 
-<!-- Keresztnév -->
-<input type="text"
-       formControlName="lastname"
-       class="form-control fadeIn third"
-       [ngClass]="{'is-invalid': registerForm.get('lastname')?.invalid && registerForm.get('lastname')?.touched}"
-       placeholder="Keresztnév">
-<div *ngIf="registerForm.get('lastname')?.touched" class="invalid-feedback">
-  <div *ngIf="registerForm.get('lastname')?.hasError('required')">Keresztnév megadása kötelező.</div>
-  <div *ngIf="registerForm.get('lastname')?.hasError('minlength')">Legalább 3 karakter legyen.</div>
-  <div *ngIf="registerForm.get('lastname')?.hasError('maxlength')">Legfeljebb 15 karakter lehet.</div>
-</div>
+       <div *ngIf="registerForm.get('email')?.errors && registerForm.get('email')?.touched" class="invalid-feedback">
+       <!-- Frontend hiba -->
+       <div *ngIf="registerForm.get('email')?.errors?.['required']">Az email cím megadása kötelező.</div>
+       <div *ngIf="registerForm.get('email')?.errors?.['email']">Adj meg érvényes email címet.</div>
 
-<!-- Jelszó -->
-<input type="password"
-       formControlName="password"
-       class="form-control fadeIn third"
-       [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
-       placeholder="Jelszó">
-<div *ngIf="registerForm.get('password')?.touched" class="invalid-feedback">
-  <div *ngIf="registerForm.get('password')?.hasError('required')">A jelszó megadása kötelező.</div>
-  <div *ngIf="registerForm.get('password')?.hasError('minlength')">A jelszónak legalább 7 karakter hosszúnak kell lennie.</div>
-  <div *ngIf="registerForm.get('password')?.hasError('pattern')">A jelszónak tartalmaznia kell kis- és nagybetűt, valamint számot.</div>
-</div>
+       <!-- Backend hiba -->
+       <div *ngIf="registerForm.get('email')?.errors?.['backend']">
+       {{ registerForm.get('email')?.errors?.['backend'] }}
+       </div>
+       </div>
 
-<!-- Jelszó megerősítés -->
-<input type="password"
-       formControlName="confirm_password"
-       class="form-control fadeIn third"
-       [ngClass]="{'is-invalid': (registerForm.get('confirm_password')?.invalid && registerForm.get('confirm_password')?.touched) || registerForm.hasError('notMatching')}"
-       placeholder="Jelszó megerősítése">
-<div *ngIf="registerForm.get('confirm_password')?.touched" class="invalid-feedback">
-  <div *ngIf="registerForm.get('confirm_password')?.hasError('required')">A jelszó megerősítése kötelező.</div>
-  <div *ngIf="registerForm.hasError('notMatching')">A jelszavak nem egyeznek.</div>
-</div>
+
+       <input type="text"
+              formControlName="firstname"
+              class="fadeIn third form-control"
+              [ngClass]="{'is-invalid': registerForm.get('firstname')?.invalid && registerForm.get('firstname')?.touched}"
+              placeholder="Vezetéknév">
+       <div *ngIf="registerForm.get('firstname')?.touched" class="invalid-feedback">
+       <div *ngIf="registerForm.get('firstname')?.hasError('required')">Vezetéknév megadása kötelező.</div>
+       <div *ngIf="registerForm.get('firstname')?.hasError('minlength')">Legalább 3 karakter szükséges.</div>
+       <div *ngIf="registerForm.get('firstname')?.hasError('maxlength')">Legfeljebb 15 karakter lehet.</div>
+       <div *ngIf="registerForm.get('firstname')?.hasError('backend')">
+       {{ registerForm.get('firstname')?.getError('backend') }}
+       </div>
+       </div>
+
+       <input type="text"
+              formControlName="lastname"
+              class="fadeIn third form-control"
+              [ngClass]="{'is-invalid': registerForm.get('lastname')?.invalid && registerForm.get('lastname')?.touched}"
+              placeholder="Keresztnév">
+       <div *ngIf="registerForm.get('lastname')?.touched" class="invalid-feedback">
+       <div *ngIf="registerForm.get('lastname')?.hasError('required')">Keresztnév megadása kötelező.</div>
+       <div *ngIf="registerForm.get('lastname')?.hasError('minlength')">Legalább 3 karakter szükséges.</div>
+       <div *ngIf="registerForm.get('lastname')?.hasError('maxlength')">Legfeljebb 15 karakter lehet.</div>
+       <div *ngIf="registerForm.get('lastname')?.hasError('backend')">
+       {{ registerForm.get('lastname')?.getError('backend') }}
+       </div>
+       </div>
+
+
+       <input type="password"
+              formControlName="password"
+              class="fadeIn third form-control"
+              [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+              placeholder="Jelszó">
+       <div *ngIf="registerForm.get('password')?.touched" class="invalid-feedback">
+       <div *ngIf="registerForm.get('password')?.hasError('required')">A jelszó megadása kötelező.</div>
+       <div *ngIf="registerForm.get('password')?.hasError('minlength')">A jelszónak legalább 7 karakteresnek kell lennie.</div>
+       <div *ngIf="registerForm.get('password')?.hasError('pattern')">A jelszónak tartalmaznia kell kis- és nagybetűt, valamint számot.</div>
+       <div *ngIf="registerForm.get('password')?.hasError('backend')">
+       {{ registerForm.get('password')?.getError('backend') }}
+       </div>
+       </div>
+
+       <input type="password"
+              formControlName="confirm_password"
+              class="fadeIn third form-control"
+              [ngClass]="{'is-invalid': registerForm.get('confirm_password')?.invalid && registerForm.get('confirm_password')?.touched}"
+              placeholder="Jelszó megerősítése">
+       <div *ngIf="registerForm.get('confirm_password')?.touched" class="invalid-feedback">
+       <div *ngIf="registerForm.get('confirm_password')?.hasError('required')">A jelszó megerősítése kötelező.</div>
+       <div *ngIf="registerForm.get('confirm_password')?.hasError('backend')">
+       {{ registerForm.get('confirm_password')?.getError('backend') }}
+       </div>
+       </div>
+
 
   <input type="submit" class="fadeIn fourth btn btn-primary mt-3" value="Regisztráció">
 

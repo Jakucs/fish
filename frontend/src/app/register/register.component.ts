@@ -48,38 +48,55 @@ export class RegisterComponent {
     return pass === confirm ? null : { notMatching: true };
   };
 
-  // --- Regisztrációs logika ---
-  register() {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      return;
-    }
-
-    console.log(this.registerForm.value);
-    this.authapi.register(this.registerForm.value).subscribe({
-      next: (response: any) => {
-        if (response.success) {
-          console.log("Sikerült a regisztráció! " + response.message);
-          this.router.navigate(['successfulregister']);
-          const email = this.registerForm.value.email;
-          this.authapi.setEmail(email);
-        } else {
-          console.log('Nem sikerült a regisztráció', response);
-          this.errorMessageFromBackend = response.message;
-          this.showErrorCard = true;
+        // --- Regisztrációs logika ---
+      register() {
+        if (this.registerForm.invalid) {
+          this.registerForm.markAllAsTouched();
+          return;
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log('Regisztrációs hiba:', error);
+
+        this.authapi.register(this.registerForm.value).subscribe({
+          next: (response: any) => {
+            if (response.success) {
+              console.log("Sikerült a regisztráció! " + response.message);
+              const email = this.registerForm.value.email;
+              this.authapi.setEmail(email);
+              this.router.navigate(['successfulregister']);
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+        console.log('❌ Regisztrációs hiba:', error);
+
         this.showErrorCard = true;
-        this.errorMessageFromBackend = `
-          <hr>
-          <p>Valós email cím feltétel!</p>
-          <hr> 
-          <p>Jelszó minimum 7 karakter! Tartalmazzon kis- és nagybetűt, valamint számot!</p>
-          <hr>
-        `;
+
+        // 🔹 Laravel validációs hiba esetén
+        if (error.status === 422 && error.error?.errors) {
+          const backendErrors = error.error.errors;
+
+          // Végigmegyünk a mezőkön és beállítjuk a hibát Angular oldalról is
+          Object.keys(backendErrors).forEach((field) => {
+            const control = this.registerForm.get(field);
+            if (control) {
+              control.setErrors({ backend: backendErrors[field][0] });
+            }
+          });
+
+          // 🔹 Összegyűjtjük a hibaüzeneteket egyetlen stringbe
+          const allMessages = Object.values(backendErrors)
+            .flat()
+            .join('\n');
+
+          this.errorMessageFromBackend = allMessages;
+        } else if (error.error?.message) {
+          // Laravel más típusú hiba (pl. success: false)
+          this.errorMessageFromBackend = error.error.message;
+        } else {
+          // Egyéb hiba
+          this.errorMessageFromBackend = 'Ismeretlen hiba történt a regisztráció során.';
+        }
       }
-    });
-  }
+
+        });
+      }
+
 }
