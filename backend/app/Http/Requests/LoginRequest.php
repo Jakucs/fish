@@ -33,17 +33,19 @@ class LoginRequest extends FormRequest
         public function messages() {
 
         return [
-            "name.required" => "Név elvárt",
+            "login.required" => "Add meg a felhasználóneved vagy e-mail címed.",
             "password.required" => "Jelszó elvárt."
         ];
     }
 
-        public function failedValidation( Validator $validator ) {
+    	    public function failedValidation(Validator $validator)
+            {
+                $response = response()->json([
+                    "success" => false,
+                    "message" => "Adatbeviteli hiba",
+                    "errors" => $validator->errors()
+                ], 422); // ✅ státuszkód itt a response()->json() része
 
-        throw new HttpResponseException( response()->json([
-            "success" => false,
-            "error" => $validator->errors(),
-            "message" => "Adatbeviteli hiba"
-        ]));
-    }
+                throw new HttpResponseException($response); // ✅ csak a response objektum megy a konstruktorba
+            }
 }

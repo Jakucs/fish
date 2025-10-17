@@ -28,15 +28,6 @@ class TypeRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
-    {
-    throw new HttpResponseException(response()->json([
-        "success" => false,
-        "errors" => $validator->errors(),
-        "message" => "Adatbeviteli hiba"
-    ]));
-    }
-
         public function messages(){
         return [
             "type.required" => "Típus megadása szükséges",
@@ -45,4 +36,15 @@ class TypeRequest extends FormRequest
             "type.unique" => "Ez a típus már létezik"
         ];
     }
+
+    	    public function failedValidation(Validator $validator)
+            {
+                $response = response()->json([
+                    "success" => false,
+                    "message" => "Adatbeviteli hiba",
+                    "errors" => $validator->errors()
+                ], 422); // ✅ státuszkód itt a response()->json() része
+
+                throw new HttpResponseException($response); // ✅ csak a response objektum megy a konstruktorba
+            }
 }

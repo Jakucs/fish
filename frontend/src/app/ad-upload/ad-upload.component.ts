@@ -22,6 +22,7 @@ export class AdUploadComponent {
   city: string = '';
   isCityReadonly = true;
   showPhoneInput = true;
+  //errorMessagesFromBackend: string[] = [];
 
   constructor(
     private builder: FormBuilder,
@@ -133,6 +134,8 @@ ngOnInit(): void {
         error: (err) => {
           console.error('Mentési hiba:', err);
           alert('Hiba történt a hirdetés feladása során. Kérlek, próbáld újra.');
+          //this.errorMessagesFromBackend = err.data
+          //alert(this.errorMessagesFromBackend)
         }
       });
     } else {

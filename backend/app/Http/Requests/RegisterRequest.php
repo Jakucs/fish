@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "username" => "required|min:3|max:20|unique:users,username",
+            "username" => "required|min:3|max:20|unique:users,username|regex:/^(?![0-9]+$).*/",
             "email" => "required|email|unique:users,email",
             "firstname" => "required|min:3|max:15",
             "lastname" => "required|min:3|max:15",
@@ -39,25 +39,42 @@ class RegisterRequest extends FormRequest
     }
 
     	    public function messages(){
-        return [
-            "name.required" => "Név elvárt.",
-            "name.unique" => "Ez a név már foglalt",
-            "name.min" => "Név nemlehet kevesebb mint 3 karakter",
-            "name.max" => "Név nem lehet hosszabb mint 10 karakter",
-            "email.required" => "Az email cím megadása kötelező",
-            "email.unique" => "Email cím már foglalt (Hibás email cím)",
-            "password.required" => "A jelszó megadása kötelező.",
-            "password.min" => "A jelszónak legalább 5 karakter hosszúnak kell lennie.",
-            "password.confirmed" => "A jelszó megerősítés nem egyezik.",
-        ];
+                return [
+                    "username.required" => "Felhasználónév megadása kötelező.",
+                    "username.unique"   => "Ez a felhasználónév már foglalt.",
+                    "username.min"      => "Felhasználónév nem lehet kevesebb mint 3 karakter.",
+                    "username.max"      => "Felhasználónév nem lehet hosszabb mint 20 karakter.",
+                    "username.regex"    => "A felhasználónév nem állhat csak számokból.",
 
-    }
+                    "email.required"    => "Az email cím megadása kötelező.",
+                    "email.unique"      => "Ez az email cím már foglalt.",
+                    "email.email"       => "Érvényes email címet adj meg.",
 
-    	    public function failedValidation(Validator $validator){
-        throw new HttpResponseException(response()->json([
-            "success" => false,
-            "message" => "Adatbeviteli hiba",
-            "errors" => $validator->errors()
-        ]));
-    }
+                    "firstname.required"=> "Vezetéknév megadása kötelező.",
+                    "firstname.min"     => "Vezetéknév legalább 3 karakter.",
+                    "firstname.max"     => "Vezetéknév legfeljebb 15 karakter lehet.",
+
+                    "lastname.required" => "Keresztnév megadása kötelező.",
+                    "lastname.min"      => "Keresztnév legalább 3 karakter.",
+                    "lastname.max"      => "Keresztnév legfeljebb 15 karakter lehet.",
+
+                    "password.required" => "A jelszó megadása kötelező.",
+                    "password.min"      => "A jelszónak legalább 7 karakter hosszúnak kell lennie.",
+                    "password.regex"    => "A jelszónak tartalmaznia kell kis- és nagybetűt, valamint számot.",
+
+                    "confirm_password.same" => "A jelszavak nem egyeznek."
+                ];
+}
+
+
+    	    public function failedValidation(Validator $validator)
+            {
+                $response = response()->json([
+                    "success" => false,
+                    "message" => "Adatbeviteli hiba",
+                    "errors" => $validator->errors()
+                ], 422); // ✅ státuszkód itt a response()->json() része
+
+                throw new HttpResponseException($response); // ✅ csak a response objektum megy a konstruktorba
+            }
 }

@@ -31,28 +31,30 @@ class LocationRequest extends FormRequest
     }
 
 
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            "success" =>false,
-            "errors" => $validator->errors(),
-            "message" => "Adatbeviteli hiba"
-        ]));
-    }
+            public function messages()
+            {
+            return [
+                'product_id.required' => 'A termék azonosítója kötelező.',
+                'product_id.exists'   => 'A megadott termék azonosító nem létezik.',
+                'postal_code.required' => 'Az irányítószám megadása kötelező.',
+                'postal_code.string'   => 'Az irányítószámnak szövegnek kell lennie.',
+                'postal_code.max'      => 'Az irányítószám maximum 10 karakter lehet.',
+                'city.required'        => 'A város megadása kötelező.',
+                'city.string'          => 'A városnak szövegnek kell lennie.',
+                'city.max'             => 'A város maximum 255 karakter lehet.',
+            ];
+        }
 
-    public function messages()
-    {
-    return [
-        'product_id.required' => 'A termék azonosítója kötelező.',
-        'product_id.exists'   => 'A megadott termék azonosító nem létezik.',
-        'postal_code.required' => 'Az irányítószám megadása kötelező.',
-        'postal_code.string'   => 'Az irányítószámnak szövegnek kell lennie.',
-        'postal_code.max'      => 'Az irányítószám maximum 10 karakter lehet.',
-        'city.required'        => 'A város megadása kötelező.',
-        'city.string'          => 'A városnak szövegnek kell lennie.',
-        'city.max'             => 'A város maximum 255 karakter lehet.',
-    ];
-}
+    	    public function failedValidation(Validator $validator)
+            {
+                $response = response()->json([
+                    "success" => false,
+                    "message" => "Adatbeviteli hiba",
+                    "errors" => $validator->errors()
+                ], 422); // ✅ státuszkód itt a response()->json() része
+
+                throw new HttpResponseException($response); // ✅ csak a response objektum megy a konstruktorba
+            }
 
 
 
