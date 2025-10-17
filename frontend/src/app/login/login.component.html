@@ -8,23 +8,34 @@
     </div>
 
     <!-- Login Form -->
-<form [formGroup]="loginForm" (ngSubmit)="login()">
-  <input type="text"
-         id="login"
-         formControlName="login"
-         class="fadeIn second"
-         placeholder="Felhasználónév vagy email">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
 
-  <input type="password"
-         id="password"
-         formControlName="password"
-         class="fadeIn third"
-         placeholder="Jelszó">
+      <!-- 🔴 Backend hibaüzenet -->
+      <div *ngIf="showErrorCard" class="error-message fadeIn">
+        {{ errorMessageFromBackend }}
+      </div>
 
-  <input type="submit"
-         class="fadeIn fourth"
-         value="Belépés">
-</form>
+      <input
+        type="text"
+        id="login"
+        formControlName="login"
+        class="fadeIn second"
+        placeholder="Felhasználónév vagy email">
+
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        class="fadeIn third"
+        placeholder="Jelszó">
+
+      <input
+        type="submit"
+        class="fadeIn fourth"
+        value="Belépés">
+
+    </form>
+
 
 <div class="text-center fadeIn fifth underlineHover">
   <a href="/register" style="text-decoration: none; color: inherit;">

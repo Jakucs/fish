@@ -24,7 +24,7 @@ export class LoginComponent {
   ) { }
 
   loggedIn = false;
-  errorMessageFromBackend!: any;
+  errorMessageFromBackend: string | null = null;
   loginForm !: FormGroup;
   showErrorCard: boolean = false;
 
@@ -37,33 +37,32 @@ export class LoginComponent {
   }
 
   login() {
-    console.log("Azonosítás..");
+    this.errorMessageFromBackend = null;
+    this.showErrorCard = false;
+
     this.authapi.login(this.loginForm.value).subscribe({
       next: (res: any) => {
-        console.log(res);
-
         if (!res.data || !res.data.token) {
-          this.errorMessageFromBackend = `<p>Az azonosítás sikertelen. Nincs érvényes token!</p>`;
+          this.errorMessageFromBackend = 'Az azonosítás sikertelen. Nincs érvényes token!';
+          this.showErrorCard = true;
           return;
         }
 
         const token = res.data.token;
-        console.log('Token beállítása:', token);
         localStorage.setItem('token', token);
         localStorage.setItem('userName', res.data.username);
         localStorage.setItem('userId', res.data.user_id.toString());
         localStorage.setItem('email', res.data.email);
 
         this.loggedIn = true;
-        console.log('LocalStorage tartalom:', localStorage.getItem('token'), localStorage.getItem('userId'));
         this.loginForm.reset();
-        this.router.navigate(['myads']).then(() => {
-          window.location.reload();
-        });
+        this.router.navigate(['myads']).then(() => window.location.reload());
       },
       error: (error: HttpErrorResponse) => {
         console.log("Belépési hiba:", error);
-        this.errorMessageFromBackend = `<hr><p>Hibás felhasználónév vagy jelszó</p><hr>`;
+
+        // Ha a backend 401/422-t küld, itt jelenítjük meg:
+        this.errorMessageFromBackend = "Hibás felhasználónév vagy jelszó.";
         this.showErrorCard = true;
       }
     });
