@@ -22,7 +22,7 @@ export class AdUploadComponent {
   city: string = '';
   isCityReadonly = true;
   showPhoneInput = true;
-  //errorMessagesFromBackend: string[] = [];
+  errorMessagesFromBackend? = [];
 
   constructor(
     private builder: FormBuilder,
@@ -132,11 +132,10 @@ ngOnInit(): void {
         }
       },
         error: (err) => {
-          console.error('Mentési hiba:', err);
-          alert('Hiba történt a hirdetés feladása során. Kérlek, próbáld újra.');
-          //this.errorMessagesFromBackend = err.data
-          //alert(this.errorMessagesFromBackend)
-        }
+        this.errorMessagesFromBackend =
+        err.error?.errors?.name || [err.error?.message || 'Ismeretlen hiba történt.'];
+      }
+
       });
     } else {
       console.warn('Az űrlap érvénytelen, töltsd ki az összes mezőt!');

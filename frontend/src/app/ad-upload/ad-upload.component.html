@@ -3,22 +3,36 @@
 <form [formGroup]="productForm" (ngSubmit)="saveProduct()" novalidate>
 
   <!-- Termék neve -->
-  <div class="mb-3 container">
-    <label for="productName" class="form-label">Termék neve</label>
-    <input type="text"
-           formControlName="name"
-           class="form-control"
-           id="productName"
-           placeholder="Add meg a termék nevét"
-           [ngClass]="{'is-invalid': productForm.controls['name'].invalid && productForm.controls['name'].touched}">
-  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['required']" class="invalid-feedback">
+<div class="mb-3 container">
+  <label for="productName" class="form-label">Termék neve</label>
+  <input type="text"
+         formControlName="name"
+         class="form-control"
+         id="productName"
+         placeholder="Add meg a termék nevét"
+         [ngClass]="{
+           'is-invalid': productForm.controls['name'].invalid && productForm.controls['name'].touched
+                         || errorMessagesFromBackend?.length
+         }">
+
+  <!-- Frontend validációk -->
+  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['required']"
+       class="invalid-feedback">
     Termék neve megadása kötelező.
   </div>
-  
-  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['minlength']" class="invalid-feedback">
+
+  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['minlength']"
+       class="invalid-feedback">
     A termék neve legalább 3 karakter hosszú kell legyen.
   </div>
+
+  <!-- 🔴 Backend hiba -->
+  <div *ngIf="errorMessagesFromBackend?.length"
+       class="invalid-feedback d-block">
+    <div *ngFor="let msg of errorMessagesFromBackend">{{ msg }}</div>
   </div>
+</div>
+
 
   <!-- Leírás -->
 <div class="mb-3 container">
