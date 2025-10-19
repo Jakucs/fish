@@ -4,86 +4,82 @@
 
   <!-- Termék neve -->
 <div class="mb-3 container">
-  <label for="productName" class="form-label">Termék neve</label>
-  <input type="text"
-         formControlName="name"
-         class="form-control"
-         id="productName"
-         placeholder="Add meg a termék nevét"
-         [ngClass]="{
-           'is-invalid': productForm.controls['name'].invalid && productForm.controls['name'].touched
-                         || errorMessagesFromBackend?.length
-         }">
+  <label for="productName" class="form-label">Termék neve <span class="text-danger">*</span></label>
+  <input
+    type="text"
+    formControlName="name"
+    id="productName"
+    class="form-control"
+    placeholder="Add meg a termék nevét"
+    [ngClass]="{'is-invalid': productForm.get('name')?.invalid && productForm.get('name')?.touched}"
+  />
 
-  <!-- Frontend validációk -->
-  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['required']"
-       class="invalid-feedback">
-    Termék neve megadása kötelező.
-  </div>
-
-  <div *ngIf="productForm.controls['name'].touched && productForm.controls['name'].errors?.['minlength']"
-       class="invalid-feedback">
-    A termék neve legalább 3 karakter hosszú kell legyen.
-  </div>
-
-  <!-- 🔴 Backend hiba -->
-  <div *ngIf="errorMessagesFromBackend?.length"
-       class="invalid-feedback d-block">
-    <div *ngFor="let msg of errorMessagesFromBackend">{{ msg }}</div>
+  <div *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid" class="invalid-feedback d-block">
+    <div *ngIf="productForm.get('name')?.errors?.['required']">Termék megadása szükséges.</div>
+    <div *ngIf="productForm.get('name')?.errors?.['minlength']">Product minimum 3 karakter kell legyen.</div>
+    <div *ngIf="productForm.get('name')?.errors?.['maxlength']">Product maximum 50 karakter lehet.</div>
+    <div *ngIf="productForm.get('name')?.errors?.['pattern']">A terméknév nem állhat csak számokból.</div>
   </div>
 </div>
+
 
 
   <!-- Leírás -->
 <div class="mb-3 container">
   <label for="productDescription" class="form-label">Leírás</label>
   <textarea
-         formControlName="description"
-         class="form-control"
-         id="productDescription"
-         rows="3"
-         placeholder="Add meg a termék leírását"
-         [ngClass]="{'is-invalid': productForm.controls['description'].invalid && productForm.controls['description'].touched}">
+    formControlName="description"
+    id="productDescription"
+    rows="3"
+    class="form-control"
+    placeholder="Add meg a termék leírását"
+    [ngClass]="{'is-invalid': productForm.get('description')?.invalid && productForm.get('description')?.touched}">
   </textarea>
-  <div *ngIf="productForm.controls['description'].invalid && productForm.controls['description'].touched" class="invalid-feedback">
-    Leírás megadása kötelező.
+
+  <div *ngIf="productForm.get('description')?.errors?.['maxlength']" class="invalid-feedback d-block">
+    A leírás maximum 2000 karakter lehet.
   </div>
 </div>
 
 
+
   <!-- Ár -->
-  <div class="mb-3 container">
-    <label for="productPrice" class="form-label">Ár</label>
-    
-    <div class="input-group">
-      <input type="number"
-            formControlName="price"
-            class="form-control"
-            id="productPrice"
-            placeholder="Add meg az árat"
-            [ngClass]="{'is-invalid': productForm.controls['price'].invalid && productForm.controls['price'].touched}">
-      <span class="input-group-text">Ft</span>
-    </div>
+<div class="mb-3 container">
+  <label for="productPrice" class="form-label">
+    Ár <span class="text-danger">*</span>
+  </label>
 
-    <div *ngIf="productForm.controls['price'].invalid && productForm.controls['price'].touched" class="invalid-feedback">
-      Ár megadása kötelező.
-    </div>
-
-    <!-- Checkbox az ár nullázásához az input alatt -->
-    <div class="form-check mt-2">
-      <input class="form-check-input"
-            type="checkbox"
-            id="freePrice"
-            (change)="onFreePriceChange($event)">
-      <label class="form-check-label" for="freePrice">
-        Ingyenes termék
-      </label>
-    </div>
+  <div class="input-group">
+    <input
+      type="number"
+      formControlName="price"
+      id="productPrice"
+      class="form-control"
+      placeholder="Add meg az árat"
+      [ngClass]="{'is-invalid': productForm.get('price')?.invalid && productForm.get('price')?.touched}">
+    <span class="input-group-text">Ft</span>
   </div>
 
+  <div *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid"
+       class="invalid-feedback d-block">
+    <div *ngIf="productForm.get('price')?.errors?.['required']">Az ár megadása kötelező.</div>
+    <div *ngIf="productForm.get('price')?.errors?.['pattern']">Az ár csak szám lehet.</div>
+    <div *ngIf="productForm.get('price')?.errors?.['max']">Az ár nem lehet nagyobb, mint 99 999 999.</div>
+  </div>
+
+  <!-- ✅ Checkbox bent a containerben -->
+  <div class="form-check mt-2">
+    <input class="form-check-input" type="checkbox" id="freePrice" (change)="onFreePriceChange($event)">
+    <label class="form-check-label" for="freePrice">
+      Ingyenes termék
+    </label>
+  </div>
+</div>
+
+
 
   <div class="mb-3 container">
-  <label for="productType" class="form-label">Kategória</label>
+  <label for="productType" class="form-label">Kategória <span class="text-danger">*</span> </label> 
   <select
          formControlName="type_id"
          id="productType"
@@ -116,7 +112,7 @@
 </div>
 
   <div class="mb-3 container">
-    <label for="productCondition" class="form-label">Állapot</label>
+    <label for="productCondition" class="form-label">Állapot  <span class="text-danger">*</span> </label>
     <select
           formControlName="condition"
           id="productCondition"
@@ -136,24 +132,45 @@
 
 
 <div class="mb-3 container">
-  <label for="postal_code" class="form-label">Irányítószám</label>
+  <label for="postal_code" class="form-label">
+    Irányítószám <span class="text-danger">*</span>
+  </label>
   <input type="text"
          formControlName="postal_code"
          class="form-control"
          id="postal_code"
          placeholder="Pl. 1061"
          (input)="getCityByZip()">
+
+  <div *ngIf="productForm.get('postal_code')?.touched && productForm.get('postal_code')?.invalid"
+       class="text-danger small mt-1">
+    <div *ngIf="productForm.get('postal_code')?.errors?.['required']">
+      Az irányítószám megadása kötelező.
+    </div>
+    <div *ngIf="productForm.get('postal_code')?.errors?.['pattern']">
+      Az irányítószámnak 4 számjegyből kell állnia.
+    </div>
+  </div>
 </div>
 
+
 <div class="mb-3 container">
-  <label for="city" class="form-label">Város</label>
+  <label for="city" class="form-label">
+    Város <span class="text-danger">*</span>
+  </label>
   <input type="text"
          formControlName="city"
          class="form-control"
          id="city"
          [readonly]="isCityReadonly"
          placeholder="Automatikusan kitöltve vagy kézzel megadható">
+
+  <div *ngIf="productForm.get('city')?.touched && productForm.get('city')?.invalid"
+       class="text-danger small mt-1">
+    A város megadása kötelező.
+  </div>
 </div>
+
 
 
 <div *ngIf="showPhoneInput" class="mb-3 container">

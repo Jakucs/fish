@@ -22,7 +22,6 @@ export class AdUploadComponent {
   city: string = '';
   isCityReadonly = true;
   showPhoneInput = true;
-  errorMessagesFromBackend? = [];
 
   constructor(
     private builder: FormBuilder,
@@ -35,16 +34,39 @@ export class AdUploadComponent {
 
 ngOnInit(): void {
   this.productForm = this.builder.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
-    description: ['', [Validators.required]],
+        name: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        Validators.pattern(/^(?!\d+$).+/) // ne lehessen csak szám
+      ]
+    ],
+    description: ['', [Validators.maxLength(2000)]],
     type_id: ['', Validators.required],
     user_id: [localStorage.getItem('userId')],
-    price: ['', Validators.required],
+    price: [
+      '',
+      [
+        Validators.required,
+        Validators.max(99999999),
+        Validators.pattern(/^[0-9]+$/)
+      ]
+    ],
     image: [''],
     condition: ['', Validators.required],
     status: ['active', Validators.required],
     postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
-    city: [''],
+    city: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(/^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s-]+$/)
+      ]
+    ],
     phone_number: ['']
   });
 
@@ -132,8 +154,7 @@ ngOnInit(): void {
         }
       },
         error: (err) => {
-        this.errorMessagesFromBackend =
-        err.error?.errors?.name || [err.error?.message || 'Ismeretlen hiba történt.'];
+        console.log("Backend error: ", err)
       }
 
       });
