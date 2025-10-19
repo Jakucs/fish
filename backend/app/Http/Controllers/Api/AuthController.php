@@ -48,7 +48,15 @@ class AuthController extends ResponseController
             return $this->sendResponse($data, "Sikeres bejelentkezés");
 
         } else {
-            return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 405);
+            (new BannerController)->setLoginCounter($request["name"]);
+            (new BannerController)->resetLoginCounter($user->name);
+            $counter = (new BannerController)->getLoginCounter($request["name"]);
+            if($counter > 3){
+                $time = ( new BannerController )->setBanningTime($request["name"]);
+                return ( new BannerController )->getBanningTime($request["name"]);
+            }
+            return $counter;
+            //return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 405);
         }
     }
 
