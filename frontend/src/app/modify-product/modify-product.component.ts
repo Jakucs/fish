@@ -17,6 +17,8 @@ export class ModifyProductComponent {
     isCityReadonly = false;
     productId!: number;
     images: string[] = [];
+    successMessage: string | null = null;
+    errorMessage: string | null = null;
 
   constructor(
     private productapi: ProductapiService,
@@ -149,22 +151,32 @@ export class ModifyProductComponent {
   }
 
 
-    onSubmit() {
-    if (this.productForm.valid) {
-      const updatedProduct = this.productForm.value;
-      console.log('Mentendő adatok:', updatedProduct);
+onSubmit() {
+  if (this.productForm.valid) {
+    const updatedProduct = this.productForm.value;
+    console.log('Mentendő adatok:', updatedProduct);
 
-      this.productapi.modifyProduct(this.productId, updatedProduct).subscribe({
-        next: (res) => {
-          console.log('Sikeres módosítás:', res);
-          alert('Termék sikeresen frissítve!');
-        },
-        error: (err) => {
-          console.error('Hiba a módosítás közben:', err);
-        }
-      });
-    }
+    this.productapi.modifyProduct(this.productId, updatedProduct).subscribe({
+      next: (res) => {
+        console.log('Sikeres módosítás:', res);
+        this.successMessage = '✅ A termék sikeresen frissítve lett!';
+        this.errorMessage = null;
+
+        // Üzenet eltüntetése pár másodperc után
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
+      },
+      error: (err) => {
+        console.error('Hiba a módosítás közben:', err);
+        this.errorMessage = '❌ Hiba történt a frissítés során.';
+        this.successMessage = null;
+      }
+    });
+  } else {
+    this.errorMessage = 'Kérlek, töltsd ki helyesen az összes kötelező mezőt.';
   }
+}
 
 
   goToModifyImages(){
