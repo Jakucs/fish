@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ProductapiService } from '../shared/productapi.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
@@ -29,13 +29,47 @@ export class ModifyProductComponent {
     ngOnInit(): void {
     // Reactive form inicializálása
     this.productForm = this.builder.group({
-      name: [''],
-      description: [''],
+      name: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        Validators.pattern('^(?![0-9]+$).+')
+      ]
+    ],
+      description: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(1000)
+      ]
+    ],
       type_id: [''],
-      price: [''],
+      price: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern('^[0-9]+$'), // csak szám
+        Validators.max(99999999)
+      ]
+    ],
       condition: [''],
-      postal_code: [''],
-      city: ['']
+      postal_code: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern('^[0-9]{4}$') // magyar irányítószám formátum
+      ]
+    ],
+      city: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern('^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\\-\\s]+$') // csak betű, szóköz, kötőjel
+      ]
+    ]
     });
 
     // URL-ből az ID

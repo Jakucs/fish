@@ -2,80 +2,124 @@
   <h4 class="mb-3">Termék adatainak módosítása</h4>
 
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <!-- Név -->
-    <div class="mb-3">
-      <label for="name" class="form-label">Termék neve</label>
-      <input
-        type="text"
-        id="name"
-        formControlName="name"
-        class="form-control"
-        placeholder="Pl.: Horgászbot"
-      />
-    </div>
+  <!-- Név -->
+  <div class="mb-3">
+    <label for="name" class="form-label">Termék neve <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      id="name"
+      formControlName="name"
+      class="form-control"
+      placeholder="Pl.: Horgászbot"
+      [ngClass]="{'is-invalid': productForm.get('name')?.invalid && productForm.get('name')?.touched}"
+    />
 
-    <!-- Leírás -->
-    <div class="mb-3">
-      <label for="description" class="form-label">Leírás</label>
-      <textarea
-        id="description"
-        formControlName="description"
-        class="form-control"
-        rows="3"
-        placeholder="Röviden írd le a terméket..."
-      ></textarea>
+    <!-- 🔹 Validációs hibák -->
+    <div *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid" class="invalid-feedback d-block">
+      <div *ngIf="productForm.get('name')?.errors?.['required']">Termék megadása szükséges.</div>
+      <div *ngIf="productForm.get('name')?.errors?.['minlength']">Product minimum 3 karakter kell legyen.</div>
+      <div *ngIf="productForm.get('name')?.errors?.['maxlength']">Product maximum 50 karakter lehet.</div>
+      <div *ngIf="productForm.get('name')?.errors?.['pattern']">A terméknév nem állhat csak számokból.</div>
     </div>
+  </div>
 
-    <!-- Ár -->
-    <div class="mb-3">
-      <label for="price" class="form-label">Ár (Ft)</label>
-      <input
-        type="number"
-        id="price"
-        formControlName="price"
-        class="form-control"
-        placeholder="Pl.: 4000"
-      />
+  <!-- Leírás -->
+  <div class="mb-3">
+    <label for="description" class="form-label">Leírás <span class="text-danger">*</span></label>
+    <textarea
+      id="description"
+      formControlName="description"
+      class="form-control"
+      rows="3"
+      placeholder="Röviden írd le a terméket..."
+      [ngClass]="{'is-invalid': productForm.get('description')?.invalid && productForm.get('description')?.touched}"
+    ></textarea>
+
+    <div *ngIf="productForm.get('description')?.touched && productForm.get('description')?.invalid" class="invalid-feedback d-block">
+      <div *ngIf="productForm.get('description')?.errors?.['required']">A leírás megadása kötelező.</div>
+      <div *ngIf="productForm.get('description')?.errors?.['minlength']">A leírás legalább 10 karakter hosszú legyen.</div>
+      <div *ngIf="productForm.get('description')?.errors?.['maxlength']">A leírás legfeljebb 1000 karakter lehet.</div>
     </div>
+  </div>
 
-    <!-- Állapot -->
-    <div class="mb-3">
-      <label for="condition" class="form-label">Állapot</label>
-      <select id="condition" formControlName="condition" class="form-select">
-        <option value="Új">Új</option>
-        <option value="Újszerű">Újszerű</option>
-        <option value="Jó állapotú">Jó állapotú</option>
-        <option value="Használt">Használt</option>
-      </select>
+  <!-- Ár -->
+  <div class="mb-3">
+    <label for="price" class="form-label">Ár (Ft) <span class="text-danger">*</span></label>
+    <input
+      type="number"
+      id="price"
+      formControlName="price"
+      class="form-control"
+      placeholder="Pl.: 4000"
+      [ngClass]="{'is-invalid': productForm.get('price')?.invalid && productForm.get('price')?.touched}"
+    />
+
+    <div *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid" class="invalid-feedback d-block">
+      <div *ngIf="productForm.get('price')?.errors?.['required']">Az ár megadása kötelező.</div>
+      <div *ngIf="productForm.get('price')?.errors?.['pattern']">Az ár csak szám lehet.</div>
+      <div *ngIf="productForm.get('price')?.errors?.['max']">Az ár nem lehet nagyobb, mint 99 999 999.</div>
     </div>
+  </div>
 
-    <!-- Irányítószám -->
-    <div class="mb-3">
-      <label for="postal_code" class="form-label">Irányítószám</label>
-      <input
-        type="text"
-        id="postal_code"
-        maxlength="4"
-        formControlName="postal_code"
-        class="form-control"
-        placeholder="Pl.: 1095"
-        (input)="getCityByZip()"
-      />
+  <!-- Állapot -->
+  <div class="mb-3">
+    <label for="condition" class="form-label">Állapot <span class="text-danger">*</span></label>
+    <select
+      id="condition"
+      formControlName="condition"
+      class="form-select"
+      [ngClass]="{'is-invalid': productForm.get('condition')?.invalid && productForm.get('condition')?.touched}"
+    >
+      <option value="" disabled selected hidden>Válassz állapotot</option>
+      <option value="Új">Új</option>
+      <option value="Újszerű">Újszerű</option>
+      <option value="Jó állapotú">Jó állapotú</option>
+      <option value="Használt">Használt</option>
+    </select>
+
+    <div *ngIf="productForm.get('condition')?.touched && productForm.get('condition')?.invalid" class="invalid-feedback d-block">
+      Állapot kiválasztása kötelező.
     </div>
+  </div>
 
-    <!-- Város -->
-    <div class="mb-3">
-      <label for="city" class="form-label">Város</label>
-      <input
-        type="text"
-        id="city"
-        formControlName="city"
-        class="form-control"
-        placeholder="Automatikusan kitöltve"
-        [readonly]="isCityReadonly"
-      />
+  <!-- Irányítószám -->
+  <div class="mb-3">
+    <label for="postal_code" class="form-label">Irányítószám <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      id="postal_code"
+      maxlength="4"
+      formControlName="postal_code"
+      class="form-control"
+      placeholder="Pl.: 1095"
+      (input)="getCityByZip()"
+      [ngClass]="{'is-invalid': productForm.get('postal_code')?.invalid && productForm.get('postal_code')?.touched}"
+    />
+
+    <div *ngIf="productForm.get('postal_code')?.touched && productForm.get('postal_code')?.invalid" class="invalid-feedback d-block">
+      <div *ngIf="productForm.get('postal_code')?.errors?.['required']">Az irányítószám megadása kötelező.</div>
+      <div *ngIf="productForm.get('postal_code')?.errors?.['pattern']">Az irányítószám pontosan 4 számjegyből állhat.</div>
     </div>
+  </div>
 
+  <!-- Város -->
+  <div class="mb-3">
+    <label for="city" class="form-label">Város <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      id="city"
+      formControlName="city"
+      class="form-control"
+      placeholder="Automatikusan kitöltve"
+      [readonly]="isCityReadonly"
+      [ngClass]="{'is-invalid': productForm.get('city')?.invalid && productForm.get('city')?.touched}"
+    />
+
+    <div *ngIf="productForm.get('city')?.touched && productForm.get('city')?.invalid" class="invalid-feedback d-block">
+      <div *ngIf="productForm.get('city')?.errors?.['required']">A város megadása kötelező.</div>
+      <div *ngIf="productForm.get('city')?.errors?.['pattern']">A város neve csak betűket, szóközt és kötőjelet tartalmazhat.</div>
+    </div>
+  </div>
         
             <!-- Képek előnézete -->
             @if (images.length > 0) {
