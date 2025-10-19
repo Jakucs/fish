@@ -70,6 +70,8 @@ class AuthController extends ResponseController
 
                         $data = [
                             "name" => $user->username,
+                            "user_id" => $user->id,
+                            "email" => $user->email,
                             "token" => $token
                         ];
 
