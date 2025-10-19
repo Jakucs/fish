@@ -26,56 +26,63 @@ class AuthController extends ResponseController
         return $this->sendResponse($user, "Sikeres regisztráció");
     }
 
-    public function login(LoginRequest $request)
-    {
-        $request->validated();
+public function login(LoginRequest $request)
+{
+    $request->validated();
 
-        $loginInput = $request->input('login'); // felhasználónév vagy email
-        $password = $request->input('password');
+    $loginInput = $request->input('login');
+    $password = $request->input('password');
 
-        // Kiválasztjuk, hogy email vagy username alapján próbálkozzunk
-        $credentials = ['password' => $password];
-
-        if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
-            $credentials['email'] = $loginInput;
-        } else {
-            $credentials['username'] = $loginInput;
-        }
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            // Hibás próbálkozások és tiltás visszaállítása
-            (new BannerController)->resetLoginCounter($user->username);
-            (new BannerController)->resetBanningTime($user->username);
-
-            // Token létrehozása
-            $token = $user->createToken($user->username . "Token")->plainTextToken;
-
-            $data = [
-                "username" => $user->username,
-                "token" => $token
-            ];
-
-            return $this->sendResponse($data, "Sikeres bejelentkezés");
-        } else {
-            // Hibás próbálkozások kezelése
-            (new BannerController)->setLoginCounter($loginInput);
-            $counter = (new BannerController)->getLoginCounter($loginInput);
-            $banningTime = (new BannerController)->getBanningTime($loginInput);
-
-            if ($counter > 3 && $banningTime != null) {
-                $errorMessage = [
-                    "Következő lehetőség: ",
-                    $banningTime
-                ];
-                return $this->sendError("Azonosítási hiba", $errorMessage, 405);
-            } else {
-                (new BannerController)->setBanningTime($loginInput);
-                return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 401);
-            }
-        }
+    $credentials = ['password' => $password];
+    if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
+        $credentials['email'] = $loginInput;
+    } else {
+        $credentials['username'] = $loginInput;
     }
+
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+
+        (new BannerController)->resetLoginCounter($user->username);
+        (new BannerController)->resetBanningTime($user->username);
+
+        $token = $user->createToken($user->username . "Token")->plainTextToken;
+
+        $data = [
+            "name" => $user->username,
+            "token" => $token
+        ];
+
+        return $this->sendResponse($data, "Sikeres bejelentkezés");
+    } else {
+        $banner = new BannerController();
+
+        // előbb növeljük a számlálót
+        $banner->setLoginCounter($loginInput);
+
+        // lekérjük az aktuális értékeket
+        $counter = $banner->getLoginCounter($loginInput);
+        $banningTime = $banner->getBanningTime($loginInput);
+
+        // ha most lépte túl a 3-at -> tiltás beállítása és hibaüzenet
+        if ($counter > 3) {
+            if (!$banningTime) {
+                $banner->setBanningTime($loginInput);
+                $banningTime = $banner->getBanningTime($loginInput);
+            }
+
+            $errorMessage = [
+                "Következő lehetőség: ",
+                $banningTime
+            ];
+            return $this->sendError("Túl sok sikertelen próbálkozás", $errorMessage, 405);
+        }
+
+        // ha még nem tiltott, sima hiba
+        return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 401);
+    }
+}
+
 
 
 
