@@ -9,6 +9,7 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 
 
@@ -26,62 +27,81 @@ class AuthController extends ResponseController
         return $this->sendResponse($user, "Sikeres regisztráció");
     }
 
-public function login(LoginRequest $request)
-{
-    $request->validated();
+            public function login(LoginRequest $request)
+            {
+                    $request->validated();
 
-    $loginInput = $request->input('login');
-    $password = $request->input('password');
+                    $loginInput = $request->input('login');
+                    $password = $request->input('password');
 
-    $credentials = ['password' => $password];
-    if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
-        $credentials['email'] = $loginInput;
-    } else {
-        $credentials['username'] = $loginInput;
-    }
+                    $credentials = ['password' => $password];
+                    if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
+                        $credentials['email'] = $loginInput;
+                    } else {
+                        $credentials['username'] = $loginInput;
+                    }
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
+                        // ⛔️ Ellenőrzés: tiltva van-e a felhasználó
+                    $banner = new BannerController();
+                    $banningTime = $banner->getBanningTime($loginInput);
 
-        (new BannerController)->resetLoginCounter($user->username);
-        (new BannerController)->resetBanningTime($user->username);
+                    if ($banningTime && Carbon::parse($banningTime)->isFuture()) {
+                        // Még tart a tiltás
+                        return $this->sendError(
+                            "Túl sok sikertelen próbálkozás",
+                            ["Következő lehetőség: ", $banningTime],
+                            403
+                        );
+                    }
 
-        $token = $user->createToken($user->username . "Token")->plainTextToken;
+                    // Ha lejárt, akkor feloldjuk
+                    if ($banningTime && Carbon::parse($banningTime)->isPast()) {
+                        $banner->resetBanningTime($loginInput);
+                        $banner->resetLoginCounter($loginInput);
+                    }
 
-        $data = [
-            "name" => $user->username,
-            "token" => $token
-        ];
+                    if (Auth::attempt($credentials)) {
+                        $user = Auth::user();
 
-        return $this->sendResponse($data, "Sikeres bejelentkezés");
-    } else {
-        $banner = new BannerController();
+                        (new BannerController)->resetLoginCounter($user->username);
+                        (new BannerController)->resetBanningTime($user->username);
 
-        // előbb növeljük a számlálót
-        $banner->setLoginCounter($loginInput);
+                        $token = $user->createToken($user->username . "Token")->plainTextToken;
 
-        // lekérjük az aktuális értékeket
-        $counter = $banner->getLoginCounter($loginInput);
-        $banningTime = $banner->getBanningTime($loginInput);
+                        $data = [
+                            "name" => $user->username,
+                            "token" => $token
+                        ];
 
-        // ha most lépte túl a 3-at -> tiltás beállítása és hibaüzenet
-        if ($counter > 3) {
-            if (!$banningTime) {
-                $banner->setBanningTime($loginInput);
-                $banningTime = $banner->getBanningTime($loginInput);
+                        return $this->sendResponse($data, "Sikeres bejelentkezés");
+                    } else {
+                        $banner = new BannerController();
+
+                        // előbb növeljük a számlálót
+                        $banner->setLoginCounter($loginInput);
+
+                        // lekérjük az aktuális értékeket
+                        $counter = $banner->getLoginCounter($loginInput);
+                        $banningTime = $banner->getBanningTime($loginInput);
+
+                        // ha most lépte túl a 3-at -> tiltás beállítása és hibaüzenet
+                        if ($counter > 3) {
+                            if (!$banningTime) {
+                                $banner->setBanningTime($loginInput);
+                                $banningTime = $banner->getBanningTime($loginInput);
+                            }
+
+                            $errorMessage = [
+                                "Következő lehetőség: ",
+                                $banningTime
+                            ];
+                            return $this->sendError("Túl sok sikertelen próbálkozás", $errorMessage, 405);
+                        }
+
+                        // ha még nem tiltott, sima hiba
+                        return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 401);
+                    }
             }
-
-            $errorMessage = [
-                "Következő lehetőség: ",
-                $banningTime
-            ];
-            return $this->sendError("Túl sok sikertelen próbálkozás", $errorMessage, 405);
-        }
-
-        // ha még nem tiltott, sima hiba
-        return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 401);
-    }
-}
 
 
 

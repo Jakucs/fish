@@ -57,7 +57,7 @@ class BannerController extends Controller
             ->first();
 
         if ($user) {
-            $user->banning_time = Carbon::now()->addMinutes(1);
+            $user->banning_time = Carbon::now()->addHours(1); // Átkéne gondolni a User élmény és biztonság közto egyensúlyt
             $user->save();
         }
     }
