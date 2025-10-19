@@ -1,0 +1,5 @@
+.alert {
+  font-weight: 500;
+  border-radius: 8px;
+  transition: opacity 0.3s ease;
+}

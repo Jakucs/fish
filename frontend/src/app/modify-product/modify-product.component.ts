@@ -153,30 +153,18 @@ export class ModifyProductComponent {
 
 onSubmit() {
   if (this.productForm.valid) {
-    const updatedProduct = this.productForm.value;
-    console.log('Mentendő adatok:', updatedProduct);
-
-    this.productapi.modifyProduct(this.productId, updatedProduct).subscribe({
+    this.productapi.modifyProduct(this.productId, this.productForm.value).subscribe({
       next: (res) => {
-        console.log('Sikeres módosítás:', res);
-        this.successMessage = '✅ A termék sikeresen frissítve lett!';
-        this.errorMessage = null;
-
-        // Üzenet eltüntetése pár másodperc után
-        setTimeout(() => {
-          this.successMessage = null;
-        }, 3000);
+        this.successMessage = 'Termék sikeresen frissítve!';
+        setTimeout(() => this.successMessage = null, 3000);
       },
       error: (err) => {
-        console.error('Hiba a módosítás közben:', err);
-        this.errorMessage = '❌ Hiba történt a frissítés során.';
-        this.successMessage = null;
+        this.errorMessage = 'Hiba történt a frissítés során.';
       }
     });
-  } else {
-    this.errorMessage = 'Kérlek, töltsd ki helyesen az összes kötelező mezőt.';
   }
 }
+
 
 
   goToModifyImages(){
