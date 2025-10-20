@@ -180,13 +180,17 @@
          class="form-control"
          id="phone_number"
          placeholder="Add meg a telefonszámodat"
-         [ngClass]="{'is-invalid': productForm.controls['phone_number'].invalid && productForm.controls['phone_number'].touched}">
-  <div *ngIf="productForm.controls['phone_number'].invalid && productForm.controls['phone_number'].touched" class="invalid-feedback">
+         [ngClass]="{
+           'is-invalid': productForm.controls['phone_number'].invalid && productForm.controls['phone_number'].touched
+         }">
+
+  <div *ngIf="productForm.controls['phone_number'].hasError('required')" class="invalid-feedback">
     Telefonszám megadása kötelező.
   </div>
-  <div *ngIf="backendErrorMessage" class="backend-error mt-1">
-  {{ backendErrorMessage }}
-</div>
+
+  <div *ngIf="productForm.controls['phone_number'].hasError('phoneExists')" class="invalid-feedback">
+    Ez a telefonszám már létezik az adatbázisban.
+  </div>
 </div>
 
 
