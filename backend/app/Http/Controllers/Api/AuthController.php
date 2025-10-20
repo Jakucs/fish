@@ -49,7 +49,7 @@ class AuthController extends ResponseController
                         // Még tart a tiltás
                         return $this->sendError(
                             "Túl sok sikertelen próbálkozás",
-                            ["Következő lehetőség: ", $banningTime],
+                            ["Túl sok sikertelen próbálkozás. Következő lehetőség: ", $banningTime],
                             403
                         );
                     }
