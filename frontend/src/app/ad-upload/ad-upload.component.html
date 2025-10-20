@@ -26,7 +26,7 @@
 
   <!-- Leírás -->
 <div class="mb-3 container">
-  <label for="productDescription" class="form-label">Leírás</label>
+  <label for="productDescription" class="form-label">Leírás <span class="text-danger">*</span></label>
   <textarea
     formControlName="description"
     id="productDescription"
@@ -174,7 +174,7 @@
 
 
 <div *ngIf="showPhoneInput" class="mb-3 container">
-  <label for="phone_number" class="form-label">Telefonszám</label>
+  <label for="phone_number" class="form-label">Telefonszám <span class="text-danger">*</span></label>
   <input type="text"
          formControlName="phone_number"
          class="form-control"
@@ -184,6 +184,9 @@
   <div *ngIf="productForm.controls['phone_number'].invalid && productForm.controls['phone_number'].touched" class="invalid-feedback">
     Telefonszám megadása kötelező.
   </div>
+  <div *ngIf="backendErrorMessage" class="backend-error mt-1">
+  {{ backendErrorMessage }}
+</div>
 </div>
 
 

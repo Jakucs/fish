@@ -2,3 +2,16 @@ input[type="checkbox"] {
   appearance: auto !important;
   -webkit-appearance: checkbox !important;
 }
+
+.backend-error {
+  color: #f44336; /* piros */
+  background-color: #ffebee; /* halvány piros háttér */
+  border: 1px solid #f44336;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+.form-label .text-danger {
+  font-weight: bold;
+}

@@ -22,6 +22,7 @@ export class AdUploadComponent {
   city: string = '';
   isCityReadonly = true;
   showPhoneInput = true;
+  backendErrorMessage: string = '';
 
   constructor(
     private builder: FormBuilder,
@@ -148,13 +149,17 @@ ngOnInit(): void {
           this.productForm.reset();
           this.router.navigate(['/successfulupdate']);
           console.log('Hirdetés mentve:', this.productForm.value);
+          this.backendErrorMessage = '';
         } else{
           console.error('❌ Sikertelen mentés:', res);
           alert(`Hiba a mentés során: ${res.message}`);
         }
       },
-        error: (err) => {
-        console.log("Backend error: ", err)
+      error: (err: any) => {
+        console.log("Backend error object:", err);
+
+        // ✅ Itt a tényleges hibaüzenet a backendtől
+        this.backendErrorMessage = err?.error?.message || 'Ismeretlen hiba történt';
       }
 
       });
