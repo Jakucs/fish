@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Http\Resources\Product as ProductResource;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\UniqueConstraintViolationException;
 
 
 class ProductController extends ResponseController
@@ -93,37 +95,62 @@ class ProductController extends ResponseController
 
 
 
-        public function newProduct(ProductRequest $request){
-        $request->validated();
-        
-        $product = new Product();
-        $product->name = $request["name"]; 
-        $product->description = $request["description"];
-        $product->type_id = $request["type_id"];
-        $product->user_id = Auth::id();
-        //$product->user_id = $request["user_id"];
-        $product->price = $request["price"];
-        $product->image	= $request["image"];
-        $product->condition = $request["condition"]; // pl. 'új', 'használt', 'újszerű'
-        $product->status = $request["status"];       // pl. 'pending', 'active', 'sold', 'archived'
-        $product->save();
+        public function newProduct(ProductRequest $request)
+        {
+            try {
+                $request->validated();
 
-        // Helyszín mentése a locations táblába
-        $product->location()->create([
-        'postal_code' => $request['postal_code'],
-        'city' => $request['city'],
-    ]);
+                $product = new Product();
+                $product->name = $request["name"];
+                $product->description = $request["description"];
+                $product->type_id = $request["type_id"];
+                $product->user_id = Auth::id();
+                $product->price = $request["price"];
+                $product->image = $request["image"];
+                $product->condition = $request["condition"];
+                $product->status = $request["status"];
+                $product->save();
 
+                // Helyszín mentése
+                $product->location()->create([
+                    'postal_code' => $request['postal_code'],
+                    'city' => $request['city'],
+                ]);
 
-        // 🔹 Telefonszám mentése a users táblába
-        if ($request->has('phone_number') && $request['phone_number']) {
-            $user = Auth::user(); // vagy User::find($userId)
-            $user->phone_number = $request['phone_number'];
-            $user->save();
+                // Telefonszám mentése
+                if ($request->has('phone_number') && $request['phone_number']) {
+                    $user = Auth::user();
+                    $user->phone_number = $request['phone_number'];
+                    $user->save();
+                }
+
+                return $this->sendResponse(new ProductResource($product), "Sikeres felvitel!");
+
+            } catch (UniqueConstraintViolationException $e) {
+                // 🔹 Konkrétan az egyedi constraint hiba
+                return $this->sendError(
+                    'A megadott telefonszám már egy másik felhasználóhoz tartozik.',
+                    [],
+                    409
+                );
+
+            } catch (QueryException $e) {
+                // 🔹 Egyéb SQL hibák
+                return $this->sendError(
+                    'Adatbázis hiba történt. Kérlek, próbáld újra később.',
+                    [],
+                    500
+                );
+
+            } catch (\Exception $e) {
+                // 🔹 Váratlan hiba
+                return $this->sendError(
+                    'Váratlan hiba történt. Kérlek, próbáld újra később.',
+                    [],
+                    500
+                );
+            }
         }
-
-        return $this->sendResponse(new ProductResource($product), "Sikeres felvitel!");
-    }
 
 
         public function updateProduct(ProductRequest $request, $id){
