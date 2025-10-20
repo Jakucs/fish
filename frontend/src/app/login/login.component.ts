@@ -58,14 +58,35 @@ export class LoginComponent {
         this.loginForm.reset();
         this.router.navigate(['myads']).then(() => window.location.reload());
       },
-      error: (error: HttpErrorResponse) => {
-        console.log("Belépési hiba:", error);
+        error: (error: HttpErrorResponse) => {
+  console.log("Belépési hiba (raw):", error);
 
-        // Ha a backend 401/422-t küld, itt jelenítjük meg:
-        this.errorMessageFromBackend = "Hibás felhasználónév vagy jelszó.";
-        this.showErrorCard = true;
+  let msg = 'Azonosítási hiba.';
+
+  if (error.error) {
+    try {
+      const body = (typeof error.error === 'string') ? JSON.parse(error.error) : error.error;
+
+      if (body && typeof body === 'object') {
+        // Ha van errorMessage, az élvez elsőbbséget
+        if (body.errorMessage) {
+          msg = body.errorMessage;
+        } else if (body.message) {
+          msg = body.message;
+        }
       }
-    });
+    } catch (e) {
+      if (typeof error.error === 'string' && error.error.trim()) {
+        msg = error.error;
+      }
+    }
+  }
+
+  this.errorMessageFromBackend = msg;
+  this.showErrorCard = true;
+}
+
+  });
   }
 
 
