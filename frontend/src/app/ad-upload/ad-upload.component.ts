@@ -7,6 +7,7 @@ import { UserapiService } from '../shared/userapi.service';
 import { PicsShareService } from '../shared/pics-share.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { ValidatorService } from '../shared/validator.service';
 
 @Component({
   selector: 'app-ad-upload',
@@ -30,7 +31,8 @@ export class AdUploadComponent {
     private userapi: UserapiService,
     private picsshare: PicsShareService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private validator: ValidatorService
   ) { }
 
 ngOnInit(): void {
@@ -68,7 +70,11 @@ ngOnInit(): void {
         Validators.pattern(/^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s-]+$/)
       ]
     ],
-    phone_number: ['']
+      phone_number: ['', {
+      validators: [Validators.required],
+      asyncValidators: [this.validator.phoneExistsValidator()],
+      updateOn: 'blur' // vagy 'change', ha gépelés közben is akarod
+    }] //<---Felhasználjuk az aszinkron validátort először!
   });
 
   // Alapból mutatjuk az inputot

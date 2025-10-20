@@ -127,4 +127,20 @@ class AuthController extends ResponseController
             'data' => $request->user()
         ]);
     }
+
+
+
+
+
+            // Megnézzük valós időben, hogy létezik-e ilyen telefonszámú user
+            public function checkPhone(Request $request)
+        {
+            $phone = $request->query('phone');
+
+            $exists = \App\Models\User::where('phone_number', $phone)->exists();
+
+            return response()->json([
+                'exists' => $exists
+            ]);
+        }
 }
