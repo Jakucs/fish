@@ -30,8 +30,12 @@
             </button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" type="button" (click)="goToModifyProduct(adItem.id)">Szerkesztés</a></li>
-              <app-delete-product [productId]="adItem.id"></app-delete-product>
+
+                <li>
+                  <a class="dropdown-item" [routerLink]="['/delete-product', adItem.id]">Törlés</a>
+                </li>
               <li><a class="dropdown-item" href="#">Megtekintés</a></li>
+
             </ul>
           </div>
 

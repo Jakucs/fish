@@ -1,49 +1,83 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-delete-product',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './delete-product.component.html',
-  imports: [CommonModule, RouterModule]
 })
 export class DeleteProductComponent {
-  @Input() productId!: number; // a törlendő termék ID-je
-  confirmationVisible = false; // megerősítő ablak láthatósága
+  productId!: number;
+  product: any = null; // 🔹 A törlendő termék adatai
+  loading = true;
+  error = false;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-  // 1️⃣ gomb megnyomásakor csak a confirmation-t mutatjuk
-  deleteProduct() {
-    this.confirmationVisible = true;
+  ngOnInit() {
+    this.productId = Number(this.route.snapshot.paramMap.get('id'));
+    this.fetchProduct();
   }
 
-  // 2️⃣ ha a felhasználó mégse gombra kattint
-  cancelDeletion() {
-    this.confirmationVisible = false;
-  }
-
-  // 3️⃣ ha a felhasználó megerősíti a törlést
-  confirmDeletion() {
-    if (!this.productId) {
-      console.error('Nincs megadva productId');
-      return;
-    }
-
-    const url = `http://192.168.100.147:8000/api/destroyproduct/${this.productId}`;
-
-    this.http.delete(url).subscribe({
+  // 🔹 Lekérjük a termék adatait
+  fetchProduct() {
+    const url = `http://192.168.100.147:8000/api/product/${this.productId}`;
+    this.http.get(url).subscribe({
       next: (res: any) => {
+        this.product = res.data ?? res; // backend szerkezetétől függően
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Hiba a termék lekérésekor:', err);
+        this.error = true;
+        this.loading = false;
+      },
+    });
+  }
+
+  // 🔹 Törlés megerősítése
+  confirmDeletion() {
+    const url = `http://192.168.100.147:8000/api/destroyproduct/${this.productId}`;
+    this.http.delete(url).subscribe({
+      next: (res) => {
         console.log('Sikeresen törölve', res);
-        this.confirmationVisible = false;
-        this.router.navigate(['/my-products']); // vagy emitter, ha listában használod
+        this.router.navigate(['/my-products']);
       },
       error: (err) => {
         console.error('Hiba a törlés során', err);
         alert('Hiba történt a termék törlésekor.');
-        this.confirmationVisible = false;
       },
     });
   }
+
+  cancelDeletion() {
+    this.router.navigate(['/my-products']);
+  }
+
+
+
+  isJson(value: string): boolean {
+  try {
+    JSON.parse(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+getFirstImage(value: string): string {
+  try {
+    const images = JSON.parse(value);
+    return Array.isArray(images) && images.length > 0 ? images[0] : '';
+  } catch {
+    return '';
+  }
+}
 }

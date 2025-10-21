@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { AdapiService } from '../shared/adapi.service';
 import { UserapiService } from '../shared/userapi.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DeleteProductComponent } from '../delete-product/delete-product.component';
 
 @Component({
   selector: 'app-myads',
-  imports: [CommonModule, DeleteProductComponent],
+  imports: [CommonModule, DeleteProductComponent, RouterModule],
   templateUrl: './myads.component.html',
   styleUrl: './myads.component.css'
 })

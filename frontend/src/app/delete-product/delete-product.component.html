@@ -1,10 +1,64 @@
-<a class="dropdown-item" (click)="deleteProduct()" style="cursor: pointer;">
-  Törlés
-</a>
+<div class="container mt-5" *ngIf="!loading && !error">
+  <h4 class="text-center mb-4 text-danger">Termék törlése</h4>
 
-<!-- Confirmation dialóg, ha kell -->
-<div *ngIf="confirmationVisible" class="confirmation-dialog p-2 border rounded mt-1 bg-light">
-  <p class="mb-2">Biztosan törölni szeretné a terméket?</p>
-  <button class="btn btn-secondary btn-sm me-2" (click)="cancelDeletion()">Mégse</button>
-  <button class="btn btn-danger btn-sm" (click)="confirmDeletion()">Igen, törlés</button>
+  <div class="card shadow-sm p-3 mb-4 text-center">
+    <!-- 🖼️ Kép megjelenítése -->
+    <div class="mb-3">
+      <ng-container *ngIf="product?.image; else noImage">
+        <!-- Ha image JSON string (tömb), akkor az első képet mutatjuk -->
+        <img
+          *ngIf="isJson(product.image); else singleImage"
+          [src]="getFirstImage(product.image)"
+          alt="{{ product?.name }}"
+          class="img-thumbnail"
+          style="width: 180px; height: 180px; object-fit: cover;"
+        />
+
+        <!-- Ha nem JSON, akkor sima egy URL -->
+        <ng-template #singleImage>
+          <img
+            [src]="product.image"
+            alt="{{ product?.name }}"
+            class="img-thumbnail"
+            style="width: 180px; height: 180px; object-fit: cover;"
+          />
+        </ng-template>
+      </ng-container>
+
+      <!-- Ha nincs kép -->
+      <ng-template #noImage>
+        <div
+          class="bg-light text-muted d-flex align-items-center justify-content-center mx-auto"
+          style="width: 180px; height: 180px; font-size: 14px; border-radius: 10px;"
+        >
+          Nincs kép
+        </div>
+      </ng-template>
+    </div>
+
+    <h5 class="mb-2">{{ product?.name }}</h5>
+    <p class="text-muted mb-0">{{ product?.description }}</p>
+    <p class="fw-semibold mt-2">{{ product?.price }} Ft</p>
+  </div>
+
+  <div class="alert alert-warning text-center">
+    <p>Biztosan törölni szeretné ezt a terméket?</p>
+  </div>
+
+  <div class="d-flex justify-content-center gap-3 mt-3">
+    <button class="btn btn-secondary" (click)="cancelDeletion()">Mégse</button>
+    <button class="btn btn-danger" (click)="confirmDeletion()">Igen, törlés</button>
+  </div>
+</div>
+
+<!-- Betöltés közben -->
+<div class="container mt-5 text-center" *ngIf="loading">
+  <div class="spinner-border text-secondary" role="status"></div>
+  <p class="mt-2 text-muted">Termék betöltése...</p>
+</div>
+
+<!-- Hiba esetén -->
+<div class="container mt-5 text-center text-danger" *ngIf="error">
+  <p>Hiba történt a termék adatainak betöltésekor.</p>
+  <button class="btn btn-dark btn-sm" (click)="cancelDeletion()">Vissza</button>
 </div>
