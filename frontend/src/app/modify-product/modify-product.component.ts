@@ -19,6 +19,7 @@ export class ModifyProductComponent {
     images: string[] = [];
     successMessage: string | null = null;
     errorMessage: string | null = null;
+    freePriceChecked = false;
 
   constructor(
     private productapi: ProductapiService,
@@ -151,19 +152,34 @@ export class ModifyProductComponent {
   }
 
 
-onSubmit() {
-  if (this.productForm.valid) {
-    this.productapi.modifyProduct(this.productId, this.productForm.value).subscribe({
-      next: (res) => {
-        this.successMessage = 'Termék sikeresen frissítve!';
-        setTimeout(() => this.successMessage = null, 3000);
-      },
-      error: (err) => {
-        this.errorMessage = 'Hiba történt a frissítés során.';
-      }
-    });
+  onSubmit() {
+    if (this.productForm.valid) {
+      this.productapi.modifyProduct(this.productId, this.productForm.value).subscribe({
+        next: (res) => {
+          this.successMessage = 'Termék sikeresen frissítve!';
+          setTimeout(() => this.successMessage = null, 3000);
+        },
+        error: (err) => {
+          this.errorMessage = 'Hiba történt a frissítés során.';
+        }
+      });
+    }
   }
-}
+
+
+  onFreePriceChange(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.freePriceChecked = checked;
+
+    const priceControl = this.productForm.get('price');
+
+    if (checked) {
+      priceControl?.setValue(0);
+      priceControl?.disable(); // readonly is ok, de disable jobb
+    } else {
+      priceControl?.enable();
+    }
+  }
 
 
 
