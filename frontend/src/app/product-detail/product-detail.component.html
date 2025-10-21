@@ -106,11 +106,18 @@
           </table>
 
           <!-- CTA / Akció gomb -->
-          <div class="d-grid gap-2">
-            <button class="btn btn-primary btn-lg" type="button">
-              Kapcsolatfelvétel a hirdetővel
-            </button>
-          </div>
+<!-- product-detail.component.html -->
+<button
+  type="button"
+  class="btn btn-primary btn-lg"
+  ngbPopover="{{ productDetails.user.phone_number }}"
+  popoverTitle="Hirdető telefonszáma"
+  triggers="click"
+>
+  Kapcsolatfelvétel a hirdetővel
+</button>
+
+
 
         </div>
       </div>

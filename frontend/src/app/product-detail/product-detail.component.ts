@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { ProductapiService } from '../shared/productapi.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, NgbPopoverModule],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
@@ -49,6 +50,12 @@ ngOnInit(): void {
     });
   }
 }
+
+showPhoneNumber() {
+  alert(this.productDetails.user.phone_number);
+}
+
+
 
 
 
