@@ -35,94 +35,109 @@ export class AdUploadComponent {
     private validator: ValidatorService
   ) { }
 
-ngOnInit(): void {
-  this.productForm = this.builder.group({
-        name: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        Validators.pattern(/^(?!\d+$).+/) // ne lehessen csak szám
-      ]
-    ],
-    description: ['', [Validators.maxLength(2000)]],
-    type_id: ['', Validators.required],
-    user_id: [localStorage.getItem('userId')],
-    price: [
-      '',
-      [
-        Validators.required,
-        Validators.max(99999999),
-        Validators.pattern(/^[0-9]+$/)
-      ]
-    ],
-    image: [''],
-    condition: ['', Validators.required],
-    status: ['active', Validators.required],
-    postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
-    city: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-        Validators.pattern(/^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s-]+$/)
-      ]
-    ],
-      phone_number: ['', {
-      validators: [Validators.required],
-      asyncValidators: [this.validator.phoneExistsValidator()],
-      updateOn: 'blur' // vagy 'change', ha gépelés közben is akarod
-    }] //<---Felhasználjuk az aszinkron validátort először!
-  });
+  ngOnInit(): void {
+    this.productForm = this.builder.group({
+          name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+          Validators.pattern(/^(?!\d+$).+/) // ne lehessen csak szám
+        ]
+      ],
+      description: ['', [Validators.maxLength(2000)]],
+      type_id: ['', Validators.required],
+      user_id: [localStorage.getItem('userId')],
+      price: [
+        '',
+        [
+          Validators.required,
+          Validators.max(99999999),
+          Validators.pattern(/^[0-9]+$/)
+        ]
+      ],
+      image: [''],
+      condition: ['', Validators.required],
+      status: ['active', Validators.required],
+      postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
+      city: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+          Validators.pattern(/^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s-]+$/)
+        ]
+      ],
+        phone_number: ['', {
+        validators: [Validators.required],
+        asyncValidators: [this.validator.phoneExistsValidator()],
+        updateOn: 'blur' // vagy 'change', ha gépelés közben is akarod
+      }] //<---Felhasználjuk az aszinkron validátort először!
+    });
 
-  // Alapból mutatjuk az inputot
-  this.showPhoneInput = true;
+    // Alapból mutatjuk az inputot
+    this.showPhoneInput = true;
 
-  this.userapi.getUserDetails().subscribe({
-    next: (res: any) => {
-      console.log('Felhasználói adatok:', res);
-      if (res.success) {
-        const phone = res.data.phone_number;
+    this.userapi.getUserDetails().subscribe({
+      next: (res: any) => {
+        console.log('Felhasználói adatok:', res);
+        if (res.success) {
+          const phone = res.data.phone_number;
         if (phone) {
-          // Ha van telefonszám → ne mutassuk az inputot
+          // ✅ Ha már van telefonszám az adatbázisban
           this.showPhoneInput = false;
-
-          // Formot is előtöltjük az API értékkel (bár az input nem látszik)
           this.productForm.patchValue({ phone_number: phone });
+
+          // ⚙️ Eltávolítjuk a kötelező és async validátorokat
+          const phoneCtrl = this.productForm.get('phone_number');
+          phoneCtrl?.clearValidators();
+          phoneCtrl?.clearAsyncValidators();
+          phoneCtrl?.updateValueAndValidity();
         } else {
-          // Ha nincs telefonszám → inputot mutatjuk
+          // ⚙️ Ha nincs telefonszám — visszaállítjuk a validátorokat
           this.showPhoneInput = true;
+          const phoneCtrl = this.productForm.get('phone_number');
+          phoneCtrl?.setValidators([Validators.required]);
+          phoneCtrl?.setAsyncValidators([this.validator.phoneExistsValidator()]);
+          phoneCtrl?.updateValueAndValidity();
         }
       }
     },
-    error: (err: any) => {
-      console.error('Hiba a felhasználói adatok lekérésekor:', err);
-      // API hiba esetén mutassuk az inputot
-      this.showPhoneInput = true;
-    }
-  });
-}
-
-
-  onFreePriceChange(event: any) {
-  if (event.target.checked) {
-    // Checkbox be van pipálva → ár 0
-    this.productForm.get('price')?.setValue(0);
-  } else {
-    // Checkbox üres → ár mező törlése vagy marad az előző érték
-    this.productForm.get('price')?.setValue(null);
+      error: (err: any) => {
+        console.error('Hiba a felhasználói adatok lekérésekor:', err);
+        // API hiba esetén mutassuk az inputot
+        this.showPhoneInput = true;
+      }
+    });
   }
-}
+
+
+    onFreePriceChange(event: any) {
+    if (event.target.checked) {
+      // Checkbox be van pipálva → ár 0
+      this.productForm.get('price')?.setValue(0);
+    } else {
+      // Checkbox üres → ár mező törlése vagy marad az előző érték
+      this.productForm.get('price')?.setValue(null);
+    }
+  }
 
 
   saveProduct() {
+    console.log(this.productForm);
+
+    // ✅ 1️⃣ Ellenőrizzük, hogy érvényes-e a form
     if (this.productForm.invalid) {
-      Object.values(this.productForm.controls).forEach(control => control.markAsTouched());
-      return;
+      Object.values(this.productForm.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      return; // ⛔️ Ne menjen tovább
     }
 
+    // ✅ 2️⃣ Ha van kép, előbb azt töltjük fel
     if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
       this.picsUpload.uploadImages().subscribe({
         next: (res: any[]) => {
@@ -130,10 +145,11 @@ ngOnInit(): void {
             const urls = res.map(r => r.secure_url);
             this.productForm.patchValue({ image: JSON.stringify(urls) });
 
-            // ⬇️ Itt adod tovább más komponenseknek
+            // Esetleg más komponens is használja
             this.picsshare.updateUrls(urls);
           }
 
+          // Mentés a backendre
           this.saveProductToBackend();
         },
         error: (err: any) => {
@@ -141,9 +157,11 @@ ngOnInit(): void {
         }
       });
     } else {
+      // ✅ 3️⃣ Ha nincs kép, közvetlen mentés
       this.saveProductToBackend();
     }
   }
+
 
   saveProductToBackend() {
     if (this.productForm.valid) {

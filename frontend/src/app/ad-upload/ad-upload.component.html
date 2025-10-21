@@ -202,7 +202,7 @@
 
   <div class="container mb-3">
     <app-pics-upload class="container"></app-pics-upload>
-    <button type="submit" class="btn btn-primary mt-3">Hirdetés mentése</button>
+    <button type="submit" class="btn btn-primary mt-3" [disabled]="productForm.invalid">Hirdetés mentése</button>
   </div>
 
 </form>
