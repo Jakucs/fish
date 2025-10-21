@@ -16,11 +16,12 @@
           </div>
 
           <!-- Középső rész: cím, leírás, ár -->
-          <div class="flex-grow-1">
-            <h6 class="mb-1">{{ adItem.name }}</h6>
-            <p class="mb-1 text-muted small">{{ adItem.description }}</p>
+          <div class="flex-grow-1 me-3" style="min-width: 0;">
+            <h6 class="mb-1 text-truncate" title="{{ adItem.name }}">{{ adItem.name }}</h6>
+            <p class="mb-1 text-muted small text-truncate" title="{{ adItem.description }}">{{ adItem.description }}</p>
             <span class="fw-semibold">{{ adItem.price }} Ft</span>
           </div>
+
 
           <!-- Jobb oldali 3 pötty -->
           <div class="ms-3 dropdown">
