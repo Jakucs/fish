@@ -24,6 +24,7 @@ export class AdUploadComponent {
   isCityReadonly = true;
   showPhoneInput = true;
   backendErrorMessage: string = '';
+  freePriceChecked = false;
 
   constructor(
     private builder: FormBuilder,
@@ -114,14 +115,15 @@ export class AdUploadComponent {
   }
 
 
-    onFreePriceChange(event: any) {
-    if (event.target.checked) {
-      // Checkbox be van pipálva → ár 0
-      this.productForm.get('price')?.setValue(0);
-    } else {
-      // Checkbox üres → ár mező törlése vagy marad az előző érték
-      this.productForm.get('price')?.setValue(null);
-    }
+    onFreePriceChange(event: Event) {
+      const checkbox = event.target as HTMLInputElement;
+      this.freePriceChecked = checkbox.checked;
+
+      const priceControl = this.productForm.get('price');
+
+      if (this.freePriceChecked) {
+        priceControl?.setValue(0); // 0 Ft lesz
+      }
   }
 
 

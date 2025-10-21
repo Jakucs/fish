@@ -56,6 +56,7 @@
       id="productPrice"
       class="form-control"
       placeholder="Add meg az árat"
+      [readonly]="freePriceChecked"
       [ngClass]="{'is-invalid': productForm.get('price')?.invalid && productForm.get('price')?.touched}">
     <span class="input-group-text">Ft</span>
   </div>
