@@ -12,6 +12,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import { SuccessfulupdateComponent } from './successfulupdate/successfulupdate.component';
 import { ModifyProductComponent } from './modify-product/modify-product.component';
 import { ModifyImagesComponent } from './modify-images/modify-images.component';
+import { DeleteProductComponent } from './delete-product/delete-product.component';
 
 export const routes: Routes = [
     { path: "products", component: ProductListComponent},
@@ -26,6 +27,7 @@ export const routes: Routes = [
     { path: 'product/:id', component: ProductDetailComponent},
     { path: 'modify-product/:id', component: ModifyProductComponent},
     { path: 'modify-images/:id', component: ModifyImagesComponent },
+    { path: 'delete-product/:id', component: DeleteProductComponent },
     { path: '', component: ProductListComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

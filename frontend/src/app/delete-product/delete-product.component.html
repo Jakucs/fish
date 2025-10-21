@@ -1,0 +1,10 @@
+<a class="dropdown-item" (click)="deleteProduct()" style="cursor: pointer;">
+  Törlés
+</a>
+
+<!-- Confirmation dialóg, ha kell -->
+<div *ngIf="confirmationVisible" class="confirmation-dialog p-2 border rounded mt-1 bg-light">
+  <p class="mb-2">Biztosan törölni szeretné a terméket?</p>
+  <button class="btn btn-secondary btn-sm me-2" (click)="cancelDeletion()">Mégse</button>
+  <button class="btn btn-danger btn-sm" (click)="confirmDeletion()">Igen, törlés</button>
+</div>
