@@ -26,19 +26,32 @@ export class MyadsComponent {
       this.adapi.getMyAds().subscribe({
         next: (data: any) => {
           this.adList = data.data.map((ad: any) => {
-            return {
-              ...ad,
-              imagesArray: ad.image ? JSON.parse(ad.image) : [] // JSON string → tömb
-            };
+            let imagesArray: any[] = [];
+
+            if (Array.isArray(ad.image)) {
+              // Már tömb
+              imagesArray = ad.image;
+            } else if (typeof ad.image === 'string') {
+              try {
+                const parsed = JSON.parse(ad.image);
+                imagesArray = Array.isArray(parsed) ? parsed : [parsed];
+              } catch {
+                // Nem JSON (pl. URL), kezeljük sima stringként
+                imagesArray = [ad.image];
+              }
+            }
+
+            return { ...ad, imagesArray };
           });
 
           console.log("MyAds tartalma képekkel: ", this.adList);
         },
         error: (error) => {
-          console.log("Hiba a hirdetések betöltésekor: ", error)
+          console.log("Hiba a hirdetések betöltésekor: ", error);
         }
       });
     }
+
 
     goToAdupload() {
       this.router.navigate(['/ad_upload']);
