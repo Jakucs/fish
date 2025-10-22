@@ -2,7 +2,8 @@
   @if(adList && adList.length > 0) {
     <div class="list-group">
       @for(adItem of adList; track adItem.id) {
-        <div class="list-group-item d-flex align-items-center justify-content-between mb-2 p-2 shadow-sm">
+        <div class="list-group-item d-flex align-items-center justify-content-between mb-2 p-2 shadow-sm"   [routerLink]="['/product', adItem.id]"
+  style="cursor: pointer;">
           
           <!-- Bal kép -->
           <div class="me-3 flex-shrink-0">
@@ -24,7 +25,7 @@
 
 
           <!-- Jobb oldali 3 pötty -->
-          <div class="ms-3 dropdown">
+          <div class="ms-3 dropdown" (click)="$event.stopPropagation()">
             <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               &#x22EE; <!-- függőleges három pont -->
             </button>
