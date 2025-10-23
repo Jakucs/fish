@@ -29,13 +29,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favourites/toggle/{productId}', [FavouriteController::class, 'toggle']);
 
     Route::get ("/products", [ProductController::class, "getProducts"]);
+    Route::get( "/users", [ AuthController::class, "getUsers" ]);
 
 });
 
 Route::post( "/register", [ AuthController::class, "register" ]);
 Route::post( "/login", [ AuthController::class, "login" ]);
 Route::post( "/logout", [ AuthController::class, "logout" ]);
-Route::get( "/users", [ AuthController::class, "getUsers" ]);
 
 
 Route::get ("/product/{id}", [ProductController::class, "getProduct"]);
@@ -58,8 +58,3 @@ Route::put("/updatepicture/{id}", [ProductController::class, "updatePicture"]);
 
 // Telefonszám ellenőrzése valós időben
 Route::get('/check-phone', [AuthController::class, 'checkPhone']);
-
-
-
-
-Route::get( "/users", [ AuthController::class, "getUsers" ]);

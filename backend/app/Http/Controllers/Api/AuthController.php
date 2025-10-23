@@ -145,22 +145,24 @@ class AuthController extends ResponseController
 
             // Csak adminoknak
             public function getUsers(Request $request)
-            {
-                // Ellenőrizzük, hogy az aktuális user admin-e
-                $user = $request->user();
-                if ($user->role !== 'admin') {
+                {
+                    $user = $request->user();
+
+                    // Ellenőrizzük, hogy az aktuális user admin vagy superadmin
+                    if (!$user || $user->role < 1) { 
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Unauthorized'
+                        ], 403);
+                    }
+
+                    // Visszaadjuk az összes felhasználót
+                    $users = User::select('id', 'username', 'email', 'role', 'created_at')->get();
+
                     return response()->json([
-                        'success' => false,
-                        'message' => 'Unauthorized'
-                    ], 403);
+                        'success' => true,
+                        'users' => $users
+                    ]);
                 }
 
-                // Visszaadjuk az összes felhasználót
-                $users = User::select('id', 'name', 'email', 'role', 'created_at')->get();
-
-                return response()->json([
-                    'success' => true,
-                    'users' => $users
-                ]);
-            }
 }
