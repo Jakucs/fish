@@ -116,10 +116,7 @@ class AuthController extends ResponseController
         return $this->sendResponse( $user->name, "Sikeres kijelentkezés" );
     }
 
-        public function getUsers(){
-        $users = User::all();
-        return $users;
-    }
+
 
     public function getUserDetails(Request $request) {
         return response()->json([
@@ -134,13 +131,35 @@ class AuthController extends ResponseController
 
             // Megnézzük valós időben, hogy létezik-e ilyen telefonszámú user
             public function checkPhone(Request $request)
-        {
-            $phone = $request->query('phone');
+            {
+                $phone = $request->query('phone');
 
-            $exists = \App\Models\User::where('phone_number', $phone)->exists();
+                $exists = \App\Models\User::where('phone_number', $phone)->exists();
 
-            return response()->json([
-                'exists' => $exists
-            ]);
-        }
+                return response()->json([
+                    'exists' => $exists
+                ]);
+            }
+
+
+            // Csak adminoknak
+            public function getUsers(Request $request)
+            {
+                // Ellenőrizzük, hogy az aktuális user admin-e
+                $user = $request->user();
+                if ($user->role !== 'admin') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Unauthorized'
+                    ], 403);
+                }
+
+                // Visszaadjuk az összes felhasználót
+                $users = User::select('id', 'name', 'email', 'role', 'created_at')->get();
+
+                return response()->json([
+                    'success' => true,
+                    'users' => $users
+                ]);
+            }
 }

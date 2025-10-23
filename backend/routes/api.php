@@ -58,3 +58,8 @@ Route::put("/updatepicture/{id}", [ProductController::class, "updatePicture"]);
 
 // Telefonszám ellenőrzése valós időben
 Route::get('/check-phone', [AuthController::class, 'checkPhone']);
+
+
+
+
+Route::get( "/users", [ AuthController::class, "getUsers" ]);
