@@ -17,6 +17,7 @@ export class DeleteProductComponent {
   error = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  deleted = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,6 +62,7 @@ export class DeleteProductComponent {
 
           // ✅ Visszajelzés a felhasználónak
           this.successMessage = 'A hirdetésed sikeresen törölve lett.';
+          this.deleted = true;
 
           // ✅ Üzenet eltüntetése 3 mp múlva
           setTimeout(() => {
