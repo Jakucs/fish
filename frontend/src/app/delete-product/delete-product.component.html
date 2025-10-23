@@ -1,3 +1,11 @@
+<div *ngIf="successMessage" class="toast-message success">
+  {{ successMessage }}
+</div>
+<div *ngIf="errorMessage" class="toast-message error">
+  {{ errorMessage }}
+</div>
+
+
 <div class="container mt-5" *ngIf="!loading && !error">
   <h4 class="text-center mb-4 text-danger">Termék törlése</h4>
 

@@ -8,12 +8,15 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './delete-product.component.html',
+  styleUrls: ['./delete-product.component.css']
 })
 export class DeleteProductComponent {
   productId!: number;
   product: any = null; // 🔹 A törlendő termék adatai
   loading = true;
   error = false;
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,25 +46,43 @@ export class DeleteProductComponent {
   }
 
   // 🔹 Törlés megerősítése
-  confirmDeletion() {
-    const url = `http://192.168.100.147:8000/api/destroyproduct/${this.productId}`;
-    const token = localStorage.getItem('token'); // vagy ahogy tárolod a JWT-t
+    confirmDeletion() {
+      console.log('✅ confirmDeletion() meghívva');
+      const url = `http://192.168.100.147:8000/api/destroyproduct/${this.productId}`;
+      const token = localStorage.getItem('token');
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-    });
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+      });
 
-    this.http.delete(url, { headers }).subscribe({
-      next: (res) => {
-        console.log('Sikeresen törölve', res);
-        this.router.navigate(['/my-products']);
-      },
-      error: (err) => {
-        console.error('Hiba a törlés során', err);
-        alert('Hiba történt a termék törlésekor.');
-      },
-    });
-  }
+      this.http.delete(url, { headers }).subscribe({
+        next: (res) => {
+          console.log('Sikeresen törölve', res);
+
+          // ✅ Visszajelzés a felhasználónak
+          this.successMessage = 'A hirdetésed sikeresen törölve lett.';
+
+          // ✅ Üzenet eltüntetése 3 mp múlva
+          setTimeout(() => {
+            this.successMessage = null;
+            this.router.navigate(['/my-products']);
+          }, 3000);
+
+        },
+        error: (err) => {
+          console.error('Hiba a törlés során', err);
+
+          if (err.status === 403) {
+            this.errorMessage = 'Nincs jogosultságod ennek a hirdetésnek a törlésére.';
+          } else {
+            this.errorMessage = 'Hiba történt a termék törlésekor. Kérlek, próbáld újra később.';
+          }
+
+          // ✅ Üzenet eltüntetése 4 mp múlva
+          setTimeout(() => (this.errorMessage = null), 4000);
+        },
+      });
+    }
 
 
   cancelDeletion() {

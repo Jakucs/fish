@@ -1,0 +1,15 @@
+.toast-message { 
+  position: fixed; 
+  top: 20px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  padding: 12px 24px; 
+  border-radius: 8px; 
+  color: white; 
+  font-weight: 500; 
+  z-index: 2000; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+  animation: fadeInOut 3s ease forwards; 
+}
+.toast-message.success { background-color: #28a745; }
+.toast-message.error { background-color: #dc3545; }
