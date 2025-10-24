@@ -49,14 +49,21 @@ export class LoginComponent {
         }
 
         const token = res.data.token;
+        const role = res.data.role;
         localStorage.setItem('token', token);
         localStorage.setItem('userName', res.data.username);
         localStorage.setItem('userId', res.data.user_id.toString());
         localStorage.setItem('email', res.data.email);
+        localStorage.setItem('role', role.toString());
 
         this.loggedIn = true;
         this.loginForm.reset();
-        this.router.navigate(['myads']).then(() => window.location.reload());
+          // ✅ Feltételes navigálás
+        if (role === 1 || role === 2) {
+          this.router.navigate(['adminpage']).then(() => window.location.reload());
+        } else {
+          this.router.navigate(['myads']).then(() => window.location.reload());
+        }
       },
         error: (error: HttpErrorResponse) => {
   console.log("Belépési hiba (raw):", error);

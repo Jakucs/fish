@@ -73,6 +73,7 @@ class AuthController extends ResponseController
                             "name" => $user->username,
                             "user_id" => $user->id,
                             "email" => $user->email,
+                            "role" => $user->role, // ✅ role -t is küldjük.
                             "token" => $token
                         ];
 
