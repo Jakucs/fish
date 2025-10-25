@@ -38,10 +38,24 @@ export class AdminpageComponent {
     this.showUsers = false;
   }
 
-    // 🔹 Részletek megjelenítése
-    showDetails(user: any): void {
-      this.selectedUser = user;
-    }
+      // 🔹 Részletek betöltése backendről
+  showDetails(user: any): void {
+    const userId = user.id;
+
+    this.adminapi.getUserDetails(userId).subscribe({
+      next: (res: any) => {
+        if (res.success && res.data) {
+          this.selectedUser = res.data;
+        } else {
+          this.errorMessage = 'Nem sikerült betölteni a felhasználó adatait.';
+        }
+      },
+      error: (err) => {
+        console.error('Hiba a részletek lekérésekor:', err);
+        this.errorMessage = 'Nem sikerült betölteni a felhasználó részleteit.';
+      }
+    });
+  }
 
     // 🔹 Részletek bezárása
     closeDetails(): void {

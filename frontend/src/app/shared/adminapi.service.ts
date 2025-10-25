@@ -16,5 +16,12 @@ export class AdminapiService {
       getUsers(page = 1): Observable<any> {
     const headers = this.authapi.makeHeader(); // mindig HttpHeaders
     return this.http.get(`${this.baseUrl}/users?page=${page}`, { headers });
-  }
+    }
+
+    // 🔹 Egy konkrét user részletes adatainak lekérése
+      getUserDetails(id: number): Observable<any> {
+        const headers = this.authapi.makeHeader(); // ⬅️ ez volt a hiba: itt is ezt kell használni
+        return this.http.get(`${this.baseUrl}/userdetails/${id}`, { headers });
+      }
+
 }
