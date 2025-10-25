@@ -3,11 +3,10 @@ import { AdapiService } from '../shared/adapi.service';
 import { UserapiService } from '../shared/userapi.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { DeleteProductComponent } from '../delete-product/delete-product.component';
 
 @Component({
   selector: 'app-myads',
-  imports: [CommonModule, DeleteProductComponent, RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './myads.component.html',
   styleUrl: './myads.component.css'
 })

@@ -20,10 +20,11 @@ export class AuthapiService {
     return localStorage.getItem('userName') || '';
   }
 
-  makeHeader() {
-    const token = localStorage.getItem('token');
+    makeHeader(): HttpHeaders {
+    const token = localStorage.getItem('token') || ''; // ha null → üres string
     return new HttpHeaders({
-      'Authorization': 'Bearer ' + token
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
     });
   }
 
