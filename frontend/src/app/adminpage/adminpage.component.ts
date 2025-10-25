@@ -15,6 +15,7 @@ export class AdminpageComponent {
   private baseUrl = 'http://192.168.100.147:8000/api';
 
   users: any[] = [];
+  selectedUser: any = null; // 🔹 éppen kiválasztott user
   errorMessage = '';
   showUsers = false;
 
@@ -36,6 +37,16 @@ export class AdminpageComponent {
   onAdsClick(): void {
     this.showUsers = false;
   }
+
+    // 🔹 Részletek megjelenítése
+    showDetails(user: any): void {
+      this.selectedUser = user;
+    }
+
+    // 🔹 Részletek bezárása
+    closeDetails(): void {
+      this.selectedUser = null;
+    }
 
   loadUsers(page: number): void {
     this.adminapi.getUsers(page).subscribe({

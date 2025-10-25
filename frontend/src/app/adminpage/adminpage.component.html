@@ -23,9 +23,26 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role }}</td>
+        <td>
+        <button class="btn btn-sm btn-primary" (click)="showDetails(user)">
+          Részletek
+        </button>
+        </td>
       </tr>
     </tbody>
   </table>
+
+    <!-- Részletek panel -->
+    <div *ngIf="selectedUser" class="card mt-3 ms-3 p-3">
+    <h5>Felhasználó részletei</h5>
+    <p><strong>ID:</strong> {{ selectedUser.id }}</p>
+    <p><strong>Felhasználónév:</strong> {{ selectedUser.username }}</p>
+    <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+    <p><strong>Szerep:</strong> {{ selectedUser.role }}</p>
+    <p><strong>Létrehozva:</strong> {{ selectedUser.created_at }}</p>
+    <!-- ide jöhetnek további mezők -->
+    <button class="btn btn-secondary btn-sm mt-2" (click)="closeDetails()">Bezárás</button>
+    </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3 ms-3">
         <button class="btn btn-secondary" (click)="prevPage()" [disabled]="currentPage === 1">
