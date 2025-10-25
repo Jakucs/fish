@@ -124,6 +124,13 @@ class AuthController extends ResponseController
     {
         $user = $request->user();
 
+        if ($user->role < 1) { // pl. 0 = normál user, 1 = admin
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
         return response()->json([
             'success' => true,
             'data' => [
