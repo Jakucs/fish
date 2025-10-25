@@ -120,12 +120,23 @@ class AuthController extends ResponseController
 
 
 
-    public function getUserDetails(Request $request) {
+    public function getUserDetails(Request $request)
+    {
+        $user = $request->user();
+
         return response()->json([
             'success' => true,
-            'data' => $request->user()
+            'data' => [
+                'username' => $user->username,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
+                'phone_number' => $user->phone_number,
+                'email' => $user->email,
+                'role' => $user->role
+            ]
         ]);
     }
+
 
 
 
