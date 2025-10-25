@@ -18,35 +18,51 @@ export class AdminpageComponent {
   errorMessage = '';
   showUsers = false;
 
+  currentPage = 1;
+  lastPage = 1;
+
   constructor(
     private router: Router,
-    private adminapi: AdminapiService,
-    private authapi: AuthapiService
-  ){}
+    private adminapi: AdminapiService
+  ) {}
 
-    onUsersClick(): void {
-    this.showUsers = true; // táblázat megjelenítése
-    this.loadUsers();
+  ngOnInit(): void {}
+
+  onUsersClick(): void {
+    this.showUsers = true;
+    this.loadUsers(this.currentPage);
   }
 
-    onAdsClick(): void {
-    this.showUsers = false; // táblázat elrejtése
-
+  onAdsClick(): void {
+    this.showUsers = false;
   }
 
-  
-  loadUsers(): void {
-    this.adminapi.getUsers().subscribe({
-      next: (response: any) => {
-        this.users = response.data || response; // backend válasz formátumától függ
-        console.log('Felhasználók:', this.users);
+  loadUsers(page: number): void {
+    this.adminapi.getUsers(page).subscribe({
+      next: (res: any) => {
+        this.users = res.users || [];
+        this.currentPage = res.current_page || 1;
+        this.lastPage = res.last_page || 1;
       },
-      error: (error) => {
-        console.error('Hiba a lekéréskor:', error);
+      error: (err) => {
+        console.error(err);
         this.errorMessage = 'Nem sikerült lekérni a felhasználókat.';
       }
     });
+  }
 
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.lastPage) {
+      this.loadUsers(page);
+    }
+  }
+
+  nextPage() {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  prevPage() {
+    this.goToPage(this.currentPage - 1);
   }
 
 }

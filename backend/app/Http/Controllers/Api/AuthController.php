@@ -146,24 +146,30 @@ class AuthController extends ResponseController
 
             // Csak adminoknak
             public function getUsers(Request $request)
-                {
-                    $user = $request->user();
+            {
+                $user = $request->user();
 
-                    // Ellenőrizzük, hogy az aktuális user admin vagy superadmin
-                    if (!$user || $user->role < 1) { 
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Unauthorized'
-                        ], 403);
-                    }
-
-                    // Visszaadjuk az összes felhasználót
-                    $users = User::select('id', 'username', 'email', 'role', 'created_at')->get();
-
+                // Ellenőrizzük, hogy az aktuális user admin vagy superadmin
+                if (!$user || $user->role < 1) { 
                     return response()->json([
-                        'success' => true,
-                        'users' => $users
-                    ]);
+                        'success' => false,
+                        'message' => 'Unauthorized'
+                    ], 403);
                 }
+
+                // Paginate: 50 felhasználó oldalanként
+                $users = User::select('id', 'username', 'email', 'role', 'created_at')
+                            ->paginate(50); // ← ez adja vissza a pagination meta adatokat is
+
+                return response()->json([
+                    'success' => true,
+                    'users' => $users->items(),    // tényleges felhasználók
+                    'current_page' => $users->currentPage(),
+                    'last_page' => $users->lastPage(),
+                    'total' => $users->total()
+                ]);
+            }
+
+
 
 }
