@@ -27,6 +27,18 @@
     </tbody>
   </table>
 
+    <div class="d-flex justify-content-between align-items-center mt-3 ms-3">
+        <button class="btn btn-secondary" (click)="prevPage()" [disabled]="currentPage === 1">
+        Előző
+        </button>
+        
+        <span>Oldal {{ currentPage }} / {{ lastPage }}</span>
+        
+        <button class="btn btn-secondary" (click)="nextPage()" [disabled]="currentPage === lastPage">
+        Következő
+        </button>
+  </div>
+
   <div *ngIf="!users.length && !errorMessage" class="text-muted">
     Nincsenek felhasználók.
   </div>
