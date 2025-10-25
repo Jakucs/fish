@@ -159,7 +159,7 @@ class AuthController extends ResponseController
 
                 // Paginate: 50 felhasználó oldalanként
                 $users = User::select('id', 'username', 'email', 'role', 'created_at')
-                            ->paginate(50); // ← ez adja vissza a pagination meta adatokat is
+                            ->paginate(30); // ← ez adja vissza a pagination meta adatokat is
 
                 return response()->json([
                     'success' => true,
