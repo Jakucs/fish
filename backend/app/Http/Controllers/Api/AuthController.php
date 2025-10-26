@@ -132,7 +132,7 @@ class AuthController extends ResponseController
             ], 403);
         }
 
-        $user = User::select('id', 'username', 'firstname', 'lastname', 'phone_number', 'email', 'role', 'created_at')
+        $user = User::select('id', 'username', 'firstname', 'lastname', 'phone_number', 'email', 'role', 'is_active', 'created_at')
                     ->find($id);
 
         if (!$user) {

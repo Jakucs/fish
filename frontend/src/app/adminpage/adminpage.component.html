@@ -47,6 +47,12 @@
         <span *ngIf="selectedUser.role === 1">Admin</span>
         <span *ngIf="selectedUser.role === 2">Superadmin</span>
     </p>
+        <!-- ✅ Aktivitás státusz -->
+    <p><strong>Státusz:</strong> 
+      <span [ngClass]="selectedUser.is_active ? 'text-success' : 'text-danger'">
+        {{ selectedUser.is_active ? 'Aktív' : 'Inaktív' }}
+      </span>
+    </p>
     <p><strong>Létrehozva:</strong> {{ selectedUser.created_at | date:'yyyy.MM.dd. HH:mm' }}</p>
 
     <button class="btn btn-secondary btn-sm mt-2" (click)="closeDetails()">Bezárás</button>
