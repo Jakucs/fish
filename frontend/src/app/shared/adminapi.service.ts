@@ -24,4 +24,12 @@ export class AdminapiService {
         return this.http.get(`${this.baseUrl}/userdetails/${id}`, { headers });
       }
 
+      toggleUserActive(userId: number) {
+      const headers = this.authapi.makeHeader();
+      return this.http.put(`${this.baseUrl}/users/${userId}/toggle-active`, {}, { headers });
+    }
+
+
+
+
 }

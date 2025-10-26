@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\FavouriteController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\UserController;
 
 Route::middleware('auth:sanctum')->group(function () {
 

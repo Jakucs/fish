@@ -48,11 +48,19 @@
         <span *ngIf="selectedUser.role === 2">Superadmin</span>
     </p>
         <!-- ✅ Aktivitás státusz -->
-    <p><strong>Státusz:</strong> 
+
+    <p><strong>Státusz:</strong>
       <span [ngClass]="selectedUser.is_active ? 'text-success' : 'text-danger'">
         {{ selectedUser.is_active ? 'Aktív' : 'Inaktív' }}
       </span>
     </p>
+
+    <!-- 🔘 Toggle gomb -->
+    <button class="btn btn-outline-primary btn-sm"
+            (click)="toggleUserActive()">
+      {{ selectedUser.is_active ? 'Inaktiválás' : 'Aktiválás' }}
+    </button>
+
     <p><strong>Létrehozva:</strong> {{ selectedUser.created_at | date:'yyyy.MM.dd. HH:mm' }}</p>
 
     <button class="btn btn-secondary btn-sm mt-2" (click)="closeDetails()">Bezárás</button>

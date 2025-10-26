@@ -17,6 +17,7 @@ export class AdminpageComponent {
   users: any[] = [];
   selectedUser: any = null; // 🔹 éppen kiválasztott user
   errorMessage = '';
+  successMessage = '';
   showUsers = false;
 
   currentPage = 1;
@@ -56,6 +57,29 @@ export class AdminpageComponent {
       }
     });
   }
+
+
+  toggleUserActive(): void {
+  if (!this.selectedUser) return;
+
+  const userId = this.selectedUser.id;
+
+  this.adminapi.toggleUserActive(userId).subscribe({
+    next: (res: any) => {
+      if (res.success) {
+        this.selectedUser.is_active = res.data.is_active; // ✅ azonnal frissíted a UI-t
+        this.successMessage = `A felhasználó státusza módosítva: ${res.data.is_active ? 'Aktív' : 'Inaktív'}`;
+      } else {
+        this.errorMessage = 'Nem sikerült módosítani a státuszt.';
+      }
+    },
+    error: (err) => {
+      console.error('Hiba a státusz módosításakor:', err);
+      this.errorMessage = 'Hiba történt a státusz módosításakor.';
+    }
+  });
+}
+
 
     // 🔹 Részletek bezárása
     closeDetails(): void {

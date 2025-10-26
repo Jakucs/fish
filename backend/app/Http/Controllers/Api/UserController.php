@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller; // ← ide kell
 use App\Models\User;
 use Illuminate\Http\Request;
 
