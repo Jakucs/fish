@@ -47,12 +47,27 @@
         <span *ngIf="selectedUser.role === 1">Admin</span>
         <span *ngIf="selectedUser.role === 2">Superadmin</span>
     </p>
-        <!-- 🔘 Admin jog gomb -->
-    <button class="btn btn-outline-primary btn-sm"
-            (click)="toggleAdminRole()"
-            [disabled]="selectedUser.role === 2">
-      {{ selectedUser.role === 1 ? 'Admin jog elvétele' : 'Adminná tétel' }}
-    </button>
+        <!-- ✅ Szerep + admin jog gomb egy sorban -->
+<div class="d-flex align-items-center gap-2 mb-2">
+  <p class="mb-0"><strong>Szerep:</strong>
+    <span *ngIf="selectedUser.role === 0">Felhasználó</span>
+    <span *ngIf="selectedUser.role === 1">Admin</span>
+    <span *ngIf="selectedUser.role === 2">Superadmin</span>
+  </p>
+
+  <!-- 🔘 Admin jog gomb -->
+  <button class="btn btn-outline-primary btn-sm"
+          (click)="toggleAdminRole()"
+          [disabled]="selectedUser.role === 2">
+    {{ selectedUser.role === 1 ? 'Admin jog elvétele' : 'Adminná tétel' }}
+  </button>
+</div>
+
+
+
+
+
+
         <!-- ✅ Aktivitás státusz + gomb egy sorban -->
     <div class="d-flex align-items-center gap-2">
       <p class="mb-0"><strong>Státusz:</strong>
@@ -60,7 +75,6 @@
           {{ selectedUser.is_active ? 'Aktív' : 'Inaktív' }}
         </span>
       </p>
-
       <button class="btn btn-outline-primary btn-sm"
               (click)="toggleUserActive()">
         {{ selectedUser.is_active ? 'Inaktiválás' : 'Aktiválás' }}

@@ -80,14 +80,23 @@ export class AdminpageComponent {
   });
 }
 
-  toggleAdminRole() {
-    if (this.selectedUser.role === 0) {
-      this.selectedUser.role = 1; // Felhasználóból admin
-    } else if (this.selectedUser.role === 1) {
-      this.selectedUser.role = 0; // Adminból felhasználó
+      // component.ts
+    toggleAdminRole() {
+      const userId = this.selectedUser.id;
+
+      this.adminapi.toggleAdmin(userId).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            // Sikeres backend váltás → frissítjük a UI-t
+            this.selectedUser.role = res.role;
+          }
+        },
+        error: (err) => {
+          console.error('Hiba a toggleAdminRole híváskor:', err);
+        }
+      });
     }
-    // itt lehet backend hívás a változás mentéséhez
-  }
+
 
 
 
