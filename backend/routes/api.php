@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\FavouriteController;
+use App\Http\Controllers\UserController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -30,6 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get ("/products", [ProductController::class, "getProducts"]);
     Route::get( "/users", [ AuthController::class, "getUsers" ]);
+
+    Route::put('/users/{id}/toggle-active', [UserController::class, 'toggleActive']);
 
 });
 
