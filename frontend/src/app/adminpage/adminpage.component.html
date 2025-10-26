@@ -47,6 +47,12 @@
         <span *ngIf="selectedUser.role === 1">Admin</span>
         <span *ngIf="selectedUser.role === 2">Superadmin</span>
     </p>
+        <!-- 🔘 Admin jog gomb -->
+    <button class="btn btn-outline-primary btn-sm"
+            (click)="toggleAdminRole()"
+            [disabled]="selectedUser.role === 2">
+      {{ selectedUser.role === 1 ? 'Admin jog elvétele' : 'Adminná tétel' }}
+    </button>
         <!-- ✅ Aktivitás státusz + gomb egy sorban -->
     <div class="d-flex align-items-center gap-2">
       <p class="mb-0"><strong>Státusz:</strong>

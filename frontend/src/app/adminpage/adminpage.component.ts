@@ -80,6 +80,16 @@ export class AdminpageComponent {
   });
 }
 
+  toggleAdminRole() {
+    if (this.selectedUser.role === 0) {
+      this.selectedUser.role = 1; // Felhasználóból admin
+    } else if (this.selectedUser.role === 1) {
+      this.selectedUser.role = 0; // Adminból felhasználó
+    }
+    // itt lehet backend hívás a változás mentéséhez
+  }
+
+
 
     // 🔹 Részletek bezárása
     closeDetails(): void {
