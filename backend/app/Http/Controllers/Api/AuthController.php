@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
+
 
 
 
@@ -125,7 +127,7 @@ class AuthController extends ResponseController
         $admin = auth()->user();
 
         // Csak admin/superadmin férhet hozzá
-        if (!$admin || $admin->role < 1) {
+        if (!Gate::allows('admin-access')) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
@@ -173,12 +175,12 @@ class AuthController extends ResponseController
                 $user = $request->user();
 
                 // Ellenőrizzük, hogy az aktuális user admin vagy superadmin
-                if (!$user || $user->role < 1) { 
+                if (!Gate::allows('admin-access')) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Unauthorized'
                     ], 403);
-                }
+            }
 
                 // Paginate: 50 felhasználó oldalanként
                 $users = User::select('id', 'username', 'email', 'role', 'created_at')
