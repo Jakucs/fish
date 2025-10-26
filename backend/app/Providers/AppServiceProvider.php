@@ -21,9 +21,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        // Admin vagy superadmin hozzáférés
-        Gate::define('admin-access', function ($user) {
-            return $user->role >= 1; // role=1 vagy role=2
-        });
+            // Admin hozzáférés (admin és superadmin)
+            Gate::define('admin-access', function ($user) {
+                return $user->role >= 1; // 1 vagy 2
+            });
+
+            // Csak superadmin hozzáférés
+            Gate::define('superadmin-access', function ($user) {
+                return $user->role === 2;
+            });
     }
 }

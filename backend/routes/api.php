@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get( "/users", [ AuthController::class, "getUsers" ]);
 
     Route::put('/users/{id}/toggle-active', [UserController::class, 'toggleActive']);
+    Route::put('/users/{id}/toggle-admin-role', [UserController::class, 'toggleAdminRole']);
 
 });
 
