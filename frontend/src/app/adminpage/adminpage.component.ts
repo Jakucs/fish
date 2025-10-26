@@ -80,7 +80,7 @@ export class AdminpageComponent {
   });
 }
 
-      // component.ts
+      
     toggleAdminRole() {
       const userId = this.selectedUser.id;
 
