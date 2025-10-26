@@ -20,7 +20,7 @@ export class AdminapiService {
 
     // 🔹 Egy konkrét user részletes adatainak lekérése
       getUserDetails(id: number): Observable<any> {
-        const headers = this.authapi.makeHeader(); // ⬅️ ez volt a hiba: itt is ezt kell használni
+        const headers = this.authapi.makeHeader();
         return this.http.get(`${this.baseUrl}/userdetails/${id}`, { headers });
       }
 
@@ -34,7 +34,10 @@ export class AdminapiService {
       return this.http.put(`${this.baseUrl}/users/${userId}/toggle-admin-role`, {}, { headers });
       }
 
-
+      getCurrentUser(): Observable<any> {
+      const headers = this.authapi.makeHeader();
+      return this.http.get(`${this.baseUrl}/user`, { headers });
+    }
 
 
 }

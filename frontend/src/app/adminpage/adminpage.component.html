@@ -52,11 +52,11 @@
       </p>
 
       <!-- 🔘 Admin jog gomb -->
-      <button class="btn btn-outline-primary btn-sm"
-              (click)="toggleAdminRole()"
-              [disabled]="selectedUser.role === 2">
-        {{ selectedUser.role === 1 ? 'Admin jog elvétele' : 'Adminná tétel' }}
-      </button>
+    <button *ngIf="currentUser?.role === 2"
+            class="btn btn-outline-primary btn-sm"
+            (click)="toggleAdminRole()">
+      {{ selectedUser.role === 1 ? 'Admin jog elvétele' : 'Adminná tétel' }}
+    </button>
     </div>
 
 

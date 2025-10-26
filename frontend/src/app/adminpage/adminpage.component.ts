@@ -19,7 +19,7 @@ export class AdminpageComponent {
   errorMessage = '';
   successMessage = '';
   showUsers = false;
-
+  currentUser: any;
   currentPage = 1;
   lastPage = 1;
 
@@ -28,7 +28,19 @@ export class AdminpageComponent {
     private adminapi: AdminapiService
   ) {}
 
-  ngOnInit(): void {}
+    ngOnInit(): void {
+          // 1️⃣ Lekérjük a bejelentkezett user adatait
+      this.adminapi.getCurrentUser().subscribe({
+        next: (res: any) => {
+          this.currentUser = res;  // most már lesz role, id, stb.
+        },
+        error: (err) => console.error('Nem sikerült lekérni a bejelentkezett usert', err)
+      });
+
+      // 2️⃣ Ha alapból a felhasználók listáját akarod látni
+      this.loadUsers(this.currentPage);
+  }
+
 
   onUsersClick(): void {
     this.showUsers = true;
