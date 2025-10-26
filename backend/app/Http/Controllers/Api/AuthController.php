@@ -120,29 +120,34 @@ class AuthController extends ResponseController
 
 
 
-    public function getUserDetails(Request $request)
+    public function getUserDetails($id)
     {
-        $user = $request->user();
+        $admin = auth()->user();
 
-        if ($user->role < 1) { // pl. 0 = normál user, 1 = admin
+        // Csak admin/superadmin férhet hozzá
+        if (!$admin || $admin->role < 1) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
             ], 403);
         }
 
+        $user = User::select('id', 'username', 'firstname', 'lastname', 'phone_number', 'email', 'role', 'created_at')
+                    ->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Felhasználó nem található'
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
-            'data' => [
-                'username' => $user->username,
-                'firstname' => $user->firstname,
-                'lastname' => $user->lastname,
-                'phone_number' => $user->phone_number,
-                'email' => $user->email,
-                'role' => $user->role
-            ]
+            'data' => $user
         ]);
     }
+
 
 
 
