@@ -12,11 +12,15 @@ use Illuminate\Queue\SerializesModels;
 class FishDrobemail extends Mailable
 {
     use Queueable, SerializesModels;
+    
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+
+    public $content;
+
+    public function __construct($content)
     {
         $this->content = $content;
     }
@@ -27,7 +31,7 @@ class FishDrobemail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Megerősítő email',
+            subject: 'Felhasználó tiltása',
         );
     }
 
@@ -37,7 +41,7 @@ class FishDrobemail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name Levelem tartalma lesz... kattints a megerősítő linkre...',
+            view: 'fishdrobe',
         );
     }
 

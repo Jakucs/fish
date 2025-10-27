@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\FavouriteController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MailController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -62,3 +63,7 @@ Route::put("/updatepicture/{id}", [ProductController::class, "updatePicture"]);
 
 // Telefonszám ellenőrzése valós időben
 Route::get('/check-phone', [AuthController::class, 'checkPhone']);
+
+
+Route::get("/email", [MailController::class, "sendMail"]);
+Route::get('/send-welcome', [MailController::class, 'sendWelcomeEmail']);
