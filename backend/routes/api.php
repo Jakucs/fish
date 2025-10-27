@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TypeController;
@@ -67,3 +68,22 @@ Route::get('/check-phone', [AuthController::class, 'checkPhone']);
 
 Route::get("/email", [MailController::class, "sendMail"]);
 Route::get('/send-welcome', [MailController::class, 'sendWelcomeEmail']);
+
+
+
+
+
+
+
+
+Route::get('/email/verify/{id}/{hash}', [MailController::class, 'verify'])
+    ->name('verification.verify');
+
+Route::post('/email/send-verification', function (Request $request) {
+    $user = \App\Models\User::find($request->user_id);
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    (new \App\Http\Controllers\MailController)->sendVerificationEmail($user);
+});

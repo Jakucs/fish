@@ -27,6 +27,7 @@ class AuthController extends ResponseController
             "password" => bcrypt($request["password"]),
             'role' => 0, // mindig normál user
         ]);
+        $user->sendEmailVerificationNotification();
         return $this->sendResponse($user, "Sikeres regisztráció");
     }
 
