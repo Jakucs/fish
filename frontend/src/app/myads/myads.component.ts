@@ -3,10 +3,11 @@ import { AdapiService } from '../shared/adapi.service';
 import { UserapiService } from '../shared/userapi.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { InactiveGuardComponent } from '../inactive-guard/inactive-guard.component';
 
 @Component({
   selector: 'app-myads',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, InactiveGuardComponent],
   templateUrl: './myads.component.html',
   styleUrl: './myads.component.css'
 })
@@ -15,7 +16,7 @@ export class MyadsComponent {
   adList: any[] = []
 
   constructor(
-    private userapi: UserapiService,
+    public userapi: UserapiService,
     private adapi: AdapiService,
     private router: Router
   ) { }
