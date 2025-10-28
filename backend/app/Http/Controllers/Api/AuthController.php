@@ -198,4 +198,29 @@ class AuthController extends ResponseController
 
 
 
+
+            // érzékeny végpont példa - fiók aktív-e
+ /*            public function protectedFunction(Request $request)
+           {
+                $user = $request->user();
+
+                if (!$user || $user->is_active == 0) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Fiókodat felfüggesztettük.'
+                    ], 403); // 403 Forbidden
+                }
+
+                // A tényleges logika, ha aktív
+                return response()->json([
+                    'success' => true,
+                    'data' => 'Valami érzékeny adat'
+                ]);
+            }     
+                
+*/
+
+
+
+
 }
