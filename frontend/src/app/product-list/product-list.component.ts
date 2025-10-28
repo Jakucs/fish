@@ -27,7 +27,7 @@ export class ProductListComponent {
     private productsapi: ProductapiService,
     private router: Router,
     private favouriteapi: FavouriteService,
-    private userapi: UserapiService,
+    public userapi: UserapiService,
     private typeapi: TypesService
   ) { }
 
