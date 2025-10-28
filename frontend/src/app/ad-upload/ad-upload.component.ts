@@ -78,40 +78,50 @@ export class AdUploadComponent {
       }] //<---Felhasználjuk az aszinkron validátort először!
     });
 
+
     // Alapból mutatjuk az inputot
     this.showPhoneInput = true;
 
-    this.userapi.getUserDetails().subscribe({
+      this.userapi.getUserDetails().subscribe({
       next: (res: any) => {
         console.log('Felhasználói adatok:', res);
         if (res.success) {
           const phone = res.data.phone_number;
-        if (phone) {
-          // ✅ Ha már van telefonszám az adatbázisban
-          this.showPhoneInput = false;
-          this.productForm.patchValue({ phone_number: phone });
+          if (phone) {
+            // ✅ Ha már van telefonszám az adatbázisban
+            this.showPhoneInput = false;
+            this.productForm.patchValue({ phone_number: phone });
 
-          // ⚙️ Eltávolítjuk a kötelező és async validátorokat
-          const phoneCtrl = this.productForm.get('phone_number');
-          phoneCtrl?.clearValidators();
-          phoneCtrl?.clearAsyncValidators();
-          phoneCtrl?.updateValueAndValidity();
-        } else {
-          // ⚙️ Ha nincs telefonszám — visszaállítjuk a validátorokat
-          this.showPhoneInput = true;
-          const phoneCtrl = this.productForm.get('phone_number');
-          phoneCtrl?.setValidators([Validators.required]);
-          phoneCtrl?.setAsyncValidators([this.validator.phoneExistsValidator()]);
-          phoneCtrl?.updateValueAndValidity();
+            // ⚙️ Eltávolítjuk a kötelező és async validátorokat
+            const phoneCtrl = this.productForm.get('phone_number');
+            phoneCtrl?.clearValidators();
+            phoneCtrl?.clearAsyncValidators();
+            phoneCtrl?.updateValueAndValidity();
+          } else {
+            // ⚙️ Ha nincs telefonszám — visszaállítjuk a validátorokat
+            this.showPhoneInput = true;
+            const phoneCtrl = this.productForm.get('phone_number');
+            phoneCtrl?.setValidators([Validators.required]);
+            phoneCtrl?.setAsyncValidators([this.validator.phoneExistsValidator()]);
+            phoneCtrl?.updateValueAndValidity();
+          }
         }
-      }
-    },
+      }, // Hiba esetén ne mutassuk a page-t
       error: (err: any) => {
         console.error('Hiba a felhasználói adatok lekérésekor:', err);
-        // API hiba esetén mutassuk az inputot
-        this.showPhoneInput = true;
+
+        // ✅ Ha a backend 403-at küld az inaktív felhasználó miatt
+        if (err.status === 403 && err.error?.message) {
+          this.backendErrorMessage = err.error.message;
+        }
+
+        // API hiba esetén mutassuk az inputot (ha nem 403)
+        if (err.status !== 403) {
+          this.showPhoneInput = true;
+        }
       }
-    });
+  });
+
   }
 
 
