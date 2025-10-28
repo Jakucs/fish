@@ -1,14 +1,4 @@
-<div class="container mt-3">
-  <!-- ✅ Ha van backend hibaüzenet (pl. inaktív user), mutatjuk csak azt -->
-  <div *ngIf="backendErrorMessage" class="alert alert-danger">
-    {{ backendErrorMessage }}
-  </div>
-
-  <!-- ✅ Form csak akkor jelenjen meg, ha nincs hiba -->
-  <div *ngIf="!backendErrorMessage">
-
-
-    <!--<---- IF LOGIKÁT NEM DUPLIKÁLNI, INKÁBB CSINÁLNI ERRE KÜLÖN KOMPONENST.-->
+<app-inactive-guard [errorMessage]="backendErrorMessage">
 
 
 <h2 class="container mt-3">Add el nem használt horgászcuccaid</h2>
@@ -220,3 +210,6 @@
   </div>
 
 </form>
+
+
+</app-inactive-guard>

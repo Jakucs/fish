@@ -8,10 +8,11 @@ import { PicsShareService } from '../shared/pics-share.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ValidatorService } from '../shared/validator.service';
+import { InactiveGuardComponent } from '../inactive-guard/inactive-guard.component';
 
 @Component({
   selector: 'app-ad-upload',
-  imports: [PicsUploadComponent, ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [PicsUploadComponent, ReactiveFormsModule, CommonModule, FormsModule, InactiveGuardComponent],
   templateUrl: './ad-upload.component.html',
   styleUrl: './ad-upload.component.css'
 })
