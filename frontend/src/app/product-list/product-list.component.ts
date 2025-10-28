@@ -37,7 +37,7 @@ export class ProductListComponent {
     }
 
     loadProducts(){
-            if (this.userapi.isLoggedIn()) {
+            if (this.userapi.isLoggedIn() && this.userapi.isUserActive()) {
         this.productsapi.getProductsWithToken().subscribe({
           next: (data: any) => {
             console.log("Bejelentkezett felhasználó termékei:", data);

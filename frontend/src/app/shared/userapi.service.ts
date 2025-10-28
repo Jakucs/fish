@@ -33,4 +33,13 @@ export class UserapiService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  // userapi.service.ts
+  isUserActive(): boolean {
+    const userData = localStorage.getItem('user');
+    if (!userData) return false;
+    const user = JSON.parse(userData);
+    return user.is_active === true;
+  }
+
 }
