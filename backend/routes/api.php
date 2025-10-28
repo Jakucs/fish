@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\FavouriteController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MailController;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', CheckIfActive::class])->group(function () {
 
     // Bejelentkezett user adatai
     Route::get('/user', function (Request $request) {
@@ -28,7 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post ("/newproduct", [ProductController::class, "newProduct"]);
     Route::put ("/updateproduct/{id}", [ProductController::class, "updateProduct"]);
     Route::delete ("/destroyproduct/{id}", [ProductController::class, "destroyProduct"]);
-    Route::get( "/userdetails/{id}", [ AuthController::class, "getUserDetails"]);
+    Route::get( "/userdetails/{id}", [ AuthController::class, "getUserDetailsById"]);
+    Route::get( "/userdetails", [ AuthController::class, "getUserDetails"]);
     // Kedvencek végpontja
     Route::post('/favourites/toggle/{productId}', [FavouriteController::class, 'toggle']);
 

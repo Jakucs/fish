@@ -21,7 +21,9 @@ export class UserapiService {
     return this.http.get(`${this.userURL}/userdetails`, { headers: this.makeHeader() });
   }
 
-
+  getUserDetailsById(id: number): Observable<any> {
+    return this.http.get(`${this.userURL}/userdetails/${id}`, { headers: this.makeHeader() });
+  }
     
   getToken(): string | null {
     return localStorage.getItem('token');

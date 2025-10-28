@@ -123,7 +123,7 @@ class AuthController extends ResponseController
 
 
 
-    public function getUserDetails($id)
+    public function getUserDetailsById($id)
     {
         $admin = auth()->user();
 
@@ -150,6 +150,29 @@ class AuthController extends ResponseController
             'data' => $user
         ]);
     }
+
+
+        public function getUserDetails(Request $request)
+    {
+        // A bejelentkezett user lekérése
+        $user = $request->user(); // vagy auth()->user()
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Felhasználó nem bejelentkezett'
+            ], 401);
+        }
+
+        // Csak a szükséges mezőket adhatod vissza
+        $userData = $user->only(['id', 'username', 'firstname', 'lastname', 'phone_number', 'email', 'role', 'is_active', 'created_at']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $userData
+        ]);
+    }
+
 
 
 
