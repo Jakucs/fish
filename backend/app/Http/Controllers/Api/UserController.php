@@ -44,25 +44,45 @@ class UserController extends Controller
     }
 
     public function toggleAdminRole($id)
-    {
-        // Megkeressük a felhasználót az id alapján
-        $user = User::find($id);
+{
+    $currentUser = auth()->user(); // Bejelentkezett user
 
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'Felhasználó nem található'], 404);
-        }
+    // Megkeressük a célfelhasználót
+    $user = User::find($id);
 
-        // Ellenőrizzük, hogy csak superadmin módosíthat admin jogosultságot
-        if (Gate::denies('superadmin-access')) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
-        }
-
-        // Felhasználó admin/jogosultság váltása
-        $user->role = $user->role === 1 ? 0 : 1; // admin ⇄ felhasználó
-        $user->save();
-
-        return response()->json(['success' => true, 'role' => $user->role]);
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Felhasználó nem található'
+        ], 404);
     }
+
+    // Csak superadmin férhet hozzá
+    if (Gate::denies('superadmin-access')) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized'
+        ], 403);
+    }
+
+    // A superadmin nem módosíthatja saját jogát
+    if ($currentUser->id === $user->id && $currentUser->role === 2) {
+        return response()->json([
+            'success' => false,
+            'message' => 'A superadmin nem módosíthatja saját jogosultságát.'
+        ], 403);
+    }
+
+    // Admin jogosultság váltása (1 ⇄ 0)
+    $user->role = $user->role === 1 ? 0 : 1;
+    $user->save();
+
+    return response()->json([
+        'success' => true,
+        'role' => $user->role
+    ]);
+}
+
 
 
 }
