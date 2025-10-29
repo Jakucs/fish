@@ -13,7 +13,8 @@ import { InactiveGuardComponent } from '../inactive-guard/inactive-guard.compone
 })
 export class MyadsComponent {
 
-  adList: any[] = []
+  adList: any[] = [];
+  isActiveUser: boolean | null = null;
 
   constructor(
     public userapi: UserapiService,
@@ -22,21 +23,37 @@ export class MyadsComponent {
   ) { }
 
 
-    ngOnInit() {
+      ngOnInit() {
+    // 1️⃣ Először lekérdezzük a user státuszát
+    this.userapi.isUserActive().subscribe({
+      next: (isActive: boolean) => {
+        if (isActive) {
+          // 2️⃣ Ha aktív, betöltjük a hirdetéseket
+          this.loadMyAds();
+        } else {
+          console.warn('A felhasználó fiókja inaktív, nem töltjük a hirdetéseket.');
+        }
+      },
+      error: (err) => {
+        console.error('Hiba az aktivitás lekérésekor:', err);
+      }
+    });
+  }
+
+    // A hirdetések betöltése külön metódusban
+    loadMyAds() {
       this.adapi.getMyAds().subscribe({
         next: (data: any) => {
           this.adList = data.data.map((ad: any) => {
             let imagesArray: any[] = [];
 
             if (Array.isArray(ad.image)) {
-              // Már tömb
               imagesArray = ad.image;
             } else if (typeof ad.image === 'string') {
               try {
                 const parsed = JSON.parse(ad.image);
                 imagesArray = Array.isArray(parsed) ? parsed : [parsed];
               } catch {
-                // Nem JSON (pl. URL), kezeljük sima stringként
                 imagesArray = [ad.image];
               }
             }
@@ -44,10 +61,10 @@ export class MyadsComponent {
             return { ...ad, imagesArray };
           });
 
-          console.log("MyAds tartalma képekkel: ", this.adList);
+          console.log('MyAds tartalma képekkel: ', this.adList);
         },
         error: (error) => {
-          console.log("Hiba a hirdetések betöltésekor: ", error);
+          console.error('Hiba a hirdetések betöltésekor: ', error);
         }
       });
     }

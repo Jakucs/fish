@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
+import { AuthapiService } from './authapi.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class UserapiService {
 
    private userURL = 'http://192.168.100.147:8000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authapi: AuthapiService) { }
 
     makeHeader(){
     const token = localStorage.getItem('token');
@@ -34,12 +35,22 @@ export class UserapiService {
     return !!this.getToken();
   }
 
-  // userapi.service.ts
-  isUserActive(): boolean {
-    const userData = localStorage.getItem('user');
-    if (!userData) return false;
-    const user = JSON.parse(userData);
-    return user.is_active === true;
+    // 🟢 Backendről kérdezzük le, hogy aktív-e a user
+  isUserActive(): Observable<boolean> {
+    return this.http
+      .get(`${this.userURL}/userdetails`, { headers: this.authapi.makeHeader() })
+      .pipe(
+        map((res: any) => {
+          const isActive = res?.data?.is_active === 1 || res?.data?.is_active === true;
+          return isActive;
+        }),
+        catchError((err) => {
+          console.error('Hiba az aktivitás lekérésekor:', err);
+          return of(false); // ha hiba, kezeljük úgy, mintha inaktív lenne
+        })
+      );
   }
+
+
 
 }
