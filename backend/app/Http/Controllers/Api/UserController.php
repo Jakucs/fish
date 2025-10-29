@@ -14,6 +14,7 @@ class UserController extends Controller
     {
         $admin = auth()->user();
 
+        // 🔒 Csak admin vagy superadmin (role >= 1) férhet hozzá
         if (!$admin || $admin->role < 1) {
             return response()->json([
                 'success' => false,
@@ -30,6 +31,23 @@ class UserController extends Controller
             ], 404);
         }
 
+        // 🚫 Saját fiók inaktiválása tiltva
+        if ($admin->id === $user->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Saját fiók inaktiválása nem engedélyezett.'
+            ], 403);
+        }
+
+        // 🚫 Superadmin fiók védelme (pl. role = 3)
+        if ($user->role === 3) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Superadmin fiók nem inaktiválható.'
+            ], 403);
+        }
+
+        // ✅ Állapot váltása
         $user->is_active = !$user->is_active;
         $user->save();
 
@@ -42,6 +60,7 @@ class UserController extends Controller
             ]
         ]);
     }
+
 
     public function toggleAdminRole($id)
 {
