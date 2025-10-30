@@ -3,10 +3,11 @@ import { ProductapiService } from '../shared/productapi.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { TimeAgoPipe } from '../pipes/time-ago.pipe';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [RouterModule, CommonModule, NgbPopoverModule],
+  imports: [RouterModule, CommonModule, NgbPopoverModule, TimeAgoPipe],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
