@@ -72,11 +72,17 @@
 
           <!-- Hirdetés adatok -->
           <div class="d-flex align-items-center mb-3">
-          <!-- Bal oldalon a hely -->
-          <span>
-            <i class="bi bi-geo-alt-fill"></i>
-            {{ productDetails.city }}, {{ productDetails.postal_code }}
-          </span>
+          <!-- Bal oldalon a hely + idő -->
+          <div>
+            <div>
+              <i class="bi bi-geo-alt-fill"></i>
+              {{ productDetails.city }}, {{ productDetails.postal_code }}
+            </div>
+            <div class="text-muted small">
+              <i class="bi bi-clock-fill"></i>
+              {{ productDetails.created_at | timeAgo }}
+            </div>
+          </div>
 
           <!-- Jobb oldalra tolva a felhasználói adatok és extra info -->
           <div class="ms-auto text-end">
@@ -87,10 +93,6 @@
             <div>
               <i class="bi bi-envelope-fill"></i>
               {{ productDetails.user.email }}
-            </div>
-            <div>
-              <i class="bi bi-clock-fill"></i>
-              {{ productDetails.created_at | timeAgo }}
             </div>
             <div>
               <i class="bi bi-tag-fill"></i>
