@@ -60,6 +60,7 @@ export class AdUploadComponent {
         ]
       ],
       image: [''],
+      image_public_id: [''], // ✅ ide jön
       condition: ['', Validators.required],
       status: ['active', Validators.required],
       postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
@@ -156,7 +157,13 @@ export class AdUploadComponent {
         next: (res: any[]) => {
           if (res && res.length > 0) {
             const urls = res.map(r => r.secure_url);
-            this.productForm.patchValue({ image: JSON.stringify(urls) });
+            const publicIds = res.map(r => r.public_id);
+            this.productForm.patchValue({ 
+              image: JSON.stringify(urls), 
+              image_public_id: JSON.stringify(publicIds) 
+            });
+            console.log('Form érték a mentés előtt:', this.productForm.value);
+
 
             // Esetleg más komponens is használja
             this.picsshare.updateUrls(urls);

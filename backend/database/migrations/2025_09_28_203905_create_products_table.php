@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('price');
             $table->text('image')->nullable();
+            $table->string('image_public_id')->nullable();
             $table->string('condition')->default('használt');
             $table->enum('status', ['pending', 'active', 'sold', 'archived'])->default('pending');
             $table->timestamps();

@@ -107,6 +107,7 @@ class ProductController extends ResponseController
                 $product->user_id = Auth::id();
                 $product->price = $request["price"];
                 $product->image = $request["image"];
+                $product->image_public_id = json_encode(json_decode($request["image_public_id"], true));
                 $product->condition = $request["condition"];
                 $product->status = $request["status"];
                 $product->save();
