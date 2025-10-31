@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Cloudinary\Cloudinary;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -181,20 +182,44 @@ class ProductController extends ResponseController
 
         public function destroyProduct($id)
         {
-            $product = Product::find($id);
+            try {
+                $product = Product::findOrFail($id);
 
-            if (is_null($product)) {
-                return $this->sendError("Adathiba", ["Nincs ilyen termék"], 404);
+                // Csak a saját terméket vagy admin törölheti
+                $user = Auth::user();
+                if ($product->user_id !== $user->id && !$user->hasRole(['admin', 'superadmin'])) {
+                    return response()->json(['message' => 'Unauthorized'], 403);
+                }
+
+                // ✅ Cloudinary törlés
+                if ($product->image_public_id) {
+                    $cloudinary = new Cloudinary();
+
+                    $publicIds = json_decode($product->image_public_id, true);
+
+                    if (is_array($publicIds)) {
+                        foreach ($publicIds as $pid) {
+                            try {
+                                $cloudinary->uploadApi()->destroy($pid);
+                            } catch (\Exception $e) {
+                                \Log::error("Cloudinary törlés sikertelen: {$pid}", ['error' => $e->getMessage()]);
+                            }
+                        }
+                    } else {
+                        // Ha csak egy string (nem tömb)
+                        $cloudinary->uploadApi()->destroy($publicIds);
+                    }
+                }
+
+                // ✅ Törlés az adatbázisból
+                $product->delete();
+
+                return response()->json(['success' => true, 'message' => 'Termék és képek törölve a Cloudinaryról.']);
+
+            } catch (\Exception $e) {
+                \Log::error('Termék törlés hiba', ['error' => $e->getMessage()]);
+                return response()->json(['success' => false, 'message' => 'Hiba történt a törlés során.'], 500);
             }
-
-            // Ellenőrzés: csak a tulajdonos törölheti
-            if ($product->user_id !== Auth::id()) {
-                return $this->sendError("Jogosultsági hiba", ["Ehhez a termékhez nincs jogosultságod"], 403);
-            }
-
-            $product->delete();
-
-            return $this->sendResponse(new ProductResource($product), "Termék törölve");
         }
 
 
