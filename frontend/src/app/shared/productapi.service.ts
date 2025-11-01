@@ -81,5 +81,16 @@ export class ProductapiService {
     });
   }
 
+  newPictureWithPublicId(id: number, images: { url: string; public_id: string }[]) {
+  return this.http.post<{ image: string[] }>(
+    `${this.productsURL}/newpicture-publicid`,
+    {
+      product_id: id,
+      images
+    }
+  );
+}
+
+
   
 }

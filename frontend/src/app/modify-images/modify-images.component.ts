@@ -83,27 +83,31 @@ export class ModifyImagesComponent {
 
 
     saveImages() {
-    if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
-      this.picsUpload.uploadImages().subscribe({
-        next: (res: any[]) => {
-          if (res && res.length > 0) {
-            const urls = res.map(r => r.secure_url);
+  if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
+    this.picsUpload.uploadImages().subscribe({
+      next: (res: any[]) => {
+        if (res && res.length > 0) {
+          // Küldjük a képek URL-jeit és public_id-it is
+          const images = res.map(r => ({
+            url: r.secure_url,
+            public_id: r.public_id
+          }));
 
-            // ⬇️ Backendnek elküldjük az új képeket
-            this.productService.newPicture(this.productId, urls).subscribe({
-              next: (res: any) => {
-                this.images = res.image; // frissített képtömb a backendből
-              },
-              error: (err: any) => console.error('Hiba új kép hozzáadásakor:', err)
-            });
-          }
-        },
-        error: (err: any) => console.error('Feltöltési hiba:', err)
-      });
-    } else {
-      console.warn('Nincs kiválasztott kép feltöltésre.');
-    }
+          this.productService.newPicture(this.productId, images as any).subscribe({
+            next: (res: any) => {
+              this.images = res.image;
+            },
+            error: (err: any) => console.error('Hiba új kép hozzáadásakor:', err)
+          });
+        }
+      },
+      error: (err: any) => console.error('Feltöltési hiba:', err)
+    });
+  } else {
+    console.warn('Nincs kiválasztott kép feltöltésre.');
   }
+}
+
 
 
 

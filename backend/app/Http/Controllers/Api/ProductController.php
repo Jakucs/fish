@@ -247,29 +247,44 @@ class ProductController extends ResponseController
 
 
 
+        
         public function newPicture(Request $request)
         {
             $request->validate([
                 'product_id' => 'required|integer|exists:products,id',
                 'images' => 'required|array',
-                'images.*' => 'string',
+                'images.*.url' => 'required|string',
+                'images.*.public_id' => 'required|string',
             ]);
 
             $product = Product::findOrFail($request->product_id);
 
-            // meglévő képek + újak összevonása
-            $existing = is_string($product->image)
+            // 🔹 Meglévő képek betöltése (ha string, dekódoljuk)
+            $existingImages = is_string($product->image)
                 ? json_decode($product->image, true)
                 : ($product->image ?? []);
 
-            $merged = array_merge($existing, $request->images);
+            $existingPublicIds = is_string($product->image_public_id)
+                ? json_decode($product->image_public_id, true)
+                : ($product->image_public_id ?? []);
 
-            $product->image = json_encode($merged);
+            // 🔹 Új képek különválasztása (url + public_id)
+            $newUrls = collect($request->images)->pluck('url')->toArray();
+            $newPublicIds = collect($request->images)->pluck('public_id')->toArray();
+
+            // 🔹 Összefűzzük a meglévő és új adatokat
+            $mergedImages = array_merge($existingImages, $newUrls);
+            $mergedPublicIds = array_merge($existingPublicIds, $newPublicIds);
+
+            // 🔹 Mentés adatbázisba
+            $product->image = json_encode($mergedImages);
+            $product->image_public_id = json_encode($mergedPublicIds);
             $product->save();
 
             return response()->json([
                 'message' => 'Képek hozzáadva.',
-                'images' => $merged,
+                'images' => $mergedImages,
+                'image_public_id' => $mergedPublicIds,
             ]);
         }
 
