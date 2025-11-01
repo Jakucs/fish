@@ -259,14 +259,22 @@ class ProductController extends ResponseController
 
             $product = Product::findOrFail($request->product_id);
 
-            // 🔹 Meglévő képek betöltése (ha string, dekódoljuk)
-            $existingImages = is_string($product->image)
-                ? json_decode($product->image, true)
-                : ($product->image ?? []);
+            // 🔹 Biztonságos meglévő képek betöltése
+            $existingImages = [];
+            if (!empty($product->image)) {
+                $decoded = json_decode($product->image, true);
+                if (is_array($decoded)) {
+                    $existingImages = $decoded;
+                }
+            }
 
-            $existingPublicIds = is_string($product->image_public_id)
-                ? json_decode($product->image_public_id, true)
-                : ($product->image_public_id ?? []);
+            $existingPublicIds = [];
+            if (!empty($product->image_public_id)) {
+                $decoded = json_decode($product->image_public_id, true);
+                if (is_array($decoded)) {
+                    $existingPublicIds = $decoded;
+                }
+            }
 
             // 🔹 Új képek különválasztása (url + public_id)
             $newUrls = collect($request->images)->pluck('url')->toArray();
@@ -287,6 +295,7 @@ class ProductController extends ResponseController
                 'image_public_id' => $mergedPublicIds,
             ]);
         }
+
 
 
         public function destroyPicture($id, Request $request)
