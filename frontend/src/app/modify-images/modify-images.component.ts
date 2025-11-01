@@ -59,6 +59,9 @@ export class ModifyImagesComponent {
         if (res?.image) {
           this.images = Array.isArray(res.image) ? res.image : [];
         }
+
+              // ✅ Sikeres törlés üzenet a konzolra
+      console.log('✅ Kép sikeresen törölve:', url);
       },
       error: (err) => console.error('Hiba a kép törlésekor:', err)
     });

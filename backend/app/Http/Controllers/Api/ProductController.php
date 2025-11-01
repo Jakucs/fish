@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Cloudinary\Cloudinary;
+use Cloudinary\Api\Upload\UploadApi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -303,18 +304,47 @@ class ProductController extends ResponseController
             $request->validate(['url' => 'required|string']);
 
             $product = Product::findOrFail($id);
+
+            // Meglévő képek és public_id-k lekérése
             $images = is_string($product->image)
                 ? json_decode($product->image, true)
-                : [];
+                : ($product->image ?? []);
 
-            $filtered = array_filter($images, fn($img) => $img !== $request->url);
+            $publicIds = is_string($product->image_public_id)
+                ? json_decode($product->image_public_id, true)
+                : ($product->image_public_id ?? []);
 
-            $product->image = json_encode(array_values($filtered));
-            $product->save();
+            // Kép indexének megkeresése
+            $index = array_search($request->url, $images);
+
+            if ($index !== false) {
+                // 🔹 Cloudinary törlés, ha van public_id
+                if (isset($publicIds[$index]) && !empty($publicIds[$index])) {
+                    try {
+                        (new UploadApi())->destroy($publicIds[$index]);
+                    } catch (\Exception $e) {
+                        \Log::error('❌ Cloudinary törlési hiba: ' . $e->getMessage());
+                    }
+                }
+
+                // 🔹 Lokálisan is eltávolítjuk a képet
+                unset($images[$index]);
+                unset($publicIds[$index]);
+
+                // 🔹 Újrarázoljuk a tömböt, hogy az indexek folyamatosak legyenek
+                $images = array_values($images);
+                $publicIds = array_values($publicIds);
+
+                // 🔹 Mentés adatbázisba
+                $product->image = json_encode($images);
+                $product->image_public_id = json_encode($publicIds);
+                $product->save();
+            }
 
             return response()->json([
                 'message' => 'Kép törölve.',
-                'images' => array_values($filtered),
+                'image' => $images,
+                'image_public_id' => $publicIds,
             ]);
         }
 
