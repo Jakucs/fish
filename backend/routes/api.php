@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum', CheckIfActive::class])->group(function () {
     Route::get( "/userdetails", [ AuthController::class, "getUserDetails"]);
     // Kedvencek végpontja
     Route::post('/favourites/toggle/{productId}', [FavouriteController::class, 'toggle']);
+    Route::get('/favourites', [FavouriteController::class, 'getFavourites']);
 
     Route::get ("/products", [ProductController::class, "getProducts"]);
     Route::get( "/users", [ AuthController::class, "getUsers" ]);
