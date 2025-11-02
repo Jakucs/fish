@@ -21,7 +21,7 @@ export class AuthapiService {
   }
 
     makeHeader(): HttpHeaders {
-    const token = localStorage.getItem('token') || ''; // ha null → üres string
+    const token = localStorage.getItem('token') || ''; // ha null - üres string
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Accept': 'application/json'

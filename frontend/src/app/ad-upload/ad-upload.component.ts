@@ -60,7 +60,7 @@ export class AdUploadComponent {
         ]
       ],
       image: [''],
-      image_public_id: [''], // ✅ ide jön
+      image_public_id: [''],
       condition: ['', Validators.required],
       status: ['active', Validators.required],
       postal_code: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
@@ -76,12 +76,12 @@ export class AdUploadComponent {
         phone_number: ['', {
         validators: [Validators.required],
         asyncValidators: [this.validator.phoneExistsValidator()],
-        updateOn: 'blur' // vagy 'change', ha gépelés közben is akarod
+        updateOn: 'blur'
       }] //<---Felhasználjuk az aszinkron validátort először!
     });
 
 
-    // Alapból mutatjuk az inputot
+    
     this.showPhoneInput = true;
 
       this.userapi.getUserDetails().subscribe({
@@ -90,17 +90,17 @@ export class AdUploadComponent {
         if (res.success) {
           const phone = res.data.phone_number;
           if (phone) {
-            // ✅ Ha már van telefonszám az adatbázisban
+            // Ha már van telefonszám az adatbázisban
             this.showPhoneInput = false;
             this.productForm.patchValue({ phone_number: phone });
 
-            // ⚙️ Eltávolítjuk a kötelező és async validátorokat
+            // Eltávolítjuk a kötelező és async validátorokat
             const phoneCtrl = this.productForm.get('phone_number');
             phoneCtrl?.clearValidators();
             phoneCtrl?.clearAsyncValidators();
             phoneCtrl?.updateValueAndValidity();
           } else {
-            // ⚙️ Ha nincs telefonszám — visszaállítjuk a validátorokat
+            // Ha nincs telefonszám — visszaállítjuk a validátorokat
             this.showPhoneInput = true;
             const phoneCtrl = this.productForm.get('phone_number');
             phoneCtrl?.setValidators([Validators.required]);
@@ -112,12 +112,12 @@ export class AdUploadComponent {
       error: (err: any) => {
         console.error('Hiba a felhasználói adatok lekérésekor:', err);
 
-        // ✅ Ha a backend 403-at küld az inaktív felhasználó miatt
+        
         if (err.status === 403 && err.error?.message) {
           this.backendErrorMessage = err.error.message;
         }
 
-        // API hiba esetén mutassuk az inputot (ha nem 403)
+        
         if (err.status !== 403) {
           this.showPhoneInput = true;
         }
@@ -142,16 +142,16 @@ export class AdUploadComponent {
   saveProduct() {
     console.log(this.productForm);
 
-    // ✅ 1️⃣ Ellenőrizzük, hogy érvényes-e a form
+    // Ellenőrizzük, hogy érvényes-e a form
     if (this.productForm.invalid) {
       Object.values(this.productForm.controls).forEach(control => {
         control.markAsTouched();
         control.updateValueAndValidity();
       });
-      return; // ⛔️ Ne menjen tovább
+      return; // Ne menjen tovább
     }
 
-    // ✅ 2️⃣ Ha van kép, előbb azt töltjük fel
+    // Ha van kép, előbb azt töltjük fel
     if (this.picsUpload.selectedFiles && this.picsUpload.selectedFiles.length > 0) {
       this.picsUpload.uploadImages().subscribe({
         next: (res: any[]) => {
@@ -169,7 +169,7 @@ export class AdUploadComponent {
             this.picsshare.updateUrls(urls);
           }
 
-          // Mentés a backendre
+          
           this.saveProductToBackend();
         },
         error: (err: any) => {
@@ -177,7 +177,7 @@ export class AdUploadComponent {
         }
       });
     } else {
-      // ✅ 3️⃣ Ha nincs kép, közvetlen mentés
+      // Ha nincs kép, közvetlen mentés
       this.saveProductToBackend();
     }
   }
@@ -189,20 +189,20 @@ export class AdUploadComponent {
       this.productapi.addProduct(this.productForm.value).subscribe({
         next: (res: any) => {
           if (res.success) {
-          console.log('✅ Sikeres mentés:', res);
+          console.log('Sikeres mentés:', res);
           this.productForm.reset();
           this.router.navigate(['/successfulupdate']);
           console.log('Hirdetés mentve:', this.productForm.value);
           this.backendErrorMessage = '';
         } else{
-          console.error('❌ Sikertelen mentés:', res);
+          console.error('Sikertelen mentés:', res);
           alert(`Hiba a mentés során: ${res.message}`);
         }
       },
       error: (err: any) => {
         console.log("Backend error object:", err);
 
-        // ✅ Itt a tényleges hibaüzenet a backendtől
+        
         this.backendErrorMessage = err?.error?.message || 'Ismeretlen hiba történt';
       }
 
@@ -224,15 +224,15 @@ export class AdUploadComponent {
           const city = data.places?.[0]?.['place name'];
           if (city) {
             this.productForm.patchValue({ city: city });
-            this.isCityReadonly = true; // ✅ automatikus találat → readonly
+            this.isCityReadonly = true; // automatikus találat - readonly
           } else {
             console.warn('Nem található város az adott irányítószámhoz');
-            this.isCityReadonly = false; // ❌ nem található → engedjük kézzel
+            this.isCityReadonly = false; // nem található - engedjük kézzel
           }
         },
         error: (err) => {
           console.error('API hiba:', err);
-          this.isCityReadonly = false; // ❌ API hiba → engedjük kézzel
+          this.isCityReadonly = false; // API hiba - engedjük kézzel
         }
       });
     } else {

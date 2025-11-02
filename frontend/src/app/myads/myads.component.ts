@@ -24,7 +24,7 @@ export class MyadsComponent {
 
 
       ngOnInit() {
-    // 1️⃣ Először lekérdezzük a user státuszát
+    // Először lekérdezzük a user státuszát
     this.userapi.isUserActive().subscribe({
       next: (isActive: boolean) => {
         if (isActive) {

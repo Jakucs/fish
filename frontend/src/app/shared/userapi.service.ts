@@ -35,7 +35,7 @@ export class UserapiService {
     return !!this.getToken();
   }
 
-    // 🟢 Backendről kérdezzük le, hogy aktív-e a user
+    // Backendről kérdezzük le, hogy aktív-e a user
   isUserActive(): Observable<boolean> {
     return this.http
       .get(`${this.userURL}/userdetails`, { headers: this.authapi.makeHeader() })

@@ -14,7 +14,7 @@
       [ngClass]="{'is-invalid': productForm.get('name')?.invalid && productForm.get('name')?.touched}"
     />
 
-    <!-- 🔹 Validációs hibák -->
+    <!-- Validációs hibák -->
     <div *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid" class="invalid-feedback d-block">
       <div *ngIf="productForm.get('name')?.errors?.['required']">Termék megadása szükséges.</div>
       <div *ngIf="productForm.get('name')?.errors?.['minlength']">Product minimum 3 karakter kell legyen.</div>
@@ -83,7 +83,7 @@
         </div>
       </div>
 
-      <!-- ✅ Checkbox -->
+      <!-- Checkbox -->
       <div class="form-check mt-2">
         <input
           class="form-check-input"

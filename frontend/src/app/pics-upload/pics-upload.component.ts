@@ -42,7 +42,7 @@ export class PicsUploadComponent {
 
   const newFiles = Array.from(input.files);
 
-  // ❌ Összesen ne legyen több mint MAX_FILES (pl. 10)
+  // Összesen ne legyen több mint MAX_FILES (pl. 10)
   if (this.existingImagesCount + this.selectedFiles.length + newFiles.length > this.MAX_FILES) {
     alert(`Maximum ${this.MAX_FILES} képet tölthetsz fel összesen.`);
     return;
@@ -64,7 +64,7 @@ export class PicsUploadComponent {
       return this.uploadService.uploadFiles(this.selectedFiles).pipe(
         tap(results => {
           this.uploadUrls = results.map((r: any) => r.secure_url);
-          console.log('✅ Feltöltve:', this.uploadUrls);
+          console.log('Feltöltve:', this.uploadUrls);
 
           // Itt adjuk át a képeket a többi komponensnek
           this.picsshare.updateUrls(this.uploadUrls);

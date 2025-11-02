@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'timeAgo',
-  standalone: true, // ⬅️ FONTOS Angular 17+ esetén!
+  standalone: true, // FONTOS Angular 17+ esetén!
 })
 export class TimeAgoPipe implements PipeTransform {
   transform(value: string | Date): string {

@@ -52,7 +52,7 @@ export class CloudinaryapiService {
     uploadFiles(files: File[], folder: string = 'user_uploads'): Observable<any[]> {
       // Minden fájl resize-olása és feltöltése
       const uploadRequests = files.map(file =>
-        from(this.resizeImage(file, 1280, 1280, 0.7)).pipe( // Promise → Observable
+        from(this.resizeImage(file, 1280, 1280, 0.7)).pipe( // Promise - Observable
           switchMap((resizedBlob: Blob) => {
             const resizedFile = new File([resizedBlob], file.name, { type: 'image/jpeg' });
             const formData = new FormData();

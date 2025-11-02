@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class DeleteProductComponent {
   productId!: number;
-  product: any = null; // 🔹 A törlendő termék adatai
+  product: any = null; // A törlendő termék adatai
   loading = true;
   error = false;
   successMessage: string | null = null;
@@ -30,7 +30,7 @@ export class DeleteProductComponent {
     this.fetchProduct();
   }
 
-  // 🔹 Lekérjük a termék adatait
+  // Lekérjük a termék adatait
   fetchProduct() {
     const url = `http://192.168.100.147:8000/api/product/${this.productId}`;
     this.http.get(url).subscribe({
@@ -46,7 +46,7 @@ export class DeleteProductComponent {
     });
   }
 
-  // 🔹 Törlés megerősítése
+  // Törlés megerősítése
     confirmDeletion() {
       console.log('✅ confirmDeletion() meghívva');
       const url = `http://192.168.100.147:8000/api/destroyproduct/${this.productId}`;
@@ -60,11 +60,11 @@ export class DeleteProductComponent {
         next: (res) => {
           console.log('Sikeresen törölve', res);
 
-          // ✅ Visszajelzés a felhasználónak
+          // Visszajelzés a felhasználónak
           this.successMessage = 'A hirdetésed sikeresen törölve lett.';
           this.deleted = true;
 
-          // ✅ Üzenet eltüntetése 3 mp múlva
+          // Üzenet eltüntetése 3 mp múlva
           setTimeout(() => {
             this.successMessage = null;
             this.router.navigate(['/my-products']);
@@ -80,7 +80,7 @@ export class DeleteProductComponent {
             this.errorMessage = 'Hiba történt a termék törlésekor. Kérlek, próbáld újra később.';
           }
 
-          // ✅ Üzenet eltüntetése 4 mp múlva
+          // Üzenet eltüntetése 4 mp múlva
           setTimeout(() => (this.errorMessage = null), 4000);
         },
       });

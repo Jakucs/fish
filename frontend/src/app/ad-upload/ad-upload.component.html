@@ -71,7 +71,7 @@
         <div *ngIf="productForm.get('price')?.errors?.['max']">Az ár nem lehet nagyobb, mint 99 999 999.</div>
       </div>
 
-      <!-- ✅ Checkbox bent a containerben -->
+      <!-- Checkbox bent a containerben -->
       <div class="form-check mt-2">
         <input class="form-check-input" type="checkbox" id="freePrice" (change)="onFreePriceChange($event)">
         <label class="form-check-label" for="freePrice">

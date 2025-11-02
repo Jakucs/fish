@@ -10,7 +10,7 @@
     <!-- Login Form -->
     <form [formGroup]="loginForm" (ngSubmit)="login()">
 
-      <!-- 🔴 Backend hibaüzenet -->
+      <!-- Backend hibaüzenet -->
       <div *ngIf="showErrorCard" class="error-message fadeIn">
         {{ errorMessageFromBackend }}
       </div>

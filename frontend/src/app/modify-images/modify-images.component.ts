@@ -31,12 +31,12 @@ export class ModifyImagesComponent {
     loadImages() {
   this.productService.getPictures(this.productId).subscribe({
     next: (res: any) => {
-      // Mindig tömb lesz
+      
       this.images = Array.isArray(res.image) ? res.image : res.image ? [res.image] : [];
     },
     error: (err) => {
       console.error('Hiba a képek lekérésekor:', err);
-      this.images = []; // ha hiba van, legalább üres tömb
+      this.images = [];
     }
   });
 }
@@ -47,21 +47,21 @@ export class ModifyImagesComponent {
 
     this.productService.destroyPicture(this.productId, url).subscribe({
       next: (res: any) => {
-        // mindig tömb
+        
         if (!Array.isArray(this.images)) this.images = [];
 
-        // lokális törlés
+        
         if (index >= 0 && index < this.images.length) {
           this.images.splice(index, 1);
         }
 
-        // backend válasz frissítése
+        
         if (res?.image) {
           this.images = Array.isArray(res.image) ? res.image : [];
         }
 
-              // ✅ Sikeres törlés üzenet a konzolra
-      console.log('✅ Kép sikeresen törölve:', url);
+            
+      console.log('Kép sikeresen törölve:', url);
       },
       error: (err) => console.error('Hiba a kép törlésekor:', err)
     });

@@ -58,7 +58,7 @@ export class LoginComponent {
 
         this.loggedIn = true;
         this.loginForm.reset();
-          // ✅ Feltételes navigálás
+        
         if (role === 1 || role === 2) {
           this.router.navigate(['adminpage']).then(() => window.location.reload());
         } else {
@@ -75,7 +75,7 @@ export class LoginComponent {
       const body = (typeof error.error === 'string') ? JSON.parse(error.error) : error.error;
 
       if (body && typeof body === 'object') {
-        // Ha van errorMessage, az élvez elsőbbséget
+        // Ha van errorMessage elsőbbséget élvez
         if (body.errorMessage) {
           msg = body.errorMessage;
         } else if (body.message) {

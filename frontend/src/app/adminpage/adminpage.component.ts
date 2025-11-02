@@ -29,15 +29,15 @@ export class AdminpageComponent {
   ) {}
 
     ngOnInit(): void {
-          // 1️⃣ Lekérjük a bejelentkezett user adatait
+          
       this.adminapi.getCurrentUser().subscribe({
         next: (res: any) => {
-          this.currentUser = res;  // most már lesz role, id, stb.
+          this.currentUser = res;
         },
         error: (err) => console.error('Nem sikerült lekérni a bejelentkezett usert', err)
       });
 
-      // 2️⃣ Ha alapból a felhasználók listáját akarod látni
+      
       this.loadUsers(this.currentPage);
   }
 
@@ -51,7 +51,7 @@ export class AdminpageComponent {
     this.showUsers = false;
   }
 
-      // 🔹 Részletek betöltése backendről
+      
   showDetails(user: any): void {
     const userId = user.id;
 
@@ -79,7 +79,7 @@ export class AdminpageComponent {
   this.adminapi.toggleUserActive(userId).subscribe({
     next: (res: any) => {
       if (res.success) {
-        this.selectedUser.is_active = res.data.is_active; // ✅ azonnal frissíted a UI-t
+        this.selectedUser.is_active = res.data.is_active; 
         this.successMessage = `A felhasználó státusza módosítva: ${res.data.is_active ? 'Aktív' : 'Inaktív'}`;
       } else {
         this.errorMessage = 'Nem sikerült módosítani a státuszt.';
@@ -99,7 +99,7 @@ export class AdminpageComponent {
       this.adminapi.toggleAdmin(userId).subscribe({
         next: (res: any) => {
           if (res.success) {
-            // Sikeres backend váltás → frissítjük a UI-t
+            // Sikeres backend váltás - frissítjük a UI-t
             this.selectedUser.role = res.role;
           }
         },
@@ -112,7 +112,7 @@ export class AdminpageComponent {
 
 
 
-    // 🔹 Részletek bezárása
+    
     closeDetails(): void {
       this.selectedUser = null;
     }

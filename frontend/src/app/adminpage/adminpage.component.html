@@ -43,7 +43,7 @@
     <p><strong>Telefonszám:</strong> {{ selectedUser.phone_number }}</p>
     <p><strong>Email:</strong> {{ selectedUser.email }}</p>
 
-        <!-- ✅ Szerep + admin jog gomb egy sorban -->
+        <!-- Szerep + admin jog gomb egy sorban -->
     <div class="d-flex align-items-center gap-2 mb-2">
       <p class="mb-0"><strong>Szerep: </strong>
         <span *ngIf="selectedUser.role === 0">Felhasználó</span>
@@ -51,7 +51,7 @@
         <span *ngIf="selectedUser.role === 2">Superadmin</span>
       </p>
 
-      <!-- 🔘 Admin jog gomb -->
+      <!-- Admin jog gomb -->
     <button *ngIf="currentUser?.role === 2"
             class="btn btn-outline-primary btn-sm"
             (click)="toggleAdminRole()">
@@ -59,7 +59,7 @@
     </button>
     </div>
 
-        <!-- ✅ Aktivitás státusz + gomb egy sorban -->
+        <!-- Aktivitás státusz + gomb egy sorban -->
     <div class="d-flex align-items-center gap-2">
       <p class="mb-0"><strong>Státusz:</strong>
         <span [ngClass]="selectedUser.is_active ? 'text-success' : 'text-danger'">

@@ -1,6 +1,6 @@
 <div class="container mt-4">
-        <!-- 🔍 Keresősáv -->
-<!-- 🔍 Keresősáv -->
+        <!-- Keresősáv -->
+<!-- Keresősáv -->
 <div class="row mb-1"> <!-- korábban mb-3, most szinte nincs margin -->
   <div class="col-12 col-md-6 mx-auto">
     <input
@@ -32,7 +32,7 @@
           (click)="goToDetails(productItem.id)"
         >
 
-          <!-- 🔹 A kép és a badge közös, relatív konténerben -->
+          <!-- A kép és a badge közös, relatív konténerben -->
           <div class="position-relative">
             <img
               *ngIf="productItem.imagesArray && productItem.imagesArray.length > 0"
@@ -43,7 +43,7 @@
               height="200"
               style="object-fit: cover;"
             >
-            <!-- 🎣 Hal ikon badge háttérrel, lehet túlzás-->
+            <!-- Hal ikon badge háttérrel, lehet túlzás-->
             <div
               *ngIf="userapi.isUserActive()"
               class="position-absolute top-0 end-0 m-2 px-2 py-1 bg-dark text-white rounded-pill opacity-75 d-flex align-items-center justify-content-center"
@@ -60,7 +60,7 @@
 
             </div>
 
-            <!-- 📷 Képek számának jelölése -->
+            <!-- Képek számának jelölése -->
             <div
               *ngIf="productItem.imagesArray && productItem.imagesArray.length > 1"
               class="position-absolute bottom-0 end-0 m-2 px-2 py-1 bg-dark text-white small rounded-pill opacity-75"
