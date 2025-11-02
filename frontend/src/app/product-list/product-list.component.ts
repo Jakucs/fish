@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { ProductapiService } from '../shared/productapi.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { TimeAgoPipe } from '../pipes/time-ago.pipe';
 import { FavouriteService } from '../shared/favourite.service';
 import { UserapiService } from '../shared/userapi.service';
 import { TypesService } from '../shared/types.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -31,10 +32,26 @@ export class ProductListComponent {
     private typeapi: TypesService
   ) { }
 
-    ngOnInit() {
-      this.loadProducts();
-      this.loadTypes();
+      ngOnInit() {
+    // ⬇️ Görgetés visszaállítása
+    const savedScroll = sessionStorage.getItem('scrollY');
+    if (savedScroll) {
+      setTimeout(() => window.scrollTo(0, +savedScroll), 0);
+      sessionStorage.removeItem('scrollY');
     }
+
+    // ⬇️ Ha elnavigálsz, mentse a pozíciót
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationStart))
+      .subscribe(() => {
+        sessionStorage.setItem('scrollY', window.scrollY.toString());
+      });
+
+    this.loadProducts();
+    this.loadTypes();
+  }
+
+      
 
     loadProducts(){
             if (this.userapi.isLoggedIn() && this.userapi.isUserActive()) {
@@ -109,7 +126,7 @@ export class ProductListComponent {
     getProductsByType(typeId: number) {
       this.productsapi.getProductsByType(typeId).subscribe({
         next: (data: any) => {
-          this.handleProducts(data); // 🔹 így lesz imagesArray
+          this.handleProducts(data); // így lesz imagesArray
           console.log("Termékek típussal: ", this.productList);
         },
         error: (error) => console.log("Hiba a termékek lekérésekor típussal: ", error)
