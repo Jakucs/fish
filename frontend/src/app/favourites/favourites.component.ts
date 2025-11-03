@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FavouriteService } from '../shared/favourite.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-favourites',
@@ -14,7 +15,10 @@ export class FavouritesComponent {
     isLoading = true;
     errorMessage = '';
 
-    constructor(private favouriteService: FavouriteService) { }
+    constructor(
+      private favouriteService: FavouriteService,
+      private router: Router
+    ) { }
 
       ngOnInit(): void {
       this.loadFavourites();
@@ -62,6 +66,10 @@ export class FavouritesComponent {
     },
   });
 }
+
+  viewProduct(productId: number): void {
+    this.router.navigate(['/product', productId]);
+  }
 
 
   

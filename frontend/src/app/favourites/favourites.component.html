@@ -27,7 +27,13 @@
         <div class="card-body">
           <h5 class="card-title">{{ product.name }}</h5>
           <p class="card-text">{{ product.description }}</p>
-          <p class="fw-bold">{{ product.price | currency:'HUF' }}</p>
+          <p class="fw-bold">{{ product.price | currency:'HUF ' }}</p>
+                    
+          <button
+            class="btn btn-outline-primary mt-auto"
+            (click)="viewProduct(product.id)">
+            Megtekintés
+          </button>
         </div>
       </div>
     </div>
