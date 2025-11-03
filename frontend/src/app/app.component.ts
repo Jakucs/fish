@@ -29,8 +29,8 @@ export class AppComponent {
     this.router.navigate(['/myads']);
   }
 
-  goToProfile() {
-    this.router.navigate(['/profile']);
+  goToFavourites() {
+    this.router.navigate(['/favourites']);
   }
 
   goToSettings() {

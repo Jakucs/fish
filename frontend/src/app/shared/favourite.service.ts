@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserapiService } from './userapi.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FavouriteService {
 
-  private userURL = 'http://192.168.100.147:8000/api';
+  private apiURL = 'http://192.168.100.147:8000/api';
 
   constructor(
     private http: HttpClient,
@@ -15,7 +16,11 @@ export class FavouriteService {
   ) { }
 
   toggleFavourite(productId: number) {
-    return this.http.post(`${this.userURL}/favourites/toggle/${productId}`, {} , { headers: this.userapi.makeHeader() });
+    return this.http.post(`${this.apiURL}/favourites/toggle/${productId}`, {} , { headers: this.userapi.makeHeader() });
+  }
+
+    getFavourites(): Observable<any> {
+    return this.http.get(this.apiURL + '/favourites', { headers: this.userapi.makeHeader() });
   }
 
 }

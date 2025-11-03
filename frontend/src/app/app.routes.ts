@@ -14,6 +14,7 @@ import { ModifyProductComponent } from './modify-product/modify-product.componen
 import { ModifyImagesComponent } from './modify-images/modify-images.component';
 import { DeleteProductComponent } from './delete-product/delete-product.component';
 import { AdminpageComponent } from './adminpage/adminpage.component';
+import { FavouritesComponent } from './favourites/favourites.component';
 
 export const routes: Routes = [
     { path: "products", component: ProductListComponent},
@@ -29,6 +30,7 @@ export const routes: Routes = [
     { path: 'modify-product/:id', component: ModifyProductComponent},
     { path: 'modify-images/:id', component: ModifyImagesComponent },
     { path: 'delete-product/:id', component: DeleteProductComponent },
+    { path: 'favourites', component: FavouritesComponent },
     { path: '', component: ProductListComponent },
     { path: 'adminpage', component: AdminpageComponent},
     { path: '**', redirectTo: '', pathMatch: 'full' }
