@@ -15,25 +15,23 @@
 
   <div *ngIf="favourites.length > 0" class="row g-3">
     <div *ngFor="let product of favourites" class="col-12 col-md-6 col-lg-4">
-      <div class="card h-100 shadow-sm">
-                      <img
-        *ngIf="product.firstImage"
-        [src]="product.firstImage"
-        loading="lazy"
-        class="card-img-top"
-        alt="Termékkép"
-      />
+      <!-- 🔹 Az egész kártya kattintható -->
+      <div
+        class="card h-100 shadow-sm clickable-card"
+        (click)="viewProduct(product.id)"
+      >
+        <img
+          *ngIf="product.firstImage"
+          [src]="product.firstImage"
+          loading="lazy"
+          class="card-img-top"
+          alt="Termékkép"
+        />
 
         <div class="card-body">
           <h5 class="card-title">{{ product.name }}</h5>
           <p class="card-text">{{ product.description }}</p>
           <p class="fw-bold">{{ product.price | currency:'HUF ' }}</p>
-                    
-          <button
-            class="btn btn-outline-primary mt-auto"
-            (click)="viewProduct(product.id)">
-            Megtekintés
-          </button>
         </div>
       </div>
     </div>
