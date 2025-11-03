@@ -16,11 +16,26 @@
   <div *ngIf="favourites.length > 0" class="row g-3">
     <div *ngFor="let product of favourites" class="col-6 col-sm-4 col-md-3 col-lg-2">
 
-      <!-- 🔹 Az egész kártya kattintható -->
       <div
-        class="card h-100 shadow-sm clickable-card"
+        class="card h-100 shadow-sm clickable-card position-relative"
         (click)="viewProduct(product.id)"
       >
+        <!-- 🔹 Kedvenc hal ikon (ugyanaz mint máshol) -->
+        <div
+          *ngIf="userapi.isUserActive()"
+          class="position-absolute top-0 end-0 m-2 px-2 py-1 bg-dark text-white rounded-pill opacity-75 d-flex align-items-center justify-content-center"
+          style="z-index: 2; width: 28px; height: 28px;"
+          title="Kedvencekhez adás / eltávolítás"
+          (click)="toggleFavourite(product.id, $event)"
+        >
+          <img
+            [src]="product.is_favourite ? 'icons/fish7.svg' : 'icons/fish.svg'"
+            alt="fish icon"
+            [class.inverted]="!product.is_favourite"
+            style="width: 24px; height: 24px;"
+          >
+        </div>
+
         <img
           *ngIf="product.firstImage"
           [src]="product.firstImage"
@@ -30,9 +45,9 @@
         />
 
         <div class="card-body">
-          <h5 class="card-title">{{ product.name }}</h5>
-          <p class="card-text">{{ product.description }}</p>
-          <p class="fw-bold">{{ product.price | currency:'HUF ' }}</p>
+          <h6 class="card-title text-truncate">{{ product.name }}</h6>
+          <p class="card-text small text-truncate">{{ product.description }}</p>
+          <p class="fw-bold small">{{ product.price | currency:'HUF ' }}</p>
         </div>
       </div>
     </div>

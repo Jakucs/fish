@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FavouriteService } from '../shared/favourite.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { UserapiService } from '../shared/userapi.service';
 
 @Component({
   selector: 'app-favourites',
@@ -17,7 +18,8 @@ export class FavouritesComponent {
 
     constructor(
       private favouriteService: FavouriteService,
-      private router: Router
+      private router: Router,
+      public userapi: UserapiService
     ) { }
 
       ngOnInit(): void {
@@ -70,6 +72,21 @@ export class FavouritesComponent {
   viewProduct(productId: number): void {
     this.router.navigate(['/product', productId]);
   }
+
+  toggleFavourite(productId: number, event: MouseEvent): void {
+  event.stopPropagation(); // ne nyissa meg a terméket
+
+  this.favouriteService.toggleFavourite(productId).subscribe({
+    next: (res) => {
+      // ha eltávolítás történt, szűrjük ki a listából
+      this.favourites = this.favourites.filter(p => p.id !== productId);
+    },
+    error: (err) => {
+      console.error('Hiba a kedvenc eltávolításakor:', err);
+    }
+  });
+}
+
 
 
   
