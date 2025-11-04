@@ -377,6 +377,18 @@ class ProductController extends ResponseController
 
 
 
+        public function search(Request $request)
+        {
+            $query = $request->input('q'); // pl. ?q=hal
+            $products = Product::query()
+                ->where('name', 'like', "%{$query}%")
+                ->orWhere('description', 'like', "%{$query}%")
+                ->limit(50) // hogy ne adjon vissza túl sokat egyszerre
+                ->get();
+
+            return response()->json($products);
+        }
+
 
 
 }
