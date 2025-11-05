@@ -137,7 +137,20 @@ export class ProductListComponent {
       });
     }
 
-  
+  onSearchChange() {
+  const q = this.searchQuery.trim();
+
+  if (q.length >= 2) {
+    this.productsapi.searchProducts(q).subscribe({
+      next: (res: any) => {
+        this.handleProducts({ data: res });
+      },
+      error: err => console.error('Keresési hiba:', err)
+    });
+  } else {
+    this.loadProducts();
+  }
+}
 
 
 
