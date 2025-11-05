@@ -54,6 +54,12 @@ export class ProductapiService {
     return this.http.put(`${this.productsURL}/updateproduct/${productId}`, productData, { headers });
   }
 
+  searchProducts(query: string) {
+  return this.http.get(`${this.productsURL}/products/search`, {
+    params: { q: query }
+  });
+  }
+
 
   //Képek végpontjaival a kommunikáció
   getPictures(productId: number){
