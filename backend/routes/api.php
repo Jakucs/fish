@@ -65,6 +65,8 @@ Route::post("/newpicture", [ProductController::class, "newPicture"]);
 Route::delete("/destroypicture/{id}", [ProductController::class, "destroyPicture"]);
 Route::put("/updatepicture/{id}", [ProductController::class, "updatePicture"]);
 
+Route::get('/products/search', [ProductController::class, 'search']);
+
 // Telefonszám ellenőrzése valós időben
 Route::get('/check-phone', [AuthController::class, 'checkPhone']);
 

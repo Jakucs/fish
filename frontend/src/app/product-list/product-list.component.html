@@ -7,7 +7,10 @@
       type="text"
       class="form-control"
       placeholder="Keresés termékre..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearchChange()"
     />
+
   </div>
 </div>
 

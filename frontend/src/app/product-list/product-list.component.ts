@@ -7,17 +7,21 @@ import { FavouriteService } from '../shared/favourite.service';
 import { UserapiService } from '../shared/userapi.service';
 import { TypesService } from '../shared/types.service';
 import { filter } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, RouterModule, TimeAgoPipe],
+  imports: [CommonModule, RouterModule, TimeAgoPipe, FormsModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent {
 
-    favourited!: boolean; 
-    message!: string;
+  searchQuery: string = '';
+  searchedProducts: any[] = [];
+
+  favourited!: boolean; 
+  message!: string;
 
 
   productList: any[] = []
@@ -33,14 +37,14 @@ export class ProductListComponent {
   ) { }
 
       ngOnInit() {
-    // ⬇️ Görgetés visszaállítása
+    // Görgetés visszaállítása
     const savedScroll = sessionStorage.getItem('scrollY');
     if (savedScroll) {
       setTimeout(() => window.scrollTo(0, +savedScroll), 0);
       sessionStorage.removeItem('scrollY');
     }
 
-    // ⬇️ Ha elnavigálsz, mentse a pozíciót
+    // Ha elnavigálsz, mentse a pozíciót
     this.router.events
       .pipe(filter(event => event instanceof NavigationStart))
       .subscribe(() => {
@@ -126,13 +130,14 @@ export class ProductListComponent {
     getProductsByType(typeId: number) {
       this.productsapi.getProductsByType(typeId).subscribe({
         next: (data: any) => {
-          this.handleProducts(data); // így lesz imagesArray
+          this.handleProducts(data);
           console.log("Termékek típussal: ", this.productList);
         },
         error: (error) => console.log("Hiba a termékek lekérésekor típussal: ", error)
       });
     }
 
+  
 
 
 
