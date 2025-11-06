@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Middleware\CheckIfActive;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\AuthController;
@@ -75,7 +76,17 @@ Route::get("/email", [MailController::class, "sendMail"]);
 Route::get('/send-welcome', [MailController::class, 'sendWelcomeEmail']);
 
 
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
 
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+
+    return $status === Password::RESET_LINK_SENT
+                ? response()->json(['message' => 'Jelszó-visszaállító email elküldve.'])
+                : response()->json(['message' => 'Nem sikerült elküldeni az emailt.'], 400);
+});
 
 
 
