@@ -110,5 +110,9 @@ export class LoginComponent {
     });
   }
 
+  goToChangePassword(){
+    this.router.navigate(['change-password']);
+  }
+
 
 }
