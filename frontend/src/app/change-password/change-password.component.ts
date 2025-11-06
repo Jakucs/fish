@@ -12,22 +12,30 @@ import { FormsModule } from '@angular/forms';
 export class ChangePasswordComponent {
 
 
-    showForgotPasswordForm = false;
   forgotEmail = '';
+  successMessage = '';
+  errorMessage = '';
 
   constructor(private http: HttpClient) {}
 
   sendResetLink() {
     if (!this.forgotEmail) {
-      alert('Kérlek add meg az email címed!');
+      this.errorMessage = 'Kérlek, add meg az email címed!';
+      this.successMessage = '';
       return;
     }
 
     this.http.post('http://localhost:8000/api/forgot-password', {
       email: this.forgotEmail
     }).subscribe({
-      next: (res: any) => alert(res.message),
-      error: (err) => alert(err.error.message || 'Hiba történt.')
+      next: (res: any) => {
+        this.successMessage = res.message;
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Hiba történt a küldés során.';
+        this.successMessage = '';
+      }
     });
   }
 }
