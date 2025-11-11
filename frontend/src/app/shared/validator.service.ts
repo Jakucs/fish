@@ -8,7 +8,7 @@ import { map, catchError, debounceTime, switchMap, of } from 'rxjs';
 })
 export class ValidatorService {
 
-  apiURL = "http://192.168.100.147:8000/api"
+  apiURL = "http://127.0.0.1:8000/api"
 
     constructor(private http: HttpClient) {}
 

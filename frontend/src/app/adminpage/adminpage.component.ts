@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AdminpageComponent {
 
-  private baseUrl = 'http://192.168.100.147:8000/api';
+  private baseUrl = 'http://127.0.0.1:8000/api';
 
   users: any[] = [];
   selectedUser: any = null; // 🔹 éppen kiválasztott user
