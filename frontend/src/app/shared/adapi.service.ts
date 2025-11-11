@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class AdapiService {
 
   private adList: any[] = [];
-  myAdsURL = 'http://127.0.0.1:8000/api/getmyads'
+  myAdsURL = 'http://localhost:8000/api/getmyads'
 
   constructor(
     private userapi: UserapiService,

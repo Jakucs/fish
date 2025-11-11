@@ -8,7 +8,7 @@ import { AuthapiService } from './authapi.service';
 })
 export class AdminapiService {
 
-    private baseUrl = 'http://127.0.0.1:8000/api';
+    private baseUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient, private authapi: AuthapiService) {}
 

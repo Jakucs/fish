@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class TypesService {
 
-  typesURL: string = "http://127.0.0.1:8000/api/types";
+  typesURL: string = "http://localhost:8000/api/types";
 
   constructor(private http: HttpClient) { }
 

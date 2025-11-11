@@ -8,7 +8,7 @@ import { AuthapiService } from './authapi.service';
 })
 export class UserapiService {
 
-   private userURL = 'http://127.0.0.1:8000/api';
+   private userURL = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient, private authapi: AuthapiService) { }
 

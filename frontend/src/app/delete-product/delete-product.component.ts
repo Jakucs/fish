@@ -32,7 +32,7 @@ export class DeleteProductComponent {
 
   // Lekérjük a termék adatait
   fetchProduct() {
-    const url = `http://127.0.0.1:8000/api/product/${this.productId}`;
+    const url = `http://localhost:8000/api/product/${this.productId}`;
     this.http.get(url).subscribe({
       next: (res: any) => {
         this.product = res.data ?? res; // backend szerkezetétől függően
@@ -49,7 +49,7 @@ export class DeleteProductComponent {
   // Törlés megerősítése
     confirmDeletion() {
       console.log('✅ confirmDeletion() meghívva');
-      const url = `http://127.0.0.1:8000/api/destroyproduct/${this.productId}`;
+      const url = `http://localhost:8000/api/destroyproduct/${this.productId}`;
       const token = localStorage.getItem('token');
 
       const headers = new HttpHeaders({

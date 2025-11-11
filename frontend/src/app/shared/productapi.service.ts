@@ -8,7 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ProductapiService {
 
-  productsURL = "http://127.0.0.1:8000/api"
+  productsURL = "http://localhost:8000/api"
 
   constructor(
     private http: HttpClient,
