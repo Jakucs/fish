@@ -15,10 +15,12 @@ export class AdminpageComponent {
   private baseUrl = 'http://localhost:8000/api';
 
   users: any[] = [];
+  ads: any[] = []; 
   selectedUser: any = null; // 🔹 éppen kiválasztott user
   errorMessage = '';
   successMessage = '';
   showUsers = false;
+  showAds = false;
   currentUser: any;
   currentPage = 1;
   lastPage = 1;
@@ -44,13 +46,14 @@ export class AdminpageComponent {
 
   onUsersClick(): void {
     this.showUsers = true;
+    this.showAds = false;
     this.loadUsers(this.currentPage);
   }
 
   onAdsClick(): void {
     this.showUsers = false;
+    this.showAds = true;
   }
-
       
   showDetails(user: any): void {
     const userId = user.id;

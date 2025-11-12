@@ -95,3 +95,38 @@
     Nincsenek felhasználók.
   </div>
 </div>
+
+
+<!-- Hirdetések panel -->
+<div *ngIf="showAds">
+  <h2 class="mt-3 ms-3">Hirdetések</h2>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3 ms-3">
+    {{ errorMessage }}
+  </div>
+
+  <table class="table table-striped ms-3 mt-3" *ngIf="ads.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cím</th>
+        <th>Leírás</th>
+        <th>Ár</th>
+        <th>Felhasználó</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ad of ads">
+        <td>{{ ad.id }}</td>
+        <td>{{ ad.title }}</td>
+        <td>{{ ad.description }}</td>
+        <td>{{ ad.price }}</td>
+        <td>{{ ad.user?.username }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!ads.length && !errorMessage" class="text-muted ms-3">
+    Nincsenek hirdetések.
+  </div>
+</div>

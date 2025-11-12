@@ -42,9 +42,7 @@ class ProductController extends ResponseController
                 return $product;
             });
 
-                return response()->json([
-                    'data' => ProductResource::collection($products)
-                ]);
+                return ProductResource::collection($products);
         }
 
                             // ProductController.php
