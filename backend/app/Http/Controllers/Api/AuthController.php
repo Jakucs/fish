@@ -45,12 +45,10 @@ class AuthController extends ResponseController
                         $credentials['username'] = $loginInput;
                     }
 
-                        // ⛔️ Ellenőrzés: tiltva van-e a felhasználó
                     $banner = new BannerController();
                     $banningTime = $banner->getBanningTime($loginInput);
 
                     if ($banningTime && Carbon::parse($banningTime)->isFuture()) {
-                        // Még tart a tiltás
                         return $this->sendError(
                             "Túl sok sikertelen próbálkozás",
                             ["Túl sok sikertelen próbálkozás. Következő lehetőség: ", $banningTime],
@@ -58,7 +56,6 @@ class AuthController extends ResponseController
                         );
                     }
 
-                    // Ha lejárt, akkor feloldjuk
                     if ($banningTime && Carbon::parse($banningTime)->isPast()) {
                         $banner->resetBanningTime($loginInput);
                         $banner->resetLoginCounter($loginInput);
@@ -76,7 +73,7 @@ class AuthController extends ResponseController
                             "name" => $user->username,
                             "user_id" => $user->id,
                             "email" => $user->email,
-                            "role" => $user->role, // ✅ role -t is küldjük.
+                            "role" => $user->role,
                             "token" => $token
                         ];
 
@@ -84,14 +81,11 @@ class AuthController extends ResponseController
                     } else {
                         $banner = new BannerController();
 
-                        // előbb növeljük a számlálót
                         $banner->setLoginCounter($loginInput);
 
-                        // lekérjük az aktuális értékeket
                         $counter = $banner->getLoginCounter($loginInput);
                         $banningTime = $banner->getBanningTime($loginInput);
 
-                        // ha most lépte túl a 3-at -> tiltás beállítása és hibaüzenet
                         if ($counter > 3) {
                             if (!$banningTime) {
                                 $banner->setBanningTime($loginInput);
@@ -105,7 +99,6 @@ class AuthController extends ResponseController
                             return $this->sendError("Túl sok sikertelen próbálkozás", $errorMessage, 405);
                         }
 
-                        // ha még nem tiltott, sima hiba
                         return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 401);
                     }
             }
@@ -127,7 +120,6 @@ class AuthController extends ResponseController
     {
         $admin = auth()->user();
 
-        // Csak admin/superadmin férhet hozzá
         if (!Gate::allows('admin-access')) {
             return response()->json([
                 'success' => false,
@@ -154,7 +146,6 @@ class AuthController extends ResponseController
 
         public function getUserDetails(Request $request)
     {
-        // A bejelentkezett user lekérése
         $user = $request->user(); // vagy auth()->user()
 
         if (!$user) {
@@ -164,7 +155,6 @@ class AuthController extends ResponseController
             ], 401);
         }
 
-        // Csak a szükséges mezőket adhatod vissza
         $userData = $user->only(['id', 'username', 'firstname', 'lastname', 'phone_number', 'email', 'role', 'is_active', 'created_at']);
 
         return response()->json([
@@ -175,12 +165,6 @@ class AuthController extends ResponseController
 
 
 
-
-
-
-
-
-            // Megnézzük valós időben, hogy létezik-e ilyen telefonszámú user
             public function checkPhone(Request $request)
             {
                 $phone = $request->query('phone');
@@ -208,11 +192,11 @@ class AuthController extends ResponseController
 
                 // Paginate: 50 felhasználó oldalanként
                 $users = User::select('id', 'username', 'email', 'role', 'created_at')
-                            ->paginate(30); // ← ez adja vissza a pagination meta adatokat is
+                            ->paginate(30);
 
                 return response()->json([
                     'success' => true,
-                    'users' => $users->items(),    // tényleges felhasználók
+                    'users' => $users->items(),
                     'current_page' => $users->currentPage(),
                     'last_page' => $users->lastPage(),
                     'total' => $users->total()

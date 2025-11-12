@@ -8,9 +8,7 @@ use App\Models\Product;
 
 class FavouriteController extends Controller
 {
-    /**
-     * 🔹 Visszaadja a bejelentkezett user kedvenc termékeit
-     */
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -19,20 +17,16 @@ class FavouriteController extends Controller
         return response()->json(['data' => $favourites]);
     }
 
-    /**
-     * 🔹 Hozzáad / eltávolít egy terméket a kedvencekből
-     */
+
     public function toggle(Request $request, $productId)
     {
         $user = $request->user();
 
-        // Ellenőrizzük, hogy létezik-e a termék
         $product = Product::find($productId);
         if (!$product) {
             return response()->json(['message' => 'Termék nem található.'], 404);
         }
 
-        // Toggle (hozzáadja, ha nincs; eltávolítja, ha már benne van)
         $result = $user->favourites()->toggle($productId);
         $isNowFavourite = !empty($result['attached']);
 
@@ -48,7 +42,6 @@ class FavouriteController extends Controller
     {
         $user = $request->user();
 
-        // Betöltjük a kedvenc termékeket (akár kapcsolatokkal)
         $favourites = $user->favourites()
             ->get();
 

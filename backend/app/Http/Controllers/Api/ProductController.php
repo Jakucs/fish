@@ -23,7 +23,6 @@ class ProductController extends ResponseController
             // 100 elem oldalanként
             $products = Product::with('type', 'user')->paginate(100);
 
-            // itt csak a 10 aktuális terméket járja be, nem mindet
             $products->getCollection()->transform(function ($product) use ($user) {
                 $product->is_favourite = $user ? $user->favourites()->where('product_id', $product->id)->exists() : false;
                 return $product;
@@ -47,7 +46,6 @@ class ProductController extends ResponseController
         }
 
 
-                            // ProductController.php
             public function getProductsByType(Request $request, $id)
             {
                 $products = Product::with('type', 'user')
@@ -56,7 +54,7 @@ class ProductController extends ResponseController
                     ->take(100)
                     ->get();
 
-                $user = $request->user(); // null, ha nincs bejelentkezve
+                $user = $request->user();
 
                 // is_favourite mező beállítása
                 $products = $products->map(function ($product) use ($user) {
@@ -130,7 +128,7 @@ class ProductController extends ResponseController
                 return $this->sendResponse(new ProductResource($product), "Sikeres felvitel!");
 
             } catch (UniqueConstraintViolationException $e) {
-                // 🔹 Konkrétan az egyedi constraint hiba
+                // Konkrétan az egyedi constraint hiba
                 return $this->sendError(
                     'A megadott telefonszám már egy másik felhasználóhoz tartozik.',
                     [],
@@ -138,7 +136,7 @@ class ProductController extends ResponseController
                 );
 
             } catch (QueryException $e) {
-                // 🔹 Egyéb SQL hibák
+                // Egyéb SQL hibák
                 return $this->sendError(
                     'Adatbázis hiba történt. Kérlek, próbáld újra később.',
                     [],
@@ -146,7 +144,7 @@ class ProductController extends ResponseController
                 );
 
             } catch (\Exception $e) {
-                // 🔹 Váratlan hiba
+                // Váratlan hiba
                 return $this->sendError(
                     'Váratlan hiba történt. Kérlek, próbáld újra később.',
                     [],
@@ -192,7 +190,7 @@ class ProductController extends ResponseController
                     return response()->json(['message' => 'Unauthorized'], 403);
                 }
 
-                // ✅ Cloudinary törlés
+                // Cloudinary törlés
                 if ($product->image_public_id) {
                     $cloudinary = new Cloudinary();
 
@@ -211,8 +209,7 @@ class ProductController extends ResponseController
                         $cloudinary->uploadApi()->destroy($publicIds);
                     }
                 }
-
-                // ✅ Törlés az adatbázisból
+                // Termék törlése
                 $product->delete();
 
                 return response()->json(['success' => true, 'message' => 'Termék és képek törölve a Cloudinaryról.']);
@@ -260,7 +257,6 @@ class ProductController extends ResponseController
 
             $product = Product::findOrFail($request->product_id);
 
-            // 🔹 Biztonságos meglévő képek betöltése
             $existingImages = [];
             if (!empty($product->image)) {
                 $decoded = json_decode($product->image, true);
@@ -277,15 +273,12 @@ class ProductController extends ResponseController
                 }
             }
 
-            // 🔹 Új képek különválasztása (url + public_id)
             $newUrls = collect($request->images)->pluck('url')->toArray();
             $newPublicIds = collect($request->images)->pluck('public_id')->toArray();
 
-            // 🔹 Összefűzzük a meglévő és új adatokat
             $mergedImages = array_merge($existingImages, $newUrls);
             $mergedPublicIds = array_merge($existingPublicIds, $newPublicIds);
 
-            // 🔹 Mentés adatbázisba
             $product->image = json_encode($mergedImages);
             $product->image_public_id = json_encode($mergedPublicIds);
             $product->save();
@@ -327,15 +320,12 @@ class ProductController extends ResponseController
                     }
                 }
 
-                // 🔹 Lokálisan is eltávolítjuk a képet
                 unset($images[$index]);
                 unset($publicIds[$index]);
 
-                // 🔹 Újrarázoljuk a tömböt, hogy az indexek folyamatosak legyenek
                 $images = array_values($images);
                 $publicIds = array_values($publicIds);
 
-                // 🔹 Mentés adatbázisba
                 $product->image = json_encode($images);
                 $product->image_public_id = json_encode($publicIds);
                 $product->save();
@@ -383,7 +373,7 @@ class ProductController extends ResponseController
             $products = Product::query()
                 ->where('name', 'like', "%{$query}%")
                 ->orWhere('description', 'like', "%{$query}%")
-                ->limit(50) // hogy ne adjon vissza túl sokat egyszerre
+                ->limit(50)
                 ->get();
 
             return response()->json($products);

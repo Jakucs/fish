@@ -13,7 +13,7 @@ class LocationController extends Controller
     {
         $validated = $request->validated();
         $location = new Location();
-        $location->product_id = $validated['product_id']; // kötelező
+        $location->product_id = $validated['product_id'];
         $location->postal_code = $validated['postal_code'];
         $location->city = $validated['city'];
         $location->save();
