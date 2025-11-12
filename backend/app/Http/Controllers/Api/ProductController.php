@@ -18,32 +18,34 @@ class ProductController extends ResponseController
 {
         public function getProducts(Request $request)
         {
-            $products = Product::with('type', 'user')->get();
+            $user = $request->user();
 
-            $user = $request->user(); // null, ha nincs bejelentkezve
+            // 100 elem oldalanként
+            $products = Product::with('type', 'user')->paginate(100);
 
-            $products = $products->map(function ($product) use ($user) {
+            // itt csak a 10 aktuális terméket járja be, nem mindet
+            $products->getCollection()->transform(function ($product) use ($user) {
                 $product->is_favourite = $user ? $user->favourites()->where('product_id', $product->id)->exists() : false;
                 return $product;
             });
 
-                return response()->json([
-                    'data' => ProductResource::collection($products)
-                ]);
+            return response()->json($products);
         }
+
 
         public function getProductsPublic()
         {
-            $products = Product::with('type', 'user')->get();
+            // 100 elem oldalanként
+            $products = Product::with('type', 'user')->paginate(100);
 
-            // Nincs user, ezért minden termék is_favourite = false
-            $products = $products->map(function ($product) {
+            $products->getCollection()->transform(function ($product) {
                 $product->is_favourite = false;
                 return $product;
             });
 
-                return ProductResource::collection($products);
+            return response()->json($products);
         }
+
 
                             // ProductController.php
             public function getProductsByType(Request $request, $id)
