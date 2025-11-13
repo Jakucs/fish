@@ -16,26 +16,29 @@ use Illuminate\Database\UniqueConstraintViolationException;
 
 class ProductController extends ResponseController
 {
+    
         public function getProducts(Request $request)
         {
             $user = $request->user();
+            $perPage = $request->get('per_page', 50);
 
-            // 100 elem oldalanként
-            $products = Product::with('type', 'user')->paginate(50);
+            $products = Product::with('type', 'user')->paginate($perPage);
 
             $products->getCollection()->transform(function ($product) use ($user) {
-                $product->is_favourite = $user ? $user->favourites()->where('product_id', $product->id)->exists() : false;
+                $product->is_favourite = $user
+                    ? $user->favourites()->where('product_id', $product->id)->exists()
+                    : false;
                 return $product;
             });
 
             return response()->json($products);
         }
 
-
-        public function getProductsPublic()
+        public function getProductsPublic(Request $request)
         {
-            // 100 elem oldalanként
-            $products = Product::with('type', 'user')->paginate(50);
+            $perPage = $request->get('per_page', 50);
+
+            $products = Product::with('type', 'user')->paginate($perPage);
 
             $products->getCollection()->transform(function ($product) {
                 $product->is_favourite = false;
@@ -44,6 +47,7 @@ class ProductController extends ResponseController
 
             return response()->json($products);
         }
+
 
 
             public function getProductsByType(Request $request, $id)

@@ -24,7 +24,7 @@ export class ProductapiService {
   }
 
   getProductsPublic(page: number = 1) {
-    return this.http.get(this.productsURL + '/products/public?page=${page}');
+    return this.http.get(this.productsURL + `/products/public?page=${page}`);
   }
 
 
