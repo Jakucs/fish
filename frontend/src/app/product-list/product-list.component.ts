@@ -8,7 +8,7 @@ import { UserapiService } from '../shared/userapi.service';
 import { TypesService } from '../shared/types.service';
 import { filter } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll'; // <<< VÁLTOZÁS: infinite scroll modul import
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @Component({
   selector: 'app-product-list',
@@ -18,10 +18,10 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll'; // <<< VÁLTOZÁS: i
     RouterModule,
     TimeAgoPipe,
     FormsModule,
-    InfiniteScrollModule // <<< VÁLTOZÁS: standalone komponens imports-ban
+    InfiniteScrollModule
   ],
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css'] // <<< VÁLTOZÁS: javítva styleUrl -> styleUrls
+  styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent {
 
@@ -29,7 +29,6 @@ export class ProductListComponent {
   productList: any[] = [];
   types: any[] = [];
 
-  // <<< VÁLTOZÁS: infinite scroll állapotváltozók
   currentPage = 1; // aktuális oldal
   lastPage = 1;    // utolsó oldal
   perPage = 20;    // elemek száma oldalanként
@@ -56,13 +55,12 @@ export class ProductListComponent {
         sessionStorage.setItem('scrollY', window.scrollY.toString());
       });
 
-    this.loadProducts(); // <<< VÁLTOZÁS: oldal betöltés az infinite scroll támogatás miatt
+    this.loadProducts();
     this.loadTypes();
   }
 
-  // <<< VÁLTOZÁS: oldal alapú betöltés
   loadProducts(page: number = 1) {
-    if (this.isLoading) return; // <<< VÁLTOZÁS: prevent double load
+    if (this.isLoading) return;
     this.isLoading = true;
 
     const request$ = this.userapi.isLoggedIn() && this.userapi.isUserActive()
@@ -71,15 +69,14 @@ export class ProductListComponent {
 
     request$.subscribe({
       next: (data: any) => {
-        if (page === 1) this.productList = []; // <<< VÁLTOZÁS: ha új keresés/first page, ürítjük a listát
-        this.handleProducts(data, page);       // <<< VÁLTOZÁS: most page-t is átadjuk
+        if (page === 1) this.productList = [];
+        this.handleProducts(data, page);
         this.isLoading = false;
       },
       error: () => this.isLoading = false
     });
   }
 
-  // <<< VÁLTOZÁS: oldalankénti termék hozzáadás
   handleProducts(data: any, page: number) {
     const newProducts = data.data.map((product: any) => {
       let imagesArray: string[] = [];
@@ -97,16 +94,15 @@ export class ProductListComponent {
     });
 
     if (page === 1) {
-      this.productList = newProducts; // <<< VÁLTOZÁS: első oldal
+      this.productList = newProducts;
     } else {
-      this.productList = [...this.productList, ...newProducts]; // <<< VÁLTOZÁS: többi oldal hozzáfűzése
+      this.productList = [...this.productList, ...newProducts];
     }
 
-    this.currentPage = data.current_page || page; // <<< VÁLTOZÁS: oldalszám frissítése
-    this.lastPage = data.last_page || 1;          // <<< VÁLTOZÁS: utolsó oldal frissítése
+    this.currentPage = data.current_page || page;
+    this.lastPage = data.last_page || 1;
   }
 
-  // <<< VÁLTOZÁS: infinite scroll trigger
   onScrollDown() {
     if (this.currentPage < this.lastPage) {
       this.loadProducts(this.currentPage + 1);
@@ -126,7 +122,7 @@ export class ProductListComponent {
 
   getProductsByType(typeId: number) {
     this.productsapi.getProductsByType(typeId).subscribe({
-      next: (data: any) => this.handleProducts(data, 1), // <<< VÁLTOZÁS: új filter esetén mindig 1. oldal
+      next: (data: any) => this.handleProducts(data, 1),
       error: err => console.error(err)
     });
   }
@@ -135,11 +131,11 @@ export class ProductListComponent {
     const q = this.searchQuery.trim();
     if (q.length >= 2) {
       this.productsapi.searchProducts(q).subscribe({
-        next: (res: any) => this.handleProducts({ data: res }, 1), // <<< VÁLTOZÁS: keresés is 1. oldal
+        next: (res: any) => this.handleProducts({ data: res }, 1),
         error: err => console.error(err)
       });
     } else {
-      this.loadProducts(1); // <<< VÁLTOZÁS: ha törli a keresést, újratöltés 1. oldaltól
+      this.loadProducts(1);
     }
   }
 

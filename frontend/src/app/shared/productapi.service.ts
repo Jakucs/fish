@@ -45,9 +45,10 @@ export class ProductapiService {
     return this.http.patch(`${this.productsURL}/update/${productId}`, { image: imageUrl }, { headers });
   }
 
-  getProductsByType(id: number){
-    return this.http.get(`${this.productsURL}/getproductsbytype/${id}`);
+  getProductsByType(id: number, page: number = 1) {
+    return this.http.get(`${this.productsURL}/getproductsbytype/${id}?page=${page}`);
   }
+
 
   modifyProduct(productId: number, productData: any) {
     const headers = this.userapi.makeHeader();

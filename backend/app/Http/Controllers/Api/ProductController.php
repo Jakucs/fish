@@ -16,7 +16,7 @@ use Illuminate\Database\UniqueConstraintViolationException;
 
 class ProductController extends ResponseController
 {
-    
+
         public function getProducts(Request $request)
         {
             $user = $request->user();
@@ -50,26 +50,27 @@ class ProductController extends ResponseController
 
 
 
-            public function getProductsByType(Request $request, $id)
-            {
-                $products = Product::with('type', 'user')
-                    ->where('type_id', $id)
-                    ->orderBy('created_at', 'desc')
-                    ->take(100)
-                    ->get();
+        public function getProductsByType(Request $request, $id)
+        {
+            $user = $request->user();
 
-                $user = $request->user();
+            // Lapozás, 50 elem oldalanként (page paraméter automatikusan kezeli)
+            $products = Product::with('type', 'user')
+                ->where('type_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(50);
 
-                // is_favourite mező beállítása
-                $products = $products->map(function ($product) use ($user) {
-                    $product->is_favourite = $user ? $user->favourites()->where('product_id', $product->id)->exists() : false;
-                    return $product;
-                });
+            // is_favourite mező beállítása
+            $products->getCollection()->transform(function ($product) use ($user) {
+                $product->is_favourite = $user 
+                    ? $user->favourites()->where('product_id', $product->id)->exists() 
+                    : false;
+                return $product;
+            });
 
-                return response()->json([
-                    'data' => ProductResource::collection($products)
-                ]);
-            }
+            return response()->json($products);
+        }
+
 
 
 
