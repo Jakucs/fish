@@ -8,25 +8,32 @@ import { UserapiService } from '../shared/userapi.service';
 import { TypesService } from '../shared/types.service';
 import { filter } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll'; // <<< VÁLTOZÁS: infinite scroll modul import
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, RouterModule, TimeAgoPipe, FormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TimeAgoPipe,
+    FormsModule,
+    InfiniteScrollModule // <<< VÁLTOZÁS: standalone komponens imports-ban
+  ],
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+  styleUrls: ['./product-list.component.css'] // <<< VÁLTOZÁS: javítva styleUrl -> styleUrls
 })
 export class ProductListComponent {
 
   searchQuery: string = '';
-  searchedProducts: any[] = [];
-
-  favourited!: boolean; 
-  message!: string;
-
-
-  productList: any[] = []
+  productList: any[] = [];
   types: any[] = [];
-  productsByType: any[] = [];
+
+  // <<< VÁLTOZÁS: infinite scroll állapotváltozók
+  currentPage = 1; // aktuális oldal
+  lastPage = 1;    // utolsó oldal
+  perPage = 20;    // elemek száma oldalanként
+  isLoading = false; // betöltés állapot
 
   constructor(
     private productsapi: ProductapiService,
@@ -36,123 +43,110 @@ export class ProductListComponent {
     private typeapi: TypesService
   ) { }
 
-      ngOnInit() {
-    // Görgetés visszaállítása
+  ngOnInit() {
     const savedScroll = sessionStorage.getItem('scrollY');
     if (savedScroll) {
       setTimeout(() => window.scrollTo(0, +savedScroll), 0);
       sessionStorage.removeItem('scrollY');
     }
 
-    // Ha elnavigálsz, mentse a pozíciót
     this.router.events
       .pipe(filter(event => event instanceof NavigationStart))
       .subscribe(() => {
         sessionStorage.setItem('scrollY', window.scrollY.toString());
       });
 
-    this.loadProducts();
+    this.loadProducts(); // <<< VÁLTOZÁS: oldal betöltés az infinite scroll támogatás miatt
     this.loadTypes();
   }
 
-      
+  // <<< VÁLTOZÁS: oldal alapú betöltés
+  loadProducts(page: number = 1) {
+    if (this.isLoading) return; // <<< VÁLTOZÁS: prevent double load
+    this.isLoading = true;
 
-    loadProducts(){
-            if (this.userapi.isLoggedIn() && this.userapi.isUserActive()) {
-        this.productsapi.getProductsWithToken().subscribe({
-          next: (data: any) => {
-            console.log("Bejelentkezett felhasználó termékei:", data);
-            this.handleProducts(data);
-          },
-          error: (error) => console.log("Hiba a termék betöltésekor: ", error)
-        });
-      } else {
-        this.productsapi.getProductsPublic().subscribe({
-          next: (data: any) => {
-            console.log("Publikus terméklista:", data);
-            this.handleProducts(data);
-          },
-          error: (error) => console.log("Hiba a termék betöltésekor: ", error)
-        });
+    const request$ = this.userapi.isLoggedIn() && this.userapi.isUserActive()
+      ? this.productsapi.getProductsWithToken()
+      : this.productsapi.getProductsPublic();
+
+    request$.subscribe({
+      next: (data: any) => {
+        if (page === 1) this.productList = []; // <<< VÁLTOZÁS: ha új keresés/first page, ürítjük a listát
+        this.handleProducts(data, page);       // <<< VÁLTOZÁS: most page-t is átadjuk
+        this.isLoading = false;
+      },
+      error: () => this.isLoading = false
+    });
+  }
+
+  // <<< VÁLTOZÁS: oldalankénti termék hozzáadás
+  handleProducts(data: any, page: number) {
+    const newProducts = data.data.map((product: any) => {
+      let imagesArray: string[] = [];
+
+      if (product.image) {
+        try {
+          const parsed = JSON.parse(product.image);
+          imagesArray = Array.isArray(parsed) ? parsed : [product.image];
+        } catch {
+          imagesArray = [product.image];
+        }
       }
+
+      return { ...product, imagesArray };
+    });
+
+    if (page === 1) {
+      this.productList = newProducts; // <<< VÁLTOZÁS: első oldal
+    } else {
+      this.productList = [...this.productList, ...newProducts]; // <<< VÁLTOZÁS: többi oldal hozzáfűzése
     }
 
+    this.currentPage = data.current_page || page; // <<< VÁLTOZÁS: oldalszám frissítése
+    this.lastPage = data.last_page || 1;          // <<< VÁLTOZÁS: utolsó oldal frissítése
+  }
 
-      loadTypes(): void {
-      this.typeapi.getTypes().subscribe({
-        next: (res: any) => {
-          this.types = res.data || res;
-          console.log('Típusok:', this.types);
-        },
-        error: (err) => {
-          console.error('Hiba a típusok lekérésekor:', err);
-        }
-      });
+  // <<< VÁLTOZÁS: infinite scroll trigger
+  onScrollDown() {
+    if (this.currentPage < this.lastPage) {
+      this.loadProducts(this.currentPage + 1);
     }
+  }
 
-    handleProducts(data: any) {
-      this.productList = data.data.map((product: any) => {
-        let imagesArray: string[] = [];
+  goToDetails(id: number) {
+    this.router.navigate(['/product', id]);
+  }
 
-        if (product.image) {
-          try {
-            const parsed = JSON.parse(product.image);
-            imagesArray = Array.isArray(parsed) ? parsed : [product.image];
-          } catch {
-            imagesArray = [product.image];
-          }
-        }
+  toggleFavorite(product: any) {
+    this.favouriteapi.toggleFavourite(product.id).subscribe({
+      next: (res: any) => product.is_favourite = res.favourited,
+      error: err => console.error(err)
+    });
+  }
 
-        return {
-          ...product,
-          imagesArray
-        };
-      });
-    }
-
-    goToDetails(id: number) {
-      this.router.navigate(['/product', id]);
-    }
-
-    toggleFavorite(product: any) {
-      console.log('Kedvenc állapot váltva:', product);
-      this.favouriteapi.toggleFavourite(product.id).subscribe({
-        next: (res: any) => {
-          console.log('Kedvenc állapot sikeresen megváltoztatva:', res);
-            product.is_favourite = res.favourited;
-        },
-        error: (err) => {
-          console.error('Hiba a kedvenc állapot megváltoztatásakor:', err);
-        }
-      })
-    }
-
-    getProductsByType(typeId: number) {
-      this.productsapi.getProductsByType(typeId).subscribe({
-        next: (data: any) => {
-          this.handleProducts(data);
-          console.log("Termékek típussal: ", this.productList);
-        },
-        error: (error) => console.log("Hiba a termékek lekérésekor típussal: ", error)
-      });
-    }
+  getProductsByType(typeId: number) {
+    this.productsapi.getProductsByType(typeId).subscribe({
+      next: (data: any) => this.handleProducts(data, 1), // <<< VÁLTOZÁS: új filter esetén mindig 1. oldal
+      error: err => console.error(err)
+    });
+  }
 
   onSearchChange() {
-  const q = this.searchQuery.trim();
-
-  if (q.length >= 2) {
-    this.productsapi.searchProducts(q).subscribe({
-      next: (res: any) => {
-        this.handleProducts({ data: res });
-      },
-      error: err => console.error('Keresési hiba:', err)
-    });
-  } else {
-    this.loadProducts();
+    const q = this.searchQuery.trim();
+    if (q.length >= 2) {
+      this.productsapi.searchProducts(q).subscribe({
+        next: (res: any) => this.handleProducts({ data: res }, 1), // <<< VÁLTOZÁS: keresés is 1. oldal
+        error: err => console.error(err)
+      });
+    } else {
+      this.loadProducts(1); // <<< VÁLTOZÁS: ha törli a keresést, újratöltés 1. oldaltól
+    }
   }
-}
 
-
-
-
+  loadTypes(): void {
+    this.typeapi.getTypes().subscribe({
+      next: (res: any) => this.types = res.data || res,
+      error: err => console.error(err)
+    });
+  }
 }
