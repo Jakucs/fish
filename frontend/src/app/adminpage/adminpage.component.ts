@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthapiService } from '../shared/authapi.service';
 import { AdminapiService } from '../shared/adminapi.service';
 import { CommonModule } from '@angular/common';
+import { ProductapiService } from '../shared/productapi.service';
 
 @Component({
   selector: 'app-adminpage',
@@ -22,12 +23,17 @@ export class AdminpageComponent {
   showUsers = false;
   showAds = false;
   currentUser: any;
-  currentPage = 1;
-  lastPage = 1;
+
+  currentUserPage = 1;
+  lastUserPage = 1;
+  currentAdPage = 1;
+  lastAdPage = 1;
+
 
   constructor(
     private router: Router,
-    private adminapi: AdminapiService
+    private adminapi: AdminapiService,
+    private productapi: ProductapiService
   ) {}
 
     ngOnInit(): void {
@@ -40,19 +46,20 @@ export class AdminpageComponent {
       });
 
       
-      this.loadUsers(this.currentPage);
+      this.loadUsers(this.currentUserPage);
   }
 
 
   onUsersClick(): void {
     this.showUsers = true;
     this.showAds = false;
-    this.loadUsers(this.currentPage);
+    this.loadUsers(this.currentUserPage);
   }
 
   onAdsClick(): void {
     this.showUsers = false;
     this.showAds = true;
+    this.loadAds(this.currentAdPage);
   }
       
   showDetails(user: any): void {
@@ -124,8 +131,8 @@ export class AdminpageComponent {
     this.adminapi.getUsers(page).subscribe({
       next: (res: any) => {
         this.users = res.users || [];
-        this.currentPage = res.current_page || 1;
-        this.lastPage = res.last_page || 1;
+        this.currentUserPage = res.current_page || 1;
+        this.lastUserPage = res.last_page || 1;
       },
       error: (err) => {
         console.error(err);
@@ -134,18 +141,50 @@ export class AdminpageComponent {
     });
   }
 
-  goToPage(page: number) {
-    if (page >= 1 && page <= this.lastPage) {
+  loadAds(page: number): void {
+    this.productapi.getProductsPublic().subscribe({
+      next: (res: any) => {
+        console.log('Hirdetések válasz:', res);
+        // ha sima tömb jön vissza
+        this.ads = Array.isArray(res) ? res : res.data || [];
+        this.currentAdPage = 1;
+        this.lastAdPage = 1; // nincs lapozás a backend oldalon
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.errorMessage = 'Nem sikerült lekérni a hirdetéseket.';
+      }
+    });
+  }
+
+
+
+  goToUserPage(page: number) {
+    if (page >= 1 && page <= this.lastUserPage) {
       this.loadUsers(page);
     }
   }
 
-  nextPage() {
-    this.goToPage(this.currentPage + 1);
+  goToAdPage(page: number) {
+    if (page >= 1 && page <= this.lastAdPage) {
+      this.loadAds(page);
+    }
   }
 
-  prevPage() {
-    this.goToPage(this.currentPage - 1);
+  nextUserPage() {
+    this.goToUserPage(this.currentUserPage + 1);
+  }
+
+  prevUserPage() {
+    this.goToUserPage(this.currentUserPage - 1);
+  }
+
+  nextAdPage() {
+    this.goToAdPage(this.currentAdPage + 1);
+  }
+
+  prevAdPage() {
+    this.goToAdPage(this.currentAdPage - 1);
   }
 
 }
