@@ -21,7 +21,7 @@ class ProductController extends ResponseController
             $user = $request->user();
 
             // 100 elem oldalanként
-            $products = Product::with('type', 'user')->paginate(100);
+            $products = Product::with('type', 'user')->paginate(50);
 
             $products->getCollection()->transform(function ($product) use ($user) {
                 $product->is_favourite = $user ? $user->favourites()->where('product_id', $product->id)->exists() : false;
@@ -35,7 +35,7 @@ class ProductController extends ResponseController
         public function getProductsPublic()
         {
             // 100 elem oldalanként
-            $products = Product::with('type', 'user')->paginate(100);
+            $products = Product::with('type', 'user')->paginate(50);
 
             $products->getCollection()->transform(function ($product) {
                 $product->is_favourite = false;

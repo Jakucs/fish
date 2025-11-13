@@ -141,14 +141,14 @@ export class AdminpageComponent {
     });
   }
 
-  loadAds(page: number): void {
-    this.productapi.getProductsPublic().subscribe({
+  loadAds(page: number = 1): void {
+    this.productapi.getProductsPublic(page).subscribe({
       next: (res: any) => {
         console.log('Hirdetések válasz:', res);
-        // ha sima tömb jön vissza
-        this.ads = Array.isArray(res) ? res : res.data || [];
-        this.currentAdPage = 1;
-        this.lastAdPage = 1; // nincs lapozás a backend oldalon
+
+        this.ads = res.data || [];
+        this.currentAdPage = res.current_page || 1;
+        this.lastAdPage = res.last_page || 1;
       },
       error: (err: any) => {
         console.error(err);
@@ -156,6 +156,7 @@ export class AdminpageComponent {
       }
     });
   }
+
 
 
 
