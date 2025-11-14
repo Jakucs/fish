@@ -4,10 +4,11 @@ import { AuthapiService } from '../shared/authapi.service';
 import { AdminapiService } from '../shared/adminapi.service';
 import { CommonModule } from '@angular/common';
 import { ProductapiService } from '../shared/productapi.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-adminpage',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './adminpage.component.html',
   styleUrl: './adminpage.component.css'
 })
@@ -15,6 +16,7 @@ export class AdminpageComponent {
 
   private baseUrl = 'http://localhost:8000/api';
 
+  originalUsers: any[] = [];
   users: any[] = [];
   ads: any[] = []; 
   selectedUser: any = null; // 🔹 éppen kiválasztott user
@@ -23,6 +25,7 @@ export class AdminpageComponent {
   showUsers = false;
   showAds = false;
   currentUser: any;
+  searchQuery: string = '';
 
   currentUserPage = 1;
   lastUserPage = 1;
@@ -131,6 +134,7 @@ export class AdminpageComponent {
     this.adminapi.getUsers(page).subscribe({
       next: (res: any) => {
         this.users = res.users || [];
+        this.originalUsers = [...this.users];   // <- mentjük az eredeti listát
         this.currentUserPage = res.current_page || 1;
         this.lastUserPage = res.last_page || 1;
       },
@@ -140,6 +144,7 @@ export class AdminpageComponent {
       }
     });
   }
+
 
   loadAds(page: number = 1): void {
     this.productapi.getProductsPublic(page).subscribe({
@@ -157,6 +162,15 @@ export class AdminpageComponent {
     });
   }
 
+  filterUsers() {
+  const q = this.searchQuery.toLowerCase();
+
+  this.users = this.originalUsers.filter(u =>
+    u.username?.toLowerCase().includes(q) ||
+    u.email?.toLowerCase().includes(q) ||
+    u.role?.toLowerCase().includes(q)
+  );
+}
 
 
 

@@ -8,6 +8,18 @@
     {{ errorMessage }}
   </div>
 
+  <div class="row mt-3 ms-3">
+  <div class="col-12 col-md-6">
+    <input 
+      type="text" 
+      class="form-control"
+      placeholder="Keresés felhasználóra..."
+      [(ngModel)]="searchQuery"
+      (input)="filterUsers()"
+    />
+  </div>
+</div>
+
   <table class="table table-striped ms-3 mt-3" *ngIf="users.length > 0">
     <thead>
       <tr>
