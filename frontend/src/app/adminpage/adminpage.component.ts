@@ -130,20 +130,29 @@ export class AdminpageComponent {
       this.selectedUser = null;
     }
 
-  loadUsers(page: number): void {
-    this.adminapi.getUsers(page).subscribe({
-      next: (res: any) => {
-        this.users = res.users || [];
-        this.originalUsers = [...this.users];   // <- mentjük az eredeti listát
-        this.currentUserPage = res.current_page || 1;
-        this.lastUserPage = res.last_page || 1;
-      },
-      error: (err) => {
-        console.error(err);
-        this.errorMessage = 'Nem sikerült lekérni a felhasználókat.';
-      }
-    });
-  }
+    loadUsers(page: number = 1, search: string = ''): void {
+      this.adminapi.getUsers(page, search).subscribe({
+        next: (res: any) => {
+          this.users = res.users || [];
+          this.currentUserPage = res.current_page || 1;
+          this.lastUserPage = res.last_page || 1;
+        },
+        error: (err) => {
+          console.error(err);
+          this.errorMessage = 'Nem sikerült lekérni a felhasználókat.';
+        }
+      });
+    }
+    searchUsers() {
+      this.loadUsers(1, this.searchQuery); // az 1-es oldalra ugrik, keresőszóval
+    }
+
+    clearSearch() {
+  this.searchQuery = '';
+  this.loadUsers(1); // vissza az összes userhez
+}
+
+
 
 
   loadAds(page: number = 1): void {
@@ -162,26 +171,32 @@ export class AdminpageComponent {
     });
   }
 
-  filterUsers() {
+/*  filterUsers() {
     const q = (this.searchQuery || '').trim().toLowerCase();
 
     if (!q) {
-      // üres keresés -> visszaállítjuk az eredeti listát
       this.users = [...this.originalUsers];
       return;
     }
 
-    this.users = this.originalUsers.filter(u =>
-      (u.username || '').toLowerCase().includes(q) ||
-      (u.email || '').toLowerCase().includes(q) ||
-      (u.role || '').toLowerCase().includes(q)
-    );
-  }
+    this.users = this.originalUsers.filter(u => {
+      const username = (u.username || '').toLowerCase();
+      const email = (u.email || '').toLowerCase();
+      const role = (u.role + '').toLowerCase();  // <--- FONTOS
 
-  clearSearch() {
+      return (
+        username.includes(q) ||
+        email.includes(q) ||
+        role.includes(q)
+      );
+    });
+  } */
+
+
+/*  clearSearch() {
     this.searchQuery = '';
     this.users = [...this.originalUsers];
-  }
+  } */
 
 
 

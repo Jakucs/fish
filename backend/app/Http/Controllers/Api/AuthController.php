@@ -178,30 +178,43 @@ class AuthController extends ResponseController
 
 
             // Csak adminoknak
-            public function getUsers(Request $request)
-            {
-                $user = $request->user();
+        public function getUsers(Request $request)
+        {
+            $user = $request->user();
 
-                // Ellenőrizzük, hogy az aktuális user admin vagy superadmin
-                if (!Gate::allows('admin-access')) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Unauthorized'
-                    ], 403);
-            }
-
-                // Paginate: 50 felhasználó oldalanként
-                $users = User::select('id', 'username', 'email', 'role', 'created_at')
-                            ->paginate(30);
-
+            // Ellenőrizzük, hogy az aktuális user admin vagy superadmin
+            if (!Gate::allows('admin-access')) {
                 return response()->json([
-                    'success' => true,
-                    'users' => $users->items(),
-                    'current_page' => $users->currentPage(),
-                    'last_page' => $users->lastPage(),
-                    'total' => $users->total()
-                ]);
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ], 403);
             }
+
+            // Alap query
+            $query = User::select('id', 'username', 'email', 'role', 'created_at');
+
+            // Ha van kereső kifejezés
+            if ($request->has('search')) {
+                $search = $request->input('search');
+                $query->where(function($q) use ($search) {
+                    $q->where('username', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('role', 'like', "%{$search}%"); // ha role szám, akkor ->orWhere('role', $search)
+                });
+            }
+
+            // Lapozás: 30 felhasználó oldalanként
+            $users = $query->orderBy('id', 'desc')->paginate(30);
+
+            return response()->json([
+                'success' => true,
+                'users' => $users->items(),
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+                'total' => $users->total()
+            ]);
+        }
+
 
 
 
