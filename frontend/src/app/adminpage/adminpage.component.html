@@ -17,6 +17,8 @@
       [(ngModel)]="searchQuery"
       (input)="filterUsers()"
     />
+    <button class="btn btn-primary" (click)="filterUsers()">Keresés</button>
+    <button class="btn btn-outline-secondary" (click)="clearSearch()">Törlés</button>
   </div>
 </div>
 

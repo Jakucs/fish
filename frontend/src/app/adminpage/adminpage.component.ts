@@ -17,6 +17,7 @@ export class AdminpageComponent {
   private baseUrl = 'http://localhost:8000/api';
 
   originalUsers: any[] = [];
+  searchQuery: string = '';
   users: any[] = [];
   ads: any[] = []; 
   selectedUser: any = null; // 🔹 éppen kiválasztott user
@@ -25,7 +26,6 @@ export class AdminpageComponent {
   showUsers = false;
   showAds = false;
   currentUser: any;
-  searchQuery: string = '';
 
   currentUserPage = 1;
   lastUserPage = 1;
@@ -163,14 +163,25 @@ export class AdminpageComponent {
   }
 
   filterUsers() {
-  const q = this.searchQuery.toLowerCase();
+    const q = (this.searchQuery || '').trim().toLowerCase();
 
-  this.users = this.originalUsers.filter(u =>
-    u.username?.toLowerCase().includes(q) ||
-    u.email?.toLowerCase().includes(q) ||
-    u.role?.toLowerCase().includes(q)
-  );
-}
+    if (!q) {
+      // üres keresés -> visszaállítjuk az eredeti listát
+      this.users = [...this.originalUsers];
+      return;
+    }
+
+    this.users = this.originalUsers.filter(u =>
+      (u.username || '').toLowerCase().includes(q) ||
+      (u.email || '').toLowerCase().includes(q) ||
+      (u.role || '').toLowerCase().includes(q)
+    );
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.users = [...this.originalUsers];
+  }
 
 
 
