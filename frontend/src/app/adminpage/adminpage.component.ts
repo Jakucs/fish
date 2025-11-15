@@ -146,13 +146,13 @@ export class AdminpageComponent {
       });
     }
     searchUsers() {
-      this.loadUsers(1, this.searchQuery); // az 1-es oldalra ugrik, keresőszóval
+      this.loadUsers(1, this.searchQuery);
     }
 
     clearSearch() {
-  this.searchQuery = '';
-  this.loadUsers(1); // vissza az összes userhez
-}
+      this.searchQuery = '';
+      this.loadUsers(1);
+  }
 
 
 

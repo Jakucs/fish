@@ -37,9 +37,22 @@ class ProductController extends ResponseController
         public function getProductsPublic(Request $request)
         {
             $perPage = $request->get('per_page', 50);
+            $search = $request->get('search'); // <-- KERESÉSI PARAMÉTER
 
-            $products = Product::with('type', 'user')->paginate($perPage);
+            $query = Product::with('type', 'user');
 
+            // 🔍 Ha van keresőkifejezés → szűrés
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%")
+                    ->orWhere('price', 'LIKE', "%{$search}%");
+                });
+            }
+
+            $products = $query->paginate($perPage);
+
+            // kedvenc flag hozzádása
             $products->getCollection()->transform(function ($product) {
                 $product->is_favourite = false;
                 return $product;
@@ -47,6 +60,7 @@ class ProductController extends ResponseController
 
             return response()->json($products);
         }
+
 
 
 
