@@ -44,7 +44,7 @@ class ProductController extends ResponseController
             // 🔍 Ha van keresőkifejezés → szűrés
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('title', 'LIKE', "%{$search}%")
+                    $q->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%")
                     ->orWhere('price', 'LIKE', "%{$search}%");
                 });
