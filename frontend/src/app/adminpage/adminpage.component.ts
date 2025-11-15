@@ -19,8 +19,10 @@ export class AdminpageComponent {
   originalUsers: any[] = [];
   searchQuery: string = '';
   users: any[] = [];
+
+  productSearchQuery: string = '';
   ads: any[] = []; 
-  selectedUser: any = null; // 🔹 éppen kiválasztott user
+  selectedUser: any = null;
   errorMessage = '';
   successMessage = '';
   showUsers = false;
@@ -155,11 +157,9 @@ export class AdminpageComponent {
 
 
 
-  loadAds(page: number = 1): void {
-    this.productapi.getProductsPublic(page).subscribe({
+  loadAds(page: number = 1, search: string = ''): void {
+    this.productapi.getProductsPublic(page, search).subscribe({
       next: (res: any) => {
-        console.log('Hirdetések válasz:', res);
-
         this.ads = res.data || [];
         this.currentAdPage = res.current_page || 1;
         this.lastAdPage = res.last_page || 1;
@@ -170,6 +170,21 @@ export class AdminpageComponent {
       }
     });
   }
+
+
+  
+
+  searchProducts() {
+    this.loadAds(1, this.productSearchQuery);
+  }
+
+  clearProductSearch() {
+    this.productSearchQuery = '';
+    this.loadAds(1);
+  }
+
+
+
 
 /*  filterUsers() {
     const q = (this.searchQuery || '').trim().toLowerCase();

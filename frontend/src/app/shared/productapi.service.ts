@@ -23,9 +23,16 @@ export class ProductapiService {
     });
   }
 
-  getProductsPublic(page: number = 1) {
-    return this.http.get(this.productsURL + `/products/public?page=${page}`);
+  getProductsPublic(page: number = 1, search: string = '') {
+    const params: any = { page };
+
+    if (search && search.trim() !== '') {
+      params.search = search;
+    }
+
+    return this.http.get(this.productsURL + `/products/public`, { params });
   }
+
 
 
   //Mindent releváns adatot lekérünk egy termékről ID alapján és megis kapjuk, user táblából a phone_number-t, locations táblából a várost irányítószámmal együtt
