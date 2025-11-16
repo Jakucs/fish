@@ -37,11 +37,10 @@ class ProductController extends ResponseController
         public function getProductsPublic(Request $request)
         {
             $perPage = $request->get('per_page', 50);
-            $search = $request->get('search'); // <-- KERESÉSI PARAMÉTER
+            $search = $request->get('search');
 
             $query = Product::with('type', 'user');
 
-            // 🔍 Ha van keresőkifejezés → szűrés
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
@@ -68,13 +67,11 @@ class ProductController extends ResponseController
         {
             $user = $request->user();
 
-            // Lapozás, 50 elem oldalanként (page paraméter automatikusan kezeli)
             $products = Product::with('type', 'user')
                 ->where('type_id', $id)
                 ->orderBy('created_at', 'desc')
                 ->paginate(50);
 
-            // is_favourite mező beállítása
             $products->getCollection()->transform(function ($product) use ($user) {
                 $product->is_favourite = $user 
                     ? $user->favourites()->where('product_id', $product->id)->exists() 

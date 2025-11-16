@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+            // 🔥 KÉNYSZERÍTETT DOMAIN → a verifikációs link nem lesz többé localhost
+            URL::forceRootUrl(config('app.url'));
 
             // Admin hozzáférés (admin és superadmin)
             Gate::define('admin-access', function ($user) {
