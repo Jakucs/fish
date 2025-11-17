@@ -2,13 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { AuthapiService } from './authapi.service';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserapiService {
 
-   private userURL = 'http://localhost:8000/api';
+   private userURL = environment.apiUrl;
 
   constructor(private http: HttpClient, private authapi: AuthapiService) { }
 

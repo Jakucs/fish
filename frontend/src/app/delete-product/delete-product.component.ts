@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-delete-product',
@@ -32,7 +34,7 @@ export class DeleteProductComponent {
 
   // Lekérjük a termék adatait
   fetchProduct() {
-    const url = `http://localhost:8000/api/product/${this.productId}`;
+    const url = `${environment.apiUrl}/product/${this.productId}`;
     this.http.get(url).subscribe({
       next: (res: any) => {
         this.product = res.data ?? res; // backend szerkezetétől függően
@@ -49,7 +51,7 @@ export class DeleteProductComponent {
   // Törlés megerősítése
     confirmDeletion() {
       console.log('✅ confirmDeletion() meghívva');
-      const url = `http://localhost:8000/api/destroyproduct/${this.productId}`;
+      const url = `${environment.apiUrl}/destroyproduct/${this.productId}`;
       const token = localStorage.getItem('token');
 
       const headers = new HttpHeaders({

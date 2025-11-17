@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserapiService } from './userapi.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class AdapiService {
 
   private adList: any[] = [];
-  myAdsURL = 'http://localhost:8000/api/getmyads'
+  myAdsURL = `${environment.apiUrl}/getmyads`;
 
   constructor(
     private userapi: UserapiService,

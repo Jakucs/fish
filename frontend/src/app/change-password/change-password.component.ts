@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-change-password',
@@ -25,9 +26,9 @@ export class ChangePasswordComponent {
       return;
     }
 
-    this.http.post('http://localhost:8000/api/forgot-password', {
-      email: this.forgotEmail
-    }).subscribe({
+    const url = `${environment.apiUrl}/forgot-password`;  // <-- environment használat
+
+    this.http.post(url, { email: this.forgotEmail }).subscribe({
       next: (res: any) => {
         this.successMessage = res.message;
         this.errorMessage = '';
@@ -38,4 +39,5 @@ export class ChangePasswordComponent {
       }
     });
   }
+
 }

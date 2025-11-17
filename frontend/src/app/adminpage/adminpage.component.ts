@@ -5,6 +5,9 @@ import { AdminapiService } from '../shared/adminapi.service';
 import { CommonModule } from '@angular/common';
 import { ProductapiService } from '../shared/productapi.service';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
+
+
 
 @Component({
   selector: 'app-adminpage',
@@ -14,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminpageComponent {
 
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = environment.apiUrl;
 
   originalUsers: any[] = [];
   searchQuery: string = '';
