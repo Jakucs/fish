@@ -27,87 +27,84 @@
 
 
 
-  <div class="row g-3"
+<div class="row g-3"
      infiniteScroll
      [infiniteScrollDistance]="2"
      [infiniteScrollThrottle]="200"
      (scrolled)="onScrollDown()">
-    @for (productItem of productList; track productItem.id) {
-      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-        <div
-          class="card h-100 shadow-sm clickable-card"
-          (click)="goToDetails(productItem.id)"
+
+  <div *ngFor="let productItem of productList; trackBy: trackByProductId"
+       class="col-6 col-sm-4 col-md-3 col-lg-2">
+
+    <div class="card h-100 shadow-sm clickable-card"
+         (click)="goToDetails(productItem.id)">
+
+      <!-- A kép és a badge közös, relatív konténerben -->
+      <div class="position-relative">
+        <img
+          *ngIf="productItem.imagesArray?.length"
+          [src]="productItem.imagesArray[0]"
+          alt="{{ productItem.name }}"
+          class="card-img-top"
+          width="300"
+          height="200"
+          style="object-fit: cover;"
         >
 
-          <!-- A kép és a badge közös, relatív konténerben -->
-          <div class="position-relative">
-            <img
-              *ngIf="productItem.imagesArray && productItem.imagesArray.length > 0"
-              [src]="productItem.imagesArray[0]"
-              alt="{{ productItem.name }}"
-              class="card-img-top"
-              width="300"
-              height="200"
-              style="object-fit: cover;"
-            >
-            <!-- Hal ikon badge háttérrel, lehet túlzás-->
-            <div
-              *ngIf="userapi.isUserActive()"
-              class="position-absolute top-0 end-0 m-2 px-2 py-1 bg-dark text-white rounded-pill opacity-75 d-flex align-items-center justify-content-center"
-              style="z-index: 2; width: 28px; height: 28px;"
-              title="Kedvencekhez adás"
-              (click)="toggleFavorite(productItem); $event.stopPropagation();"
-            >
-              <img
-              [src]="productItem.is_favourite ? 'icons/fish7.svg' : 'icons/fish.svg'"
-              alt="fish icon"
-              [class.inverted]="!productItem.is_favourite"
-              style="width: 24px; height: 24px;"
-            >
+        <!-- Kedvenc ikon -->
+        <div
+          *ngIf="userapi.isUserActive()"
+          class="position-absolute top-0 end-0 m-2 px-2 py-1 bg-dark text-white rounded-pill opacity-75 d-flex align-items-center justify-content-center"
+          style="z-index: 2; width: 28px; height: 28px;"
+          title="Kedvencekhez adás"
+          (click)="toggleFavorite(productItem); $event.stopPropagation();"
+        >
+          <img
+            [src]="productItem.is_favourite ? 'icons/fish7.svg' : 'icons/fish.svg'"
+            alt="fish icon"
+            [class.inverted]="!productItem.is_favourite"
+            style="width: 24px; height: 24px;"
+          >
+        </div>
 
-            </div>
-
-            <!-- Képek számának jelölése -->
-            <div
-              *ngIf="productItem.imagesArray && productItem.imagesArray.length > 1"
-              class="position-absolute bottom-0 end-0 m-2 px-2 py-1 bg-dark text-white small rounded-pill opacity-75"
-              style="font-size: 0.75rem; z-index: 2;"
-              title="{{ productItem.imagesArray.length }} kép"
-            >
-              <i class="bi bi-camera-fill me-1"></i>{{ productItem.imagesArray.length }}
-            </div>
-          </div>
-
-          <!-- További kártya tartalom -->
-          <div class="card-body">
-            <h5 class="card-title">{{ productItem.name }}</h5>
-            <p class="card-subtitle text-muted mb-2">{{ productItem.type?.type }}</p>
-            <p class="card-text text-secondary small mb-0">{{ productItem.condition }}</p>
-          </div>
-
-          <ul class="list-group list-group-flush">
-            <li
-              class="list-group-item fw-semibold py-1"
-              [ngClass]="{ 'text-success': productItem.price === 0 }"
-            >
-              {{ productItem.price === 0 ? 'Ingyenes' : (productItem.price + ' Ft') }}
-            </li>
-            <li class="list-group-item text-muted small">
-              <div class="d-flex flex-column">
-                <div class="d-flex align-items-center">
-                  <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
-                  <span>{{ productItem.city }}</span>
-                </div>
-                <div class="d-flex align-items-center mt-1">
-                  <i class="bi bi-calendar3 me-1 text-secondary"></i>
-                  <span>{{ productItem.created_at | timeAgo }}</span>
-                </div>
-              </div>
-            </li>
-          </ul>
-
+        <!-- Képek darabszáma -->
+        <div
+          *ngIf="productItem.imagesArray?.length > 1"
+          class="position-absolute bottom-0 end-0 m-2 px-2 py-1 bg-dark text-white small rounded-pill opacity-75"
+          style="font-size: 0.75rem; z-index: 2;"
+          title="{{ productItem.imagesArray.length }} kép"
+        >
+          <i class="bi bi-camera-fill me-1"></i>
+          {{ productItem.imagesArray.length }}
         </div>
       </div>
-    }
+
+      <div class="card-body">
+        <h5 class="card-title">{{ productItem.name }}</h5>
+        <p class="card-subtitle text-muted mb-2">{{ productItem.type?.type }}</p>
+        <p class="card-text text-secondary small mb-0">{{ productItem.condition }}</p>
+      </div>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item fw-semibold py-1"
+            [ngClass]="{ 'text-success': productItem.price === 0 }">
+          {{ productItem.price === 0 ? 'Ingyenes' : (productItem.price + ' Ft') }}
+        </li>
+        <li class="list-group-item text-muted small">
+          <div class="d-flex flex-column">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
+              {{ productItem.city }}
+            </div>
+            <div class="d-flex align-items-center mt-1">
+              <i class="bi bi-calendar3 me-1 text-secondary"></i>
+              {{ productItem.created_at | timeAgo }}
+            </div>
+          </div>
+        </li>
+      </ul>
+
+    </div>
   </div>
 </div>
+

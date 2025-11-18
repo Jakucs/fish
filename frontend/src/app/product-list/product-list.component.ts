@@ -145,4 +145,9 @@ export class ProductListComponent {
       error: err => console.error(err)
     });
   }
+
+  trackByProductId(index: number, item: any): number {
+  return item.id; // vagy valami egyedi mező, ami mindig egyedi minden terméknél
+}
+
 }
