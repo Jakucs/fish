@@ -95,6 +95,10 @@ Route::post('/forgot-password', function (Request $request) {
 Route::get('/email/verify/{id}/{hash}', [MailController::class, 'verify'])
     ->name('verification.verify');
 
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+    ->name('verification.verify');
+
+
 Route::post('/email/send-verification', function (Request $request) {
     $user = \App\Models\User::find($request->user_id);
     if (!$user) {

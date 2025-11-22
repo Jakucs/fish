@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller; // ← ide kell
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $admin = auth()->user();
 
-        // 🔒 Csak admin vagy superadmin (role >= 1) férhet hozzá
+        // Csak admin vagy superadmin (role >= 1) férhet hozzá
         if (!$admin || $admin->role < 1) {
             return response()->json([
                 'success' => false,
@@ -31,7 +31,7 @@ class UserController extends Controller
             ], 404);
         }
 
-        // 🚫 Saját fiók inaktiválása tiltva
+        // Saját fiók inaktiválása tiltva
         if ($admin->id === $user->id) {
             return response()->json([
                 'success' => false,
@@ -39,7 +39,7 @@ class UserController extends Controller
             ], 403);
         }
 
-        // 🚫 Superadmin fiók védelme (pl. role = 3)
+        // Superadmin fiók védelme (pl. role = 3)
         if ($user->role === 3) {
             return response()->json([
                 'success' => false,
@@ -47,7 +47,7 @@ class UserController extends Controller
             ], 403);
         }
 
-        // ✅ Állapot váltása
+        // Állapot váltása
         $user->is_active = !$user->is_active;
         $user->save();
 

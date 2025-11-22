@@ -61,7 +61,7 @@ class MailController extends Controller
         return response()->json(['message' => 'Verification email sent']);
     }
 
-    // ✅ 2️⃣ Verifikáció kezelése
+    //  Verifikáció kezelése
     public function verify($id, $hash, Request $request)
     {
         $user = User::find($id);

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->tinyInteger('role')->default(0); // 0 = user, 1 = admin, 2 = superadmin
             $table->boolean('is_active')->default(true);
+            $table->timestamp('last_activity')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

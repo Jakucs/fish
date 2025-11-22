@@ -237,7 +237,7 @@ class ProductController extends ResponseController
         }
 
 
-        //We can modify pictures CRUD
+        
 
         public function getPictures($id)
         {
@@ -332,7 +332,7 @@ class ProductController extends ResponseController
                     try {
                         (new UploadApi())->destroy($publicIds[$index]);
                     } catch (\Exception $e) {
-                        \Log::error('❌ Cloudinary törlési hiba: ' . $e->getMessage());
+                        \Log::error('Cloudinary törlési hiba: ' . $e->getMessage());
                     }
                 }
 

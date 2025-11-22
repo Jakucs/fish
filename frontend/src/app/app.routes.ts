@@ -16,6 +16,7 @@ import { DeleteProductComponent } from './delete-product/delete-product.componen
 import { AdminpageComponent } from './adminpage/adminpage.component';
 import { FavouritesComponent } from './favourites/favourites.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { EmailverifiedComponent } from './emailverified/emailverified.component';
 
 export const routes: Routes = [
     { path: "products", component: ProductListComponent},
@@ -34,6 +35,7 @@ export const routes: Routes = [
     { path: 'favourites', component: FavouritesComponent },
     { path: '', component: ProductListComponent },
     { path: 'adminpage', component: AdminpageComponent},
+    { path: 'email-verified', component: EmailverifiedComponent },
     { path: 'change-password', component: ChangePasswordComponent},
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

@@ -31,77 +31,77 @@ class AuthController extends ResponseController
         return $this->sendResponse($user, "Sikeres regisztráció");
     }
 
-            public function login(LoginRequest $request)
-            {
-                    $request->validated();
+    public function login(LoginRequest $request)
+    {
+            $request->validated();
 
-                    $loginInput = $request->input('login');
-                    $password = $request->input('password');
+            $loginInput = $request->input('login');
+            $password = $request->input('password');
 
-                    $credentials = ['password' => $password];
-                    if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
-                        $credentials['email'] = $loginInput;
-                    } else {
-                        $credentials['username'] = $loginInput;
-                    }
-
-                    $banner = new BannerController();
-                    $banningTime = $banner->getBanningTime($loginInput);
-
-                    if ($banningTime && Carbon::parse($banningTime)->isFuture()) {
-                        return $this->sendError(
-                            "Túl sok sikertelen próbálkozás",
-                            ["Túl sok sikertelen próbálkozás. Következő lehetőség: ", $banningTime],
-                            403
-                        );
-                    }
-
-                    if ($banningTime && Carbon::parse($banningTime)->isPast()) {
-                        $banner->resetBanningTime($loginInput);
-                        $banner->resetLoginCounter($loginInput);
-                    }
-
-                    if (Auth::attempt($credentials)) {
-                        $user = Auth::user();
-
-                        (new BannerController)->resetLoginCounter($user->username);
-                        (new BannerController)->resetBanningTime($user->username);
-
-                        $token = $user->createToken($user->username . "Token")->plainTextToken;
-
-                        $data = [
-                            "name" => $user->username,
-                            "user_id" => $user->id,
-                            "email" => $user->email,
-                            "role" => $user->role,
-                            "token" => $token
-                        ];
-
-                        return $this->sendResponse($data, "Sikeres bejelentkezés");
-                    } else {
-                        $banner = new BannerController();
-
-                        $banner->setLoginCounter($loginInput);
-
-                        $counter = $banner->getLoginCounter($loginInput);
-                        $banningTime = $banner->getBanningTime($loginInput);
-
-                        if ($counter > 3) {
-                            if (!$banningTime) {
-                                $banner->setBanningTime($loginInput);
-                                $banningTime = $banner->getBanningTime($loginInput);
-                            }
-
-                            $errorMessage = [
-                                "Következő lehetőség: ",
-                                $banningTime
-                            ];
-                            return $this->sendError("Túl sok sikertelen próbálkozás", $errorMessage, 405);
-                        }
-
-                        return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 401);
-                    }
+            $credentials = ['password' => $password];
+            if (filter_var($loginInput, FILTER_VALIDATE_EMAIL)) {
+                $credentials['email'] = $loginInput;
+            } else {
+                $credentials['username'] = $loginInput;
             }
+
+            $banner = new BannerController();
+            $banningTime = $banner->getBanningTime($loginInput);
+
+            if ($banningTime && Carbon::parse($banningTime)->isFuture()) {
+                return $this->sendError(
+                    "Túl sok sikertelen próbálkozás",
+                    ["Túl sok sikertelen próbálkozás. Következő lehetőség: ", $banningTime],
+                    403
+                );
+            }
+
+            if ($banningTime && Carbon::parse($banningTime)->isPast()) {
+                $banner->resetBanningTime($loginInput);
+                $banner->resetLoginCounter($loginInput);
+            }
+
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+
+                (new BannerController)->resetLoginCounter($user->username);
+                (new BannerController)->resetBanningTime($user->username);
+
+                $token = $user->createToken($user->username . "Token")->plainTextToken;
+
+                $data = [
+                    "name" => $user->username,
+                    "user_id" => $user->id,
+                    "email" => $user->email,
+                    "role" => $user->role,
+                    "token" => $token
+                ];
+
+                return $this->sendResponse($data, "Sikeres bejelentkezés");
+            } else {
+                $banner = new BannerController();
+
+                $banner->setLoginCounter($loginInput);
+
+                $counter = $banner->getLoginCounter($loginInput);
+                $banningTime = $banner->getBanningTime($loginInput);
+
+                if ($counter > 3) {
+                    if (!$banningTime) {
+                        $banner->setBanningTime($loginInput);
+                        $banningTime = $banner->getBanningTime($loginInput);
+                    }
+
+                    $errorMessage = [
+                        "Következő lehetőség: ",
+                        $banningTime
+                    ];
+                    return $this->sendError("Túl sok sikertelen próbálkozás", $errorMessage, 405);
+                }
+
+                return $this->sendError("Azonosítási hiba", "Hibás felhasználónév vagy jelszó", 401);
+            }
+    }
 
 
 
@@ -214,6 +214,23 @@ class AuthController extends ResponseController
                 'total' => $users->total()
             ]);
         }
+
+
+        public function verifyEmail($id, $hash)
+        {
+            $user = User::findOrFail($id);
+
+            if (! hash_equals(sha1($user->email), $hash)) {
+                return response()->json(['message' => 'Invalid verification link'], 403);
+            }
+
+            if (! $user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+            }
+
+            return redirect('http://localhost:4200/email-verified');
+        }
+
 
 
 
