@@ -75,18 +75,24 @@ Route::get('/check-phone', [AuthController::class, 'checkPhone']);
 Route::get("/email", [MailController::class, "sendMail"]);
 Route::get('/send-welcome', [MailController::class, 'sendWelcomeEmail']);
 
+//Reset password--->
+Route::get('/reset-password/{token}', function ($token, Request $request) {
+    return response()->json([
+        'token' => $token,
+        'email' => $request->email
+    ]);
+})->name('password.reset');
 
 Route::post('/forgot-password', function (Request $request) {
     $request->validate(['email' => 'required|email']);
 
-    $status = Password::sendResetLink(
-        $request->only('email')
-    );
+    $status = Password::sendResetLink($request->only('email'));
 
     return $status === Password::RESET_LINK_SENT
-                ? response()->json(['message' => 'Jelszó-visszaállító email elküldve.'])
-                : response()->json(['message' => 'Nem sikerült elküldeni az emailt.'], 400);
-});
+        ? response()->json(['message' => 'Jelszó-visszaállító email elküldve.'])
+        : response()->json(['message' => 'Nem sikerült elküldeni az emailt.'], 400);
+})->name('password.email');
+// <--- Reset password
 
 
 
