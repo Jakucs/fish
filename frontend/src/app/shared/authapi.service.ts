@@ -52,4 +52,13 @@ export class AuthapiService {
     getEmail() {
     return this.email;
   }
+
+    resetPassword(email: string, token: string, password: string) {
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      email: email,
+      token: token,
+      password: password,
+      password_confirmation: password
+    });
+  }
 }

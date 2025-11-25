@@ -12,6 +12,7 @@ import { environment } from '../../environments/environment';
 })
 export class ChangePasswordComponent {
 
+  //Csak az email küldésére szolgál
 
   forgotEmail = '';
   successMessage = '';
@@ -20,7 +21,7 @@ export class ChangePasswordComponent {
   constructor(private http: HttpClient) {}
 
   sendResetLink() {
-    if (!this.forgotEmail) {
+    if (!this.forgotEmail?.trim()) {
       this.errorMessage = 'Kérlek, add meg az email címed!';
       this.successMessage = '';
       return;
