@@ -29,6 +29,9 @@ export class ResetPasswordComponent {
 
   reset() {
     this.authapi.resetPassword(this.email, this.token, this.password)
-      .subscribe(() => this.success = true);
+      .subscribe(() => {
+        this.success = true;
+      });
   }
+
 }
