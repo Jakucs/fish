@@ -327,7 +327,7 @@ class ProductController extends ResponseController
             $index = array_search($request->url, $images);
 
             if ($index !== false) {
-                // 🔹 Cloudinary törlés, ha van public_id
+                // Cloudinary törlés, ha van public_id
                 if (isset($publicIds[$index]) && !empty($publicIds[$index])) {
                     try {
                         (new UploadApi())->destroy($publicIds[$index]);

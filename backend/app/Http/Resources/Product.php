@@ -33,7 +33,7 @@ class Product extends JsonResource
                     'email' => $this->user?->email,
                     'phone_number' => $this->user?->phone_number
                 ],
-                // 🔹 Kedvenc státusz
+                // Kedvenc státusz
                 'is_favourite' => $request->user()
                     ? $this->resource->favourites()->where('user_id', $request->user()->id)->exists()
                     : false,

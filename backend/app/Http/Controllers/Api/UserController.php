@@ -92,7 +92,7 @@ class UserController extends Controller
         ], 403);
     }
 
-    // Admin jogosultság váltása (1 ⇄ 0)
+    // Admin jogosultság váltása (1 - 0)
     $user->role = $user->role === 1 ? 0 : 1;
     $user->save();
 

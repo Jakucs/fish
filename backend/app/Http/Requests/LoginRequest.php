@@ -44,8 +44,8 @@ class LoginRequest extends FormRequest
                     "success" => false,
                     "message" => "Adatbeviteli hiba",
                     "errors" => $validator->errors()
-                ], 422); // ✅ státuszkód itt a response()->json() része
+                ], 422); // státuszkód itt a response()->json() része
 
-                throw new HttpResponseException($response); // ✅ csak a response objektum megy a konstruktorba
+                throw new HttpResponseException($response); // csak a response objektum megy a konstruktorba
             }
 }

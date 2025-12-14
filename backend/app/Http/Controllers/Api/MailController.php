@@ -70,7 +70,7 @@ class MailController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        // Ellenőrizd a hash-t
+        // Ellenőrizzük a hash-t
         if (! hash_equals(sha1($user->getEmailForVerification()), $hash)) {
             return response()->json(['message' => 'Invalid verification link'], 400);
         }

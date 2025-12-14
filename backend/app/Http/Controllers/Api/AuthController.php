@@ -182,7 +182,7 @@ class AuthController extends ResponseController
         {
             $user = $request->user();
 
-            // Ellenőrizzük, hogy az aktuális user admin vagy superadmin
+            // Aktuális user admin vagy superadmin
             if (!Gate::allows('admin-access')) {
                 return response()->json([
                     'success' => false,
